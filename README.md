@@ -1,2 +1,2 @@
-# starfire
-Terra client in Scala
+# Starfire
+Terra client in Scala.
