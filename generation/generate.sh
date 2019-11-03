@@ -9,4 +9,6 @@ echo "Now generating code in temporary folder $codegen_temp_dir"
 java -cp $swagger_codegen_jar:$codegen_module_jar io.swagger.codegen.Codegen -l sttp \
         -i $swagger_file -o $codegen_temp_dir
 echo "Done generating code to $codegen_temp_dir, now syncing to $codegen_target_dir"
-# rsync
+rsync -rc --delete $codegen_temp_dir/ $codegen_target_dir
+echo "Done syncing with $codegen_target_dir."
+echo "Done with updating auto-generated code."

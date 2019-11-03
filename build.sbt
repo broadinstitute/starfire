@@ -1,3 +1,3 @@
-lazy val root = (project in file(".")).aggregate(codegen)
+lazy val root = (project in file(".")).aggregate(generated)
 
-lazy val codegen = (project in file("codegen"))
+lazy val generated = (project in file("generated"))
