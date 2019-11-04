@@ -1,3 +1,5 @@
-lazy val root = (project in file(".")).aggregate(generated)
+lazy val root = (project in file(".")).aggregate(core, auth)
 
-lazy val generated = (project in file("generated"))
+lazy val core = (project in file("core"))
+lazy val auth = (project in file("auth"))
+
