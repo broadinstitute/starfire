@@ -10,12 +10,12 @@
  * Do not edit the class manually.
  */
 
-package org.broadinstitute.starfire
+package io.swagger.sttp.utils
 
 import io.circe.{Encoder, Json}
 import io.circe.generic.semiauto._
 import java.util.Date
-import java.io.File
+import better.files.File
 
 object Encoders {
   implicit val dateEncoder: Encoder[Date] = new Encoder[Date] {

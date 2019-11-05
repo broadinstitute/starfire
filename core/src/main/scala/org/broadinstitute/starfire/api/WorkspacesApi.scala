@@ -16,8 +16,8 @@ import org.broadinstitute.starfire.model.AttributeUpdateOperation
 import org.broadinstitute.starfire.model.AttributeUpdateOperation._
 import org.broadinstitute.starfire.model.ErrorReport
 import org.broadinstitute.starfire.model.ErrorReport._
-import java.io.File
-import java.io.File._
+import better.files.File
+import better.files.File._
 import io.circe.Json
 import io.circe.Json._
 import org.broadinstitute.starfire.model.ManagedGroupAccessInstructions
@@ -51,11 +51,11 @@ import sttp.client._
 import sttp.client.circe._
 import io.circe.generic.auto._
 
-import org.broadinstitute.starfire.Decoders._
-import org.broadinstitute.starfire.Encoders._
-import org.broadinstitute.starfire.SttpUtils.Implicits._
+import io.swagger.sttp.utils.Decoders._
+import io.swagger.sttp.utils.Encoders._
+import io.swagger.sttp.utils.SttpUtils.Implicits._
 
-class WorkspacesApi() {
+object WorkspacesApi {
 
   /**
    * TSV file containing workspace attributes (allows cookie-based authentication) 
@@ -72,7 +72,7 @@ class WorkspacesApi() {
     assert(workspaceName != null, "Missing required parameter 'workspaceName' when calling WorkspacesApi->browserDownloadAttributes")
 
     basicRequest
-      .get(uri"https://localhost/cookie-authed/workspaces/${workspaceNamespace}/${workspaceName}/exportAttributesTSV")
+      .get(uri"https://api.firecloud.org/cookie-authed/workspaces/${workspaceNamespace}/${workspaceName}/exportAttributesTSV")
       .response(asJson[File])
   }
 
@@ -91,7 +91,7 @@ class WorkspacesApi() {
     assert(workspaceName != null, "Missing required parameter 'workspaceName' when calling WorkspacesApi->changedWorkspaceNotification")
 
     basicRequest
-      .post(uri"https://localhost/api/workspaces/${workspaceNamespace}/${workspaceName}/sendChangeNotification")
+      .post(uri"https://api.firecloud.org/api/workspaces/${workspaceNamespace}/${workspaceName}/sendChangeNotification")
       .response(asJson[Unit])
   }
 
@@ -113,7 +113,7 @@ class WorkspacesApi() {
     assert(workspace != null, "Missing required parameter 'workspace' when calling WorkspacesApi->cloneWorkspace")
 
     basicRequest
-      .post(uri"https://localhost/api/workspaces/${workspaceNamespace}/${workspaceName}/clone")
+      .post(uri"https://api.firecloud.org/api/workspaces/${workspaceNamespace}/${workspaceName}/clone")
       .body(workspace)
       .response(asJson[Unit])
   }
@@ -130,7 +130,7 @@ class WorkspacesApi() {
     assert(workspace != null, "Missing required parameter 'workspace' when calling WorkspacesApi->createWorkspace")
 
     basicRequest
-      .post(uri"https://localhost/api/workspaces")
+      .post(uri"https://api.firecloud.org/api/workspaces")
       .body(workspace)
       .response(asJson[Unit])
   }
@@ -150,7 +150,7 @@ class WorkspacesApi() {
     assert(workspaceName != null, "Missing required parameter 'workspaceName' when calling WorkspacesApi->deleteWorkspace")
 
     basicRequest
-      .delete(uri"https://localhost/api/workspaces/${workspaceNamespace}/${workspaceName}")
+      .delete(uri"https://api.firecloud.org/api/workspaces/${workspaceNamespace}/${workspaceName}")
       .response(asJson[Unit])
   }
 
@@ -172,7 +172,7 @@ class WorkspacesApi() {
     assert(tags != null, "Missing required parameter 'tags' when calling WorkspacesApi->deleteWorkspaceTags")
 
     basicRequest
-      .delete(uri"https://localhost/api/workspaces/${workspaceNamespace}/${workspaceName}/tags")
+      .delete(uri"https://api.firecloud.org/api/workspaces/${workspaceNamespace}/${workspaceName}/tags")
       .body(tags)
       .response(asJson[StringArray])
   }
@@ -192,7 +192,7 @@ class WorkspacesApi() {
     assert(workspaceName != null, "Missing required parameter 'workspaceName' when calling WorkspacesApi->exportAttributesTSV")
 
     basicRequest
-      .get(uri"https://localhost/api/workspaces/${workspaceNamespace}/${workspaceName}/exportAttributesTSV")
+      .get(uri"https://api.firecloud.org/api/workspaces/${workspaceNamespace}/${workspaceName}/exportAttributesTSV")
       .response(asJson[File])
   }
 
@@ -211,7 +211,7 @@ class WorkspacesApi() {
     assert(workspaceName != null, "Missing required parameter 'workspaceName' when calling WorkspacesApi->getBucketUsage")
 
     basicRequest
-      .get(uri"https://localhost/api/workspaces/${workspaceNamespace}/${workspaceName}/bucketUsage")
+      .get(uri"https://api.firecloud.org/api/workspaces/${workspaceNamespace}/${workspaceName}/bucketUsage")
       .response(asJson[Unit])
   }
 
@@ -230,7 +230,7 @@ class WorkspacesApi() {
     assert(workspaceName != null, "Missing required parameter 'workspaceName' when calling WorkspacesApi->getCatalog")
 
     basicRequest
-      .get(uri"https://localhost/api/workspaces/${workspaceNamespace}/${workspaceName}/catalog")
+      .get(uri"https://api.firecloud.org/api/workspaces/${workspaceNamespace}/${workspaceName}/catalog")
       .response(asJson[List[WorkspaceCatalog]])
   }
 
@@ -249,7 +249,7 @@ class WorkspacesApi() {
     assert(workspaceName != null, "Missing required parameter 'workspaceName' when calling WorkspacesApi->getStorageCostEstimate")
 
     basicRequest
-      .get(uri"https://localhost/api/workspaces/${workspaceNamespace}/${workspaceName}/storageCostEstimate")
+      .get(uri"https://api.firecloud.org/api/workspaces/${workspaceNamespace}/${workspaceName}/storageCostEstimate")
       .response(asJson[Unit])
   }
 
@@ -265,7 +265,7 @@ class WorkspacesApi() {
     ): Request[Either[ResponseError[io.circe.Error],List[WorkspaceTag]],Nothing] = {
 
     basicRequest
-      .get(uri"https://localhost/api/workspaces/tags?q=${q}")
+      .get(uri"https://api.firecloud.org/api/workspaces/tags?q=${q}")
       .response(asJson[List[WorkspaceTag]])
   }
 
@@ -287,7 +287,7 @@ class WorkspacesApi() {
     assert(workspaceName != null, "Missing required parameter 'workspaceName' when calling WorkspacesApi->getWorkspace")
 
     basicRequest
-      .get(uri"https://localhost/api/workspaces/${workspaceNamespace}/${workspaceName}?fields=${fields}")
+      .get(uri"https://api.firecloud.org/api/workspaces/${workspaceNamespace}/${workspaceName}?fields=${fields}")
       .response(asJson[Unit])
   }
 
@@ -306,7 +306,7 @@ class WorkspacesApi() {
     assert(workspaceName != null, "Missing required parameter 'workspaceName' when calling WorkspacesApi->getWorkspaceAccessInstructions")
 
     basicRequest
-      .get(uri"https://localhost/api/workspaces/${workspaceNamespace}/${workspaceName}/accessInstructions")
+      .get(uri"https://api.firecloud.org/api/workspaces/${workspaceNamespace}/${workspaceName}/accessInstructions")
       .response(asJson[List[ManagedGroupAccessInstructions]])
   }
 
@@ -325,7 +325,7 @@ class WorkspacesApi() {
     assert(workspaceName != null, "Missing required parameter 'workspaceName' when calling WorkspacesApi->getWorkspaceAcl")
 
     basicRequest
-      .get(uri"https://localhost/api/workspaces/${workspaceNamespace}/${workspaceName}/acl")
+      .get(uri"https://api.firecloud.org/api/workspaces/${workspaceNamespace}/${workspaceName}/acl")
       .response(asJson[WorkspaceACL])
   }
 
@@ -344,7 +344,7 @@ class WorkspacesApi() {
     assert(workspaceName != null, "Missing required parameter 'workspaceName' when calling WorkspacesApi->getWorkspaceBucketOptions")
 
     basicRequest
-      .get(uri"https://localhost/api/workspaces/${workspaceNamespace}/${workspaceName}/bucketOptions")
+      .get(uri"https://api.firecloud.org/api/workspaces/${workspaceNamespace}/${workspaceName}/bucketOptions")
       .response(asJson[WorkspaceBucketOptions])
   }
 
@@ -363,7 +363,7 @@ class WorkspacesApi() {
     assert(workspaceName != null, "Missing required parameter 'workspaceName' when calling WorkspacesApi->getWorkspaceTags")
 
     basicRequest
-      .get(uri"https://localhost/api/workspaces/${workspaceNamespace}/${workspaceName}/tags")
+      .get(uri"https://api.firecloud.org/api/workspaces/${workspaceNamespace}/${workspaceName}/tags")
       .response(asJson[StringArray])
   }
 
@@ -385,7 +385,7 @@ class WorkspacesApi() {
     assert(attributes != null, "Missing required parameter 'attributes' when calling WorkspacesApi->importAttributesTSV")
 
     basicRequest
-      .post(uri"https://localhost/api/workspaces/${workspaceNamespace}/${workspaceName}/importAttributesTSV")
+      .post(uri"https://api.firecloud.org/api/workspaces/${workspaceNamespace}/${workspaceName}/importAttributesTSV")
       .response(asJson[Unit])
   }
 
@@ -407,7 +407,7 @@ class WorkspacesApi() {
     assert(workspaceName != null, "Missing required parameter 'workspaceName' when calling WorkspacesApi->listWorkspaceMethodConfigs")
 
     basicRequest
-      .get(uri"https://localhost/api/workspaces/${workspaceNamespace}/${workspaceName}/methodconfigs?allRepos=${allRepos}")
+      .get(uri"https://api.firecloud.org/api/workspaces/${workspaceNamespace}/${workspaceName}/methodconfigs?allRepos=${allRepos}")
       .response(asJson[Unit])
   }
 
@@ -423,7 +423,7 @@ class WorkspacesApi() {
     ): Request[Either[ResponseError[io.circe.Error],Unit],Nothing] = {
 
     basicRequest
-      .get(uri"https://localhost/api/workspaces?fields=${fields}")
+      .get(uri"https://api.firecloud.org/api/workspaces?fields=${fields}")
       .response(asJson[Unit])
   }
 
@@ -442,7 +442,7 @@ class WorkspacesApi() {
     assert(workspaceName != null, "Missing required parameter 'workspaceName' when calling WorkspacesApi->lockWorkspace")
 
     basicRequest
-      .put(uri"https://localhost/api/workspaces/${workspaceNamespace}/${workspaceName}/lock")
+      .put(uri"https://api.firecloud.org/api/workspaces/${workspaceNamespace}/${workspaceName}/lock")
       .response(asJson[Unit])
   }
 
@@ -464,7 +464,7 @@ class WorkspacesApi() {
     assert(tags != null, "Missing required parameter 'tags' when calling WorkspacesApi->patchWorkspaceTags")
 
     basicRequest
-      .patch(uri"https://localhost/api/workspaces/${workspaceNamespace}/${workspaceName}/tags")
+      .patch(uri"https://api.firecloud.org/api/workspaces/${workspaceNamespace}/${workspaceName}/tags")
       .body(tags)
       .response(asJson[StringArray])
   }
@@ -487,7 +487,7 @@ class WorkspacesApi() {
     assert(methodConfigJson != null, "Missing required parameter 'methodConfigJson' when calling WorkspacesApi->postWorkspaceMethodConfig")
 
     basicRequest
-      .post(uri"https://localhost/api/workspaces/${workspaceNamespace}/${workspaceName}/methodconfigs")
+      .post(uri"https://api.firecloud.org/api/workspaces/${workspaceNamespace}/${workspaceName}/methodconfigs")
       .body(methodConfigJson)
       .response(asJson[Unit])
   }
@@ -510,7 +510,7 @@ class WorkspacesApi() {
     assert(tags != null, "Missing required parameter 'tags' when calling WorkspacesApi->putWorkspaceTags")
 
     basicRequest
-      .put(uri"https://localhost/api/workspaces/${workspaceNamespace}/${workspaceName}/tags")
+      .put(uri"https://api.firecloud.org/api/workspaces/${workspaceNamespace}/${workspaceName}/tags")
       .body(tags)
       .response(asJson[StringArray])
   }
@@ -530,7 +530,7 @@ class WorkspacesApi() {
     assert(workspaceName != null, "Missing required parameter 'workspaceName' when calling WorkspacesApi->readBucket")
 
     basicRequest
-      .get(uri"https://localhost/api/workspaces/${workspaceNamespace}/${workspaceName}/checkBucketReadAccess")
+      .get(uri"https://api.firecloud.org/api/workspaces/${workspaceNamespace}/${workspaceName}/checkBucketReadAccess")
       .response(asJson[Unit])
   }
 
@@ -552,7 +552,7 @@ class WorkspacesApi() {
     assert(newAttributes != null, "Missing required parameter 'newAttributes' when calling WorkspacesApi->setAttributes")
 
     basicRequest
-      .patch(uri"https://localhost/api/workspaces/${workspaceNamespace}/${workspaceName}/setAttributes")
+      .patch(uri"https://api.firecloud.org/api/workspaces/${workspaceNamespace}/${workspaceName}/setAttributes")
       .body(newAttributes)
       .response(asJson[Unit])
   }
@@ -572,7 +572,7 @@ class WorkspacesApi() {
     assert(workspaceName != null, "Missing required parameter 'workspaceName' when calling WorkspacesApi->unlockWorkspace")
 
     basicRequest
-      .put(uri"https://localhost/api/workspaces/${workspaceNamespace}/${workspaceName}/unlock")
+      .put(uri"https://api.firecloud.org/api/workspaces/${workspaceNamespace}/${workspaceName}/unlock")
       .response(asJson[Unit])
   }
 
@@ -594,7 +594,7 @@ class WorkspacesApi() {
     assert(workspaceUpdateJson != null, "Missing required parameter 'workspaceUpdateJson' when calling WorkspacesApi->updateAttributes")
 
     basicRequest
-      .patch(uri"https://localhost/api/workspaces/${workspaceNamespace}/${workspaceName}/updateAttributes")
+      .patch(uri"https://api.firecloud.org/api/workspaces/${workspaceNamespace}/${workspaceName}/updateAttributes")
       .body(workspaceUpdateJson)
       .response(asJson[Unit])
   }
@@ -617,7 +617,7 @@ class WorkspacesApi() {
     assert(catalogUpdates != null, "Missing required parameter 'catalogUpdates' when calling WorkspacesApi->updateCatalog")
 
     basicRequest
-      .patch(uri"https://localhost/api/workspaces/${workspaceNamespace}/${workspaceName}/catalog")
+      .patch(uri"https://api.firecloud.org/api/workspaces/${workspaceNamespace}/${workspaceName}/catalog")
       .body(catalogUpdates)
       .response(asJson[WorkspaceCatalogUpdateResponseList])
   }
@@ -642,7 +642,7 @@ class WorkspacesApi() {
     assert(aclUpdates != null, "Missing required parameter 'aclUpdates' when calling WorkspacesApi->updateWorkspaceACL")
 
     basicRequest
-      .patch(uri"https://localhost/api/workspaces/${workspaceNamespace}/${workspaceName}/acl?inviteUsersNotFound=${inviteUsersNotFound}")
+      .patch(uri"https://api.firecloud.org/api/workspaces/${workspaceNamespace}/${workspaceName}/acl?inviteUsersNotFound=${inviteUsersNotFound}")
       .body(aclUpdates)
       .response(asJson[WorkspaceACLUpdateResponseList])
   }
@@ -665,7 +665,7 @@ class WorkspacesApi() {
     assert(reportInput != null, "Missing required parameter 'reportInput' when calling WorkspacesApi->workspacePermissionReport")
 
     basicRequest
-      .post(uri"https://localhost/api/workspaces/${workspaceNamespace}/${workspaceName}/permissionReport")
+      .post(uri"https://api.firecloud.org/api/workspaces/${workspaceNamespace}/${workspaceName}/permissionReport")
       .body(reportInput)
       .response(asJson[PermissionReport])
   }

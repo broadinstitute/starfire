@@ -12,18 +12,18 @@
 
 package org.broadinstitute.starfire.api
 
-import java.io.File
-import java.io.File._
+import better.files.File
+import better.files.File._
 
 import sttp.client._
 import sttp.client.circe._
 import io.circe.generic.auto._
 
-import org.broadinstitute.starfire.Decoders._
-import org.broadinstitute.starfire.Encoders._
-import org.broadinstitute.starfire.SttpUtils.Implicits._
+import io.swagger.sttp.utils.Decoders._
+import io.swagger.sttp.utils.Encoders._
+import io.swagger.sttp.utils.SttpUtils.Implicits._
 
-class StorageApi() {
+object StorageApi {
 
   /**
    * Get metadata about an object stored in GCS. 
@@ -40,7 +40,7 @@ class StorageApi() {
     assert(`object` != null, "Missing required parameter '`object`' when calling StorageApi->getMetadata")
 
     basicRequest
-      .get(uri"https://localhost/api/storage/${bucket}/${`object`}")
+      .get(uri"https://api.firecloud.org/api/storage/${bucket}/${`object`}")
       .response(asJson[Unit])
   }
 
@@ -59,7 +59,7 @@ class StorageApi() {
     assert(`object` != null, "Missing required parameter '`object`' when calling StorageApi->getStorageDownload")
 
     basicRequest
-      .get(uri"https://localhost/cookie-authed/download/b/${bucket}/o/${`object`}")
+      .get(uri"https://api.firecloud.org/cookie-authed/download/b/${bucket}/o/${`object`}")
       .response(asJson[File])
   }
 

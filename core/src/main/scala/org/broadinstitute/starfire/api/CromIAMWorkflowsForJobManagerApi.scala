@@ -31,11 +31,11 @@ import sttp.client._
 import sttp.client.circe._
 import io.circe.generic.auto._
 
-import org.broadinstitute.starfire.Decoders._
-import org.broadinstitute.starfire.Encoders._
-import org.broadinstitute.starfire.SttpUtils.Implicits._
+import io.swagger.sttp.utils.Decoders._
+import io.swagger.sttp.utils.Encoders._
+import io.swagger.sttp.utils.SttpUtils.Implicits._
 
-class CromIAMWorkflowsForJobManagerApi() {
+object CromIAMWorkflowsForJobManagerApi {
 
   /**
    * Abort a workflow based on workflow id
@@ -52,7 +52,7 @@ class CromIAMWorkflowsForJobManagerApi() {
     assert(id != null, "Missing required parameter 'id' when calling CromIAMWorkflowsForJobManagerApi->apiWorkflowsVersionIdAbortPost")
 
     basicRequest
-      .post(uri"https://localhost/api/workflows/${version}/${id}/abort")
+      .post(uri"https://api.firecloud.org/api/workflows/${version}/${id}/abort")
       .response(asJson[WorkflowAbortResponse])
   }
 
@@ -74,7 +74,7 @@ class CromIAMWorkflowsForJobManagerApi() {
     assert(backendId != null, "Missing required parameter 'backendId' when calling CromIAMWorkflowsForJobManagerApi->apiWorkflowsVersionIdBackendMetadataBackendIdGet")
 
     basicRequest
-      .get(uri"https://localhost/api/workflows/${version}/${id}/backend/metadata/${backendId}")
+      .get(uri"https://api.firecloud.org/api/workflows/${version}/${id}/backend/metadata/${backendId}")
       .response(asJson[Unit])
   }
 
@@ -96,7 +96,7 @@ class CromIAMWorkflowsForJobManagerApi() {
     assert(labels != null, "Missing required parameter 'labels' when calling CromIAMWorkflowsForJobManagerApi->apiWorkflowsVersionIdLabelsPatch")
 
     basicRequest
-      .patch(uri"https://localhost/api/workflows/${version}/${id}/labels")
+      .patch(uri"https://api.firecloud.org/api/workflows/${version}/${id}/labels")
       .body(labels)
       .response(asJson[LabelsResponse])
   }
@@ -123,7 +123,7 @@ class CromIAMWorkflowsForJobManagerApi() {
     assert(id != null, "Missing required parameter 'id' when calling CromIAMWorkflowsForJobManagerApi->apiWorkflowsVersionIdMetadataGet")
 
     basicRequest
-      .get(uri"https://localhost/api/workflows/${version}/${id}/metadata?includeKey=${includeKey}?excludeKey=${excludeKey}?expandSubWorkflows=${expandSubWorkflows}")
+      .get(uri"https://api.firecloud.org/api/workflows/${version}/${id}/metadata?includeKey=${includeKey}?excludeKey=${excludeKey}?expandSubWorkflows=${expandSubWorkflows}")
       .response(asJson[WorkflowMetadataResponse])
   }
 
@@ -150,7 +150,7 @@ class CromIAMWorkflowsForJobManagerApi() {
     assert(version != null, "Missing required parameter 'version' when calling CromIAMWorkflowsForJobManagerApi->apiWorkflowsVersionQueryGet")
 
     basicRequest
-      .get(uri"https://localhost/api/workflows/${version}/query?start=${start}?end=${end}?status=${status}?name=${name}?id=${id}")
+      .get(uri"https://api.firecloud.org/api/workflows/${version}/query?start=${start}?end=${end}?status=${status}?name=${name}?id=${id}")
       .response(asJson[WorkflowQueryResponse])
   }
 
@@ -169,7 +169,7 @@ class CromIAMWorkflowsForJobManagerApi() {
     assert(parameters != null, "Missing required parameter 'parameters' when calling CromIAMWorkflowsForJobManagerApi->apiWorkflowsVersionQueryPost")
 
     basicRequest
-      .post(uri"https://localhost/api/workflows/${version}/query")
+      .post(uri"https://api.firecloud.org/api/workflows/${version}/query")
       .body(parameters)
       .response(asJson[WorkflowQueryResponse])
   }

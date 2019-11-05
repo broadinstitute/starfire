@@ -35,11 +35,11 @@ import sttp.client._
 import sttp.client.circe._
 import io.circe.generic.auto._
 
-import org.broadinstitute.starfire.Decoders._
-import org.broadinstitute.starfire.Encoders._
-import org.broadinstitute.starfire.SttpUtils.Implicits._
+import io.swagger.sttp.utils.Decoders._
+import io.swagger.sttp.utils.Encoders._
+import io.swagger.sttp.utils.SttpUtils.Implicits._
 
-class LibraryApi() {
+object LibraryApi {
 
   /**
    * Data Use Search ingest
@@ -53,7 +53,7 @@ class LibraryApi() {
     assert(body != null, "Missing required parameter 'body' when calling LibraryApi->dataIngest")
 
     basicRequest
-      .post(uri"https://localhost/duos/structuredData")
+      .post(uri"https://api.firecloud.org/duos/structuredData")
       .body(body)
       .response(asJson[Unit])
   }
@@ -70,7 +70,7 @@ class LibraryApi() {
     assert(queryTerm != null, "Missing required parameter 'queryTerm' when calling LibraryApi->duosAutocomplete")
 
     basicRequest
-      .get(uri"https://localhost/duos/autocomplete/${queryTerm}")
+      .get(uri"https://api.firecloud.org/duos/autocomplete/${queryTerm}")
       .response(asJson[Unit])
   }
 
@@ -86,7 +86,7 @@ class LibraryApi() {
     assert(orspId != null, "Missing required parameter 'orspId' when calling LibraryApi->duosConsentOrspId")
 
     basicRequest
-      .get(uri"https://localhost/api/duos/consent/orsp/${orspId}")
+      .get(uri"https://api.firecloud.org/api/duos/consent/orsp/${orspId}")
       .response(asJson[Consent])
   }
 
@@ -102,7 +102,7 @@ class LibraryApi() {
     assert(body != null, "Missing required parameter 'body' when calling LibraryApi->duosResearchPurposeQuery")
 
     basicRequest
-      .post(uri"https://localhost/duos/researchPurposeQuery")
+      .post(uri"https://api.firecloud.org/duos/researchPurposeQuery")
       .body(body)
       .response(asJson[Unit])
   }
@@ -119,7 +119,7 @@ class LibraryApi() {
     ): Request[Either[ResponseError[io.circe.Error],Unit],Nothing] = {
 
     basicRequest
-      .post(uri"https://localhost/api/library/search")
+      .post(uri"https://api.firecloud.org/api/library/search")
       .body(searchParams)
       .response(asJson[Unit])
   }
@@ -139,7 +139,7 @@ class LibraryApi() {
     assert(workspaceName != null, "Missing required parameter 'workspaceName' when calling LibraryApi->getDiscoverableGroups")
 
     basicRequest
-      .get(uri"https://localhost/api/library/${workspaceNamespace}/${workspaceName}/discoverableGroups")
+      .get(uri"https://api.firecloud.org/api/library/${workspaceNamespace}/${workspaceName}/discoverableGroups")
       .response(asJson[StringArray])
   }
 
@@ -158,7 +158,7 @@ class LibraryApi() {
     assert(workspaceName != null, "Missing required parameter 'workspaceName' when calling LibraryApi->getLibraryMetadata")
 
     basicRequest
-      .get(uri"https://localhost/api/library/${workspaceNamespace}/${workspaceName}/metadata")
+      .get(uri"https://api.firecloud.org/api/library/${workspaceNamespace}/${workspaceName}/metadata")
       .response(asJson[LibraryMetadataInput])
   }
 
@@ -172,7 +172,7 @@ class LibraryApi() {
     ): Request[Either[ResponseError[io.circe.Error],List[String]],Nothing] = {
 
     basicRequest
-      .get(uri"https://localhost/api/library/groups")
+      .get(uri"https://api.firecloud.org/api/library/groups")
       .response(asJson[List[String]])
   }
 
@@ -191,7 +191,7 @@ class LibraryApi() {
     assert(q != null, "Missing required parameter 'q' when calling LibraryApi->populateSuggest")
 
     basicRequest
-      .get(uri"https://localhost/api/library/populate/suggest/${field}?q=${q}")
+      .get(uri"https://api.firecloud.org/api/library/populate/suggest/${field}?q=${q}")
       .response(asJson[Unit])
   }
 
@@ -210,7 +210,7 @@ class LibraryApi() {
     assert(workspaceName != null, "Missing required parameter 'workspaceName' when calling LibraryApi->publishLibraryWorkspace")
 
     basicRequest
-      .post(uri"https://localhost/api/library/${workspaceNamespace}/${workspaceName}/published")
+      .post(uri"https://api.firecloud.org/api/library/${workspaceNamespace}/${workspaceName}/published")
       .response(asJson[Workspace])
   }
 
@@ -235,7 +235,7 @@ class LibraryApi() {
     assert(libraryMetadataJson != null, "Missing required parameter 'libraryMetadataJson' when calling LibraryApi->putLibraryMetadata")
 
     basicRequest
-      .put(uri"https://localhost/api/library/${workspaceNamespace}/${workspaceName}/metadata?validate=${validate}")
+      .put(uri"https://api.firecloud.org/api/library/${workspaceNamespace}/${workspaceName}/metadata?validate=${validate}")
       .body(libraryMetadataJson)
       .response(asJson[Workspace])
   }
@@ -250,7 +250,7 @@ class LibraryApi() {
     ): Request[Either[ResponseError[io.circe.Error],LibraryBulkIndexResponse],Nothing] = {
 
     basicRequest
-      .post(uri"https://localhost/api/library/admin/reindex")
+      .post(uri"https://api.firecloud.org/api/library/admin/reindex")
       .response(asJson[LibraryBulkIndexResponse])
   }
 
@@ -266,7 +266,7 @@ class LibraryApi() {
     ): Request[Either[ResponseError[io.circe.Error],Unit],Nothing] = {
 
     basicRequest
-      .post(uri"https://localhost/api/library/suggest")
+      .post(uri"https://api.firecloud.org/api/library/suggest")
       .body(searchParams)
       .response(asJson[Unit])
   }
@@ -286,7 +286,7 @@ class LibraryApi() {
     assert(workspaceName != null, "Missing required parameter 'workspaceName' when calling LibraryApi->unpublishLibraryWorkspace")
 
     basicRequest
-      .delete(uri"https://localhost/api/library/${workspaceNamespace}/${workspaceName}/published")
+      .delete(uri"https://api.firecloud.org/api/library/${workspaceNamespace}/${workspaceName}/published")
       .response(asJson[Workspace])
   }
 
@@ -308,7 +308,7 @@ class LibraryApi() {
     assert(discoverableGroups != null, "Missing required parameter 'discoverableGroups' when calling LibraryApi->updateDiscoverableGroups")
 
     basicRequest
-      .put(uri"https://localhost/api/library/${workspaceNamespace}/${workspaceName}/discoverableGroups")
+      .put(uri"https://api.firecloud.org/api/library/${workspaceNamespace}/${workspaceName}/discoverableGroups")
       .body(discoverableGroups)
       .response(asJson[Workspace])
   }

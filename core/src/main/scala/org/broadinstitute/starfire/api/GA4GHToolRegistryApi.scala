@@ -29,11 +29,11 @@ import sttp.client._
 import sttp.client.circe._
 import io.circe.generic.auto._
 
-import org.broadinstitute.starfire.Decoders._
-import org.broadinstitute.starfire.Encoders._
-import org.broadinstitute.starfire.SttpUtils.Implicits._
+import io.swagger.sttp.utils.Decoders._
+import io.swagger.sttp.utils.Encoders._
+import io.swagger.sttp.utils.SttpUtils.Implicits._
 
-class GA4GHToolRegistryApi() {
+object GA4GHToolRegistryApi {
 
   /**
    * Return some metadata that is useful for describing this registry
@@ -45,7 +45,7 @@ class GA4GHToolRegistryApi() {
     ): Request[Either[ResponseError[io.circe.Error],Metadata],Nothing] = {
 
     basicRequest
-      .get(uri"https://localhost/ga4gh/v1/metadata")
+      .get(uri"https://api.firecloud.org/ga4gh/v1/metadata")
       .response(asJson[Metadata])
   }
 
@@ -59,7 +59,7 @@ class GA4GHToolRegistryApi() {
     ): Request[Either[ResponseError[io.circe.Error],List[ToolClass]],Nothing] = {
 
     basicRequest
-      .get(uri"https://localhost/ga4gh/v1/tool-classes")
+      .get(uri"https://api.firecloud.org/ga4gh/v1/tool-classes")
       .response(asJson[List[ToolClass]])
   }
 
@@ -73,7 +73,7 @@ class GA4GHToolRegistryApi() {
     ): Request[Either[ResponseError[io.circe.Error],List[Tool]],Nothing] = {
 
     basicRequest
-      .get(uri"https://localhost/ga4gh/v1/tools")
+      .get(uri"https://api.firecloud.org/ga4gh/v1/tools")
       .response(asJson[List[Tool]])
   }
 
@@ -89,7 +89,7 @@ class GA4GHToolRegistryApi() {
     assert(id != null, "Missing required parameter 'id' when calling GA4GHToolRegistryApi->ga4ghV1ToolsIdGet")
 
     basicRequest
-      .get(uri"https://localhost/ga4gh/v1/tools/${id}")
+      .get(uri"https://api.firecloud.org/ga4gh/v1/tools/${id}")
       .response(asJson[Tool])
   }
 
@@ -105,7 +105,7 @@ class GA4GHToolRegistryApi() {
     assert(id != null, "Missing required parameter 'id' when calling GA4GHToolRegistryApi->ga4ghV1ToolsIdVersionsGet")
 
     basicRequest
-      .get(uri"https://localhost/ga4gh/v1/tools/${id}/versions")
+      .get(uri"https://api.firecloud.org/ga4gh/v1/tools/${id}/versions")
       .response(asJson[List[ToolVersion]])
   }
 
@@ -124,7 +124,7 @@ class GA4GHToolRegistryApi() {
     assert(versionId != null, "Missing required parameter 'versionId' when calling GA4GHToolRegistryApi->ga4ghV1ToolsIdVersionsVersionIdGet")
 
     basicRequest
-      .get(uri"https://localhost/ga4gh/v1/tools/${id}/versions/${versionId}")
+      .get(uri"https://api.firecloud.org/ga4gh/v1/tools/${id}/versions/${versionId}")
       .response(asJson[ToolVersion])
   }
 
@@ -146,7 +146,7 @@ class GA4GHToolRegistryApi() {
     assert(versionId != null, "Missing required parameter 'versionId' when calling GA4GHToolRegistryApi->ga4ghV1ToolsIdVersionsVersionIdTypeDescriptorGet")
 
     basicRequest
-      .get(uri"https://localhost/ga4gh/v1/tools/${id}/versions/${versionId}/${`type`}/descriptor")
+      .get(uri"https://api.firecloud.org/ga4gh/v1/tools/${id}/versions/${versionId}/${`type`}/descriptor")
       .response(asJson[ToolDescriptor])
   }
 

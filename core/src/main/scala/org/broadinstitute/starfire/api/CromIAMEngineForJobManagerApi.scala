@@ -21,11 +21,11 @@ import sttp.client._
 import sttp.client.circe._
 import io.circe.generic.auto._
 
-import org.broadinstitute.starfire.Decoders._
-import org.broadinstitute.starfire.Encoders._
-import org.broadinstitute.starfire.SttpUtils.Implicits._
+import io.swagger.sttp.utils.Decoders._
+import io.swagger.sttp.utils.Encoders._
+import io.swagger.sttp.utils.SttpUtils.Implicits._
 
-class CromIAMEngineForJobManagerApi() {
+object CromIAMEngineForJobManagerApi {
 
   /**
    * Returns the current health status of any monitored subsystems
@@ -39,7 +39,7 @@ class CromIAMEngineForJobManagerApi() {
     assert(version != null, "Missing required parameter 'version' when calling CromIAMEngineForJobManagerApi->engineVersionStatusGet")
 
     basicRequest
-      .get(uri"https://localhost/engine/${version}/status")
+      .get(uri"https://api.firecloud.org/engine/${version}/status")
       .response(asJson[StatusResponse])
   }
 
@@ -55,7 +55,7 @@ class CromIAMEngineForJobManagerApi() {
     assert(version != null, "Missing required parameter 'version' when calling CromIAMEngineForJobManagerApi->engineVersionVersionGet")
 
     basicRequest
-      .get(uri"https://localhost/engine/${version}/version")
+      .get(uri"https://api.firecloud.org/engine/${version}/version")
       .response(asJson[VersionResponse])
   }
 

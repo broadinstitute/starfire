@@ -21,11 +21,11 @@ import sttp.client._
 import sttp.client.circe._
 import io.circe.generic.auto._
 
-import org.broadinstitute.starfire.Decoders._
-import org.broadinstitute.starfire.Encoders._
-import org.broadinstitute.starfire.SttpUtils.Implicits._
+import io.swagger.sttp.utils.Decoders._
+import io.swagger.sttp.utils.Encoders._
+import io.swagger.sttp.utils.SttpUtils.Implicits._
 
-class NIHApi() {
+object NIHApi {
 
   /**
    * Updates a user&#39;s NIH link from a JWT
@@ -39,7 +39,7 @@ class NIHApi() {
     assert(jwt != null, "Missing required parameter 'jwt' when calling NIHApi->nIHCallback")
 
     basicRequest
-      .post(uri"https://localhost/api/nih/callback")
+      .post(uri"https://api.firecloud.org/api/nih/callback")
       .body(jwt)
       .response(asJson[NihStatus])
   }
@@ -54,7 +54,7 @@ class NIHApi() {
     ): Request[Either[ResponseError[io.circe.Error],NihStatus],Nothing] = {
 
     basicRequest
-      .get(uri"https://localhost/api/nih/status")
+      .get(uri"https://api.firecloud.org/api/nih/status")
       .response(asJson[NihStatus])
   }
 

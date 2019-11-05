@@ -23,11 +23,11 @@ import sttp.client._
 import sttp.client.circe._
 import io.circe.generic.auto._
 
-import org.broadinstitute.starfire.Decoders._
-import org.broadinstitute.starfire.Encoders._
-import org.broadinstitute.starfire.SttpUtils.Implicits._
+import io.swagger.sttp.utils.Decoders._
+import io.swagger.sttp.utils.Encoders._
+import io.swagger.sttp.utils.SttpUtils.Implicits._
 
-class BillingApi() {
+object BillingApi {
 
   /**
    * add user to billing project the caller owns
@@ -47,7 +47,7 @@ class BillingApi() {
     assert(email != null, "Missing required parameter 'email' when calling BillingApi->addUserToBillingProject")
 
     basicRequest
-      .put(uri"https://localhost/api/billing/${projectId}/${workbenchRole}/${email}")
+      .put(uri"https://api.firecloud.org/api/billing/${projectId}/${workbenchRole}/${email}")
       .response(asJson[Unit])
   }
 
@@ -63,7 +63,7 @@ class BillingApi() {
     assert(createProjectRequest != null, "Missing required parameter 'createProjectRequest' when calling BillingApi->createBillingProjectFull")
 
     basicRequest
-      .post(uri"https://localhost/api/billing")
+      .post(uri"https://api.firecloud.org/api/billing")
       .body(createProjectRequest)
       .response(asJson[Unit])
   }
@@ -86,7 +86,7 @@ class BillingApi() {
     assert(email != null, "Missing required parameter 'email' when calling BillingApi->grantGoogleRoleToUser")
 
     basicRequest
-      .put(uri"https://localhost/api/billing/${projectId}/googleRole/${role}/${email}")
+      .put(uri"https://api.firecloud.org/api/billing/${projectId}/googleRole/${role}/${email}")
       .response(asJson[Unit])
   }
 
@@ -102,7 +102,7 @@ class BillingApi() {
     assert(projectId != null, "Missing required parameter 'projectId' when calling BillingApi->listBillingProjectMembers")
 
     basicRequest
-      .get(uri"https://localhost/api/billing/${projectId}/members")
+      .get(uri"https://api.firecloud.org/api/billing/${projectId}/members")
       .response(asJson[List[BillingProjectMember]])
   }
 
@@ -124,7 +124,7 @@ class BillingApi() {
     assert(email != null, "Missing required parameter 'email' when calling BillingApi->removeGoogleRoleFromUser")
 
     basicRequest
-      .delete(uri"https://localhost/api/billing/${projectId}/googleRole/${role}/${email}")
+      .delete(uri"https://api.firecloud.org/api/billing/${projectId}/googleRole/${role}/${email}")
       .response(asJson[Unit])
   }
 
@@ -146,7 +146,7 @@ class BillingApi() {
     assert(email != null, "Missing required parameter 'email' when calling BillingApi->removeUserFromBillingProject")
 
     basicRequest
-      .delete(uri"https://localhost/api/billing/${projectId}/${workbenchRole}/${email}")
+      .delete(uri"https://api.firecloud.org/api/billing/${projectId}/${workbenchRole}/${email}")
       .response(asJson[Unit])
   }
 

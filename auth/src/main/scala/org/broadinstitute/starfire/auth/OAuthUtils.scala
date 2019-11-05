@@ -3,7 +3,6 @@ package org.broadinstitute.starfire.auth
 import java.time.Instant
 
 import better.files.File
-import com.google.auth.Credentials
 import com.google.auth.oauth2.{AccessToken, GoogleCredentials, ServiceAccountCredentials}
 import sttp.client.Request
 

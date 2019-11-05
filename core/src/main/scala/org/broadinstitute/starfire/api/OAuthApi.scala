@@ -21,11 +21,11 @@ import sttp.client._
 import sttp.client.circe._
 import io.circe.generic.auto._
 
-import org.broadinstitute.starfire.Decoders._
-import org.broadinstitute.starfire.Encoders._
-import org.broadinstitute.starfire.SttpUtils.Implicits._
+import io.swagger.sttp.utils.Decoders._
+import io.swagger.sttp.utils.Encoders._
+import io.swagger.sttp.utils.SttpUtils.Implicits._
 
-class OAuthApi() {
+object OAuthApi {
 
   /**
    * deprecated
@@ -37,7 +37,7 @@ class OAuthApi() {
     ): Request[Either[ResponseError[io.circe.Error],Json],Nothing] = {
 
     basicRequest
-      .get(uri"https://localhost/api/refresh-token-status")
+      .get(uri"https://api.firecloud.org/api/refresh-token-status")
       .response(asJson[Json])
   }
 
@@ -53,7 +53,7 @@ class OAuthApi() {
     ): Request[Either[ResponseError[io.circe.Error],Unit],Nothing] = {
 
     basicRequest
-      .post(uri"https://localhost/handle-oauth-code")
+      .post(uri"https://api.firecloud.org/handle-oauth-code")
       .body(body)
       .response(asJson[Unit])
   }

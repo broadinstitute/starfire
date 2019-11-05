@@ -35,11 +35,11 @@ import sttp.client._
 import sttp.client.circe._
 import io.circe.generic.auto._
 
-import org.broadinstitute.starfire.Decoders._
-import org.broadinstitute.starfire.Encoders._
-import org.broadinstitute.starfire.SttpUtils.Implicits._
+import io.swagger.sttp.utils.Decoders._
+import io.swagger.sttp.utils.Encoders._
+import io.swagger.sttp.utils.SttpUtils.Implicits._
 
-class MethodConfigurationsApi() {
+object MethodConfigurationsApi {
 
   /**
    * Copy a Method Repository Configuration into a workspace
@@ -59,7 +59,7 @@ class MethodConfigurationsApi() {
     assert(configToCopy != null, "Missing required parameter 'configToCopy' when calling MethodConfigurationsApi->copyFromMethodRepo")
 
     basicRequest
-      .post(uri"https://localhost/api/workspaces/${workspaceNamespace}/${workspaceName}/method_configs/copyFromMethodRepo")
+      .post(uri"https://api.firecloud.org/api/workspaces/${workspaceNamespace}/${workspaceName}/method_configs/copyFromMethodRepo")
       .body(configToCopy)
       .response(asJson[Unit])
   }
@@ -82,7 +82,7 @@ class MethodConfigurationsApi() {
     assert(configToCopy != null, "Missing required parameter 'configToCopy' when calling MethodConfigurationsApi->copyToMethodRepo")
 
     basicRequest
-      .post(uri"https://localhost/api/workspaces/${workspaceNamespace}/${workspaceName}/method_configs/copyToMethodRepo")
+      .post(uri"https://api.firecloud.org/api/workspaces/${workspaceNamespace}/${workspaceName}/method_configs/copyToMethodRepo")
       .body(configToCopy)
       .response(asJson[Unit])
   }
@@ -108,7 +108,7 @@ class MethodConfigurationsApi() {
     assert(configName != null, "Missing required parameter 'configName' when calling MethodConfigurationsApi->deleteWorkspaceMethodConfig")
 
     basicRequest
-      .delete(uri"https://localhost/api/workspaces/${workspaceNamespace}/${workspaceName}/method_configs/${configNamespace}/${configName}")
+      .delete(uri"https://api.firecloud.org/api/workspaces/${workspaceNamespace}/${workspaceName}/method_configs/${configNamespace}/${configName}")
       .response(asJson[Unit])
   }
 
@@ -133,7 +133,7 @@ class MethodConfigurationsApi() {
     assert(configName != null, "Missing required parameter 'configName' when calling MethodConfigurationsApi->getWorkspaceMethodConfig")
 
     basicRequest
-      .get(uri"https://localhost/api/workspaces/${workspaceNamespace}/${workspaceName}/method_configs/${configNamespace}/${configName}")
+      .get(uri"https://api.firecloud.org/api/workspaces/${workspaceNamespace}/${workspaceName}/method_configs/${configNamespace}/${configName}")
       .response(asJson[Unit])
   }
 
@@ -147,7 +147,7 @@ class MethodConfigurationsApi() {
     ): Request[Either[ResponseError[io.circe.Error],UserImportPermission],Nothing] = {
 
     basicRequest
-      .get(uri"https://localhost/api/profile/importstatus")
+      .get(uri"https://api.firecloud.org/api/profile/importstatus")
       .response(asJson[UserImportPermission])
   }
 
@@ -169,7 +169,7 @@ class MethodConfigurationsApi() {
     assert(workspaceName != null, "Missing required parameter 'workspaceName' when calling MethodConfigurationsApi->listWorkspaceMethodConfigs")
 
     basicRequest
-      .get(uri"https://localhost/api/workspaces/${workspaceNamespace}/${workspaceName}/methodconfigs?allRepos=${allRepos}")
+      .get(uri"https://api.firecloud.org/api/workspaces/${workspaceNamespace}/${workspaceName}/methodconfigs?allRepos=${allRepos}")
       .response(asJson[Unit])
   }
 
@@ -197,7 +197,7 @@ class MethodConfigurationsApi() {
     assert(body != null, "Missing required parameter 'body' when calling MethodConfigurationsApi->overwriteWorkspaceMethodConfig")
 
     basicRequest
-      .put(uri"https://localhost/api/workspaces/${workspaceNamespace}/${workspaceName}/method_configs/${configNamespace}/${configName}")
+      .put(uri"https://api.firecloud.org/api/workspaces/${workspaceNamespace}/${workspaceName}/method_configs/${configNamespace}/${configName}")
       .body(body)
       .response(asJson[Unit])
   }
@@ -220,7 +220,7 @@ class MethodConfigurationsApi() {
     assert(methodConfigJson != null, "Missing required parameter 'methodConfigJson' when calling MethodConfigurationsApi->postWorkspaceMethodConfig")
 
     basicRequest
-      .post(uri"https://localhost/api/workspaces/${workspaceNamespace}/${workspaceName}/methodconfigs")
+      .post(uri"https://api.firecloud.org/api/workspaces/${workspaceNamespace}/${workspaceName}/methodconfigs")
       .body(methodConfigJson)
       .response(asJson[Unit])
   }
@@ -249,7 +249,7 @@ class MethodConfigurationsApi() {
     assert(rename != null, "Missing required parameter 'rename' when calling MethodConfigurationsApi->renameWorkspaceMethodConfig")
 
     basicRequest
-      .post(uri"https://localhost/api/workspaces/${workspaceNamespace}/${workspaceName}/method_configs/${configNamespace}/${configName}/rename")
+      .post(uri"https://api.firecloud.org/api/workspaces/${workspaceNamespace}/${workspaceName}/method_configs/${configNamespace}/${configName}/rename")
       .body(rename)
       .response(asJson[Unit])
   }
@@ -278,7 +278,7 @@ class MethodConfigurationsApi() {
     assert(body != null, "Missing required parameter 'body' when calling MethodConfigurationsApi->updateWorkspaceMethodConfig")
 
     basicRequest
-      .post(uri"https://localhost/api/workspaces/${workspaceNamespace}/${workspaceName}/method_configs/${configNamespace}/${configName}")
+      .post(uri"https://api.firecloud.org/api/workspaces/${workspaceNamespace}/${workspaceName}/method_configs/${configNamespace}/${configName}")
       .body(body)
       .response(asJson[Unit])
   }
@@ -304,7 +304,7 @@ class MethodConfigurationsApi() {
     assert(configName != null, "Missing required parameter 'configName' when calling MethodConfigurationsApi->validateMethodConfiguration")
 
     basicRequest
-      .get(uri"https://localhost/api/workspaces/${workspaceNamespace}/${workspaceName}/method_configs/${configNamespace}/${configName}/validate")
+      .get(uri"https://api.firecloud.org/api/workspaces/${workspaceNamespace}/${workspaceName}/method_configs/${configNamespace}/${configName}/validate")
       .response(asJson[ValidatedMethodConfiguration])
   }
 
@@ -326,7 +326,7 @@ class MethodConfigurationsApi() {
     assert(reportInput != null, "Missing required parameter 'reportInput' when calling MethodConfigurationsApi->workspacePermissionReport")
 
     basicRequest
-      .post(uri"https://localhost/api/workspaces/${workspaceNamespace}/${workspaceName}/permissionReport")
+      .post(uri"https://api.firecloud.org/api/workspaces/${workspaceNamespace}/${workspaceName}/permissionReport")
       .body(reportInput)
       .response(asJson[PermissionReport])
   }

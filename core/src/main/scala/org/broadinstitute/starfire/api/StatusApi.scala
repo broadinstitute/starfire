@@ -19,11 +19,11 @@ import sttp.client._
 import sttp.client.circe._
 import io.circe.generic.auto._
 
-import org.broadinstitute.starfire.Decoders._
-import org.broadinstitute.starfire.Encoders._
-import org.broadinstitute.starfire.SttpUtils.Implicits._
+import io.swagger.sttp.utils.Decoders._
+import io.swagger.sttp.utils.Encoders._
+import io.swagger.sttp.utils.SttpUtils.Implicits._
 
-class StatusApi() {
+object StatusApi {
 
   /**
    * An error status endpoint for load balancing purposes 
@@ -35,7 +35,7 @@ class StatusApi() {
     ): Request[Either[ResponseError[io.circe.Error],Unit],Nothing] = {
 
     basicRequest
-      .get(uri"https://localhost/error")
+      .get(uri"https://api.firecloud.org/error")
       .response(asJson[Unit])
   }
 
@@ -49,7 +49,7 @@ class StatusApi() {
     ): Request[Either[ResponseError[io.circe.Error],Unit],Nothing] = {
 
     basicRequest
-      .get(uri"https://localhost/health")
+      .get(uri"https://api.firecloud.org/health")
       .response(asJson[Unit])
   }
 
@@ -63,7 +63,7 @@ class StatusApi() {
     ): Request[Either[ResponseError[io.circe.Error],SystemStatus],Nothing] = {
 
     basicRequest
-      .get(uri"https://localhost/status")
+      .get(uri"https://api.firecloud.org/status")
       .response(asJson[SystemStatus])
   }
 

@@ -23,11 +23,11 @@ import sttp.client._
 import sttp.client.circe._
 import io.circe.generic.auto._
 
-import org.broadinstitute.starfire.Decoders._
-import org.broadinstitute.starfire.Encoders._
-import org.broadinstitute.starfire.SttpUtils.Implicits._
+import io.swagger.sttp.utils.Decoders._
+import io.swagger.sttp.utils.Encoders._
+import io.swagger.sttp.utils.SttpUtils.Implicits._
 
-class GroupsApi() {
+object GroupsApi {
 
   /**
    * add a user to a group the caller owns
@@ -47,7 +47,7 @@ class GroupsApi() {
     assert(email != null, "Missing required parameter 'email' when calling GroupsApi->addUserToGroup")
 
     basicRequest
-      .put(uri"https://localhost/api/groups/${groupName}/${role}/${email}")
+      .put(uri"https://api.firecloud.org/api/groups/${groupName}/${role}/${email}")
       .response(asJson[Unit])
   }
 
@@ -63,7 +63,7 @@ class GroupsApi() {
     assert(groupName != null, "Missing required parameter 'groupName' when calling GroupsApi->createGroup")
 
     basicRequest
-      .post(uri"https://localhost/api/groups/${groupName}")
+      .post(uri"https://api.firecloud.org/api/groups/${groupName}")
       .response(asJson[ManagedGroupWithMembers])
   }
 
@@ -79,7 +79,7 @@ class GroupsApi() {
     assert(groupName != null, "Missing required parameter 'groupName' when calling GroupsApi->deleteGroup")
 
     basicRequest
-      .delete(uri"https://localhost/api/groups/${groupName}")
+      .delete(uri"https://api.firecloud.org/api/groups/${groupName}")
       .response(asJson[Unit])
   }
 
@@ -95,7 +95,7 @@ class GroupsApi() {
     assert(groupName != null, "Missing required parameter 'groupName' when calling GroupsApi->getGroup")
 
     basicRequest
-      .get(uri"https://localhost/api/groups/${groupName}")
+      .get(uri"https://api.firecloud.org/api/groups/${groupName}")
       .response(asJson[ManagedGroupWithMembers])
   }
 
@@ -109,7 +109,7 @@ class GroupsApi() {
     ): Request[Either[ResponseError[io.circe.Error],List[ManagedGroupAccessResponse]],Nothing] = {
 
     basicRequest
-      .get(uri"https://localhost/api/groups")
+      .get(uri"https://api.firecloud.org/api/groups")
       .response(asJson[List[ManagedGroupAccessResponse]])
   }
 
@@ -131,7 +131,7 @@ class GroupsApi() {
     assert(email != null, "Missing required parameter 'email' when calling GroupsApi->removeUserFromGroup")
 
     basicRequest
-      .delete(uri"https://localhost/api/groups/${groupName}/${role}/${email}")
+      .delete(uri"https://api.firecloud.org/api/groups/${groupName}/${role}/${email}")
       .response(asJson[Unit])
   }
 
@@ -147,7 +147,7 @@ class GroupsApi() {
     assert(groupName != null, "Missing required parameter 'groupName' when calling GroupsApi->requestAccessToGroup")
 
     basicRequest
-      .post(uri"https://localhost/api/groups/${groupName}/requestAccess")
+      .post(uri"https://api.firecloud.org/api/groups/${groupName}/requestAccess")
       .response(asJson[Unit])
   }
 

@@ -45,11 +45,11 @@ import sttp.client._
 import sttp.client.circe._
 import io.circe.generic.auto._
 
-import org.broadinstitute.starfire.Decoders._
-import org.broadinstitute.starfire.Encoders._
-import org.broadinstitute.starfire.SttpUtils.Implicits._
+import io.swagger.sttp.utils.Decoders._
+import io.swagger.sttp.utils.Encoders._
+import io.swagger.sttp.utils.SttpUtils.Implicits._
 
-class MethodRepositoryApi() {
+object MethodRepositoryApi {
 
   /**
    * Redact a single configuration.
@@ -69,7 +69,7 @@ class MethodRepositoryApi() {
     assert(snapshotId != null, "Missing required parameter 'snapshotId' when calling MethodRepositoryApi->apiConfigurationsNamespaceNameSnapshotIdDelete")
 
     basicRequest
-      .delete(uri"https://localhost/api/configurations/${namespace}/${name}/${snapshotId}")
+      .delete(uri"https://api.firecloud.org/api/configurations/${namespace}/${name}/${snapshotId}")
       .response(asJson[Integer])
   }
 
@@ -85,7 +85,7 @@ class MethodRepositoryApi() {
     ): Request[Either[ResponseError[io.circe.Error],ConfigurationResponse],Nothing] = {
 
     basicRequest
-      .post(uri"https://localhost/api/configurations")
+      .post(uri"https://api.firecloud.org/api/configurations")
       .body(body)
       .response(asJson[ConfigurationResponse])
   }
@@ -100,7 +100,7 @@ class MethodRepositoryApi() {
     ): Request[Either[ResponseError[io.circe.Error],List[MethodDefinition]],Nothing] = {
 
     basicRequest
-      .get(uri"https://localhost/api/methods/definitions")
+      .get(uri"https://api.firecloud.org/api/methods/definitions")
       .response(asJson[List[MethodDefinition]])
   }
 
@@ -119,7 +119,7 @@ class MethodRepositoryApi() {
     assert(name != null, "Missing required parameter 'name' when calling MethodRepositoryApi->apiMethodsNamespaceNameConfigurationsGet")
 
     basicRequest
-      .get(uri"https://localhost/api/methods/${namespace}/${name}/configurations")
+      .get(uri"https://api.firecloud.org/api/methods/${namespace}/${name}/configurations")
       .response(asJson[List[ConfigurationResponseWithPayloadObject]])
   }
 
@@ -141,7 +141,7 @@ class MethodRepositoryApi() {
     assert(snapshotId != null, "Missing required parameter 'snapshotId' when calling MethodRepositoryApi->apiMethodsNamespaceNameSnapshotIdConfigurationsGet")
 
     basicRequest
-      .get(uri"https://localhost/api/methods/${namespace}/${name}/${snapshotId}/configurations")
+      .get(uri"https://api.firecloud.org/api/methods/${namespace}/${name}/${snapshotId}/configurations")
       .response(asJson[List[ConfigurationResponseWithPayloadObject]])
   }
 
@@ -163,7 +163,7 @@ class MethodRepositoryApi() {
     assert(snapshotId != null, "Missing required parameter 'snapshotId' when calling MethodRepositoryApi->apiMethodsNamespaceNameSnapshotIdDelete")
 
     basicRequest
-      .delete(uri"https://localhost/api/methods/${namespace}/${name}/${snapshotId}")
+      .delete(uri"https://api.firecloud.org/api/methods/${namespace}/${name}/${snapshotId}")
       .response(asJson[Integer])
   }
 
@@ -188,7 +188,7 @@ class MethodRepositoryApi() {
     assert(snapshotId != null, "Missing required parameter 'snapshotId' when calling MethodRepositoryApi->apiMethodsNamespaceNameSnapshotIdGet")
 
     basicRequest
-      .get(uri"https://localhost/api/methods/${namespace}/${name}/${snapshotId}?onlyPayload=${onlyPayload}")
+      .get(uri"https://api.firecloud.org/api/methods/${namespace}/${name}/${snapshotId}?onlyPayload=${onlyPayload}")
       .response(asJson[MethodResponse])
   }
 
@@ -215,7 +215,7 @@ class MethodRepositoryApi() {
     assert(snapshotId != null, "Missing required parameter 'snapshotId' when calling MethodRepositoryApi->apiMethodsNamespaceNameSnapshotIdPost")
 
     basicRequest
-      .post(uri"https://localhost/api/methods/${namespace}/${name}/${snapshotId}?redact=${redact}")
+      .post(uri"https://api.firecloud.org/api/methods/${namespace}/${name}/${snapshotId}?redact=${redact}")
       .body(body)
       .response(asJson[MethodResponse])
   }
@@ -232,7 +232,7 @@ class MethodRepositoryApi() {
     ): Request[Either[ResponseError[io.circe.Error],MethodResponse],Nothing] = {
 
     basicRequest
-      .post(uri"https://localhost/api/methods")
+      .post(uri"https://api.firecloud.org/api/methods")
       .body(body)
       .response(asJson[MethodResponse])
   }
@@ -255,7 +255,7 @@ class MethodRepositoryApi() {
     assert(configToCopy != null, "Missing required parameter 'configToCopy' when calling MethodRepositoryApi->copyFromMethodRepo")
 
     basicRequest
-      .post(uri"https://localhost/api/workspaces/${workspaceNamespace}/${workspaceName}/method_configs/copyFromMethodRepo")
+      .post(uri"https://api.firecloud.org/api/workspaces/${workspaceNamespace}/${workspaceName}/method_configs/copyFromMethodRepo")
       .body(configToCopy)
       .response(asJson[Unit])
   }
@@ -278,7 +278,7 @@ class MethodRepositoryApi() {
     assert(configToCopy != null, "Missing required parameter 'configToCopy' when calling MethodRepositoryApi->copyToMethodRepo")
 
     basicRequest
-      .post(uri"https://localhost/api/workspaces/${workspaceNamespace}/${workspaceName}/method_configs/copyToMethodRepo")
+      .post(uri"https://api.firecloud.org/api/workspaces/${workspaceNamespace}/${workspaceName}/method_configs/copyToMethodRepo")
       .body(configToCopy)
       .response(asJson[Unit])
   }
@@ -295,7 +295,7 @@ class MethodRepositoryApi() {
     assert(methodName != null, "Missing required parameter 'methodName' when calling MethodRepositoryApi->createMethodTemplate")
 
     basicRequest
-      .post(uri"https://localhost/api/template")
+      .post(uri"https://api.firecloud.org/api/template")
       .body(methodName)
       .response(asJson[Unit])
   }
@@ -318,7 +318,7 @@ class MethodRepositoryApi() {
     assert(snapshotId != null, "Missing required parameter 'snapshotId' when calling MethodRepositoryApi->getConfigACL")
 
     basicRequest
-      .get(uri"https://localhost/api/configurations/${namespace}/${name}/${snapshotId}/permissions")
+      .get(uri"https://api.firecloud.org/api/configurations/${namespace}/${name}/${snapshotId}/permissions")
       .response(asJson[MethodConfigACL])
   }
 
@@ -334,7 +334,7 @@ class MethodRepositoryApi() {
     assert(namespace != null, "Missing required parameter 'namespace' when calling MethodRepositoryApi->getConfigNamespaceACL")
 
     basicRequest
-      .get(uri"https://localhost/api/configurations/${namespace}/permissions")
+      .get(uri"https://api.firecloud.org/api/configurations/${namespace}/permissions")
       .response(asJson[MethodConfigACL])
   }
 
@@ -356,7 +356,7 @@ class MethodRepositoryApi() {
     assert(snapshotId != null, "Missing required parameter 'snapshotId' when calling MethodRepositoryApi->getMethodACL")
 
     basicRequest
-      .get(uri"https://localhost/api/methods/${namespace}/${name}/${snapshotId}/permissions")
+      .get(uri"https://api.firecloud.org/api/methods/${namespace}/${name}/${snapshotId}/permissions")
       .response(asJson[MethodConfigACL])
   }
 
@@ -372,7 +372,7 @@ class MethodRepositoryApi() {
     assert(methodName != null, "Missing required parameter 'methodName' when calling MethodRepositoryApi->getMethodIO")
 
     basicRequest
-      .post(uri"https://localhost/api/inputsOutputs")
+      .post(uri"https://api.firecloud.org/api/inputsOutputs")
       .body(methodName)
       .response(asJson[Unit])
   }
@@ -389,7 +389,7 @@ class MethodRepositoryApi() {
     assert(namespace != null, "Missing required parameter 'namespace' when calling MethodRepositoryApi->getMethodNamespaceACL")
 
     basicRequest
-      .get(uri"https://localhost/api/methods/${namespace}/permissions")
+      .get(uri"https://api.firecloud.org/api/methods/${namespace}/permissions")
       .response(asJson[MethodConfigACL])
   }
 
@@ -414,7 +414,7 @@ class MethodRepositoryApi() {
     assert(snapshotId != null, "Missing required parameter 'snapshotId' when calling MethodRepositoryApi->getMethodRepositoryConfiguration")
 
     basicRequest
-      .get(uri"https://localhost/api/configurations/${namespace}/${name}/${snapshotId}?payloadAsObject=${payloadAsObject}")
+      .get(uri"https://api.firecloud.org/api/configurations/${namespace}/${name}/${snapshotId}?payloadAsObject=${payloadAsObject}")
       .response(asJson[ConfigurationResponse])
   }
 
@@ -446,7 +446,7 @@ class MethodRepositoryApi() {
     ): Request[Either[ResponseError[io.circe.Error],List[ConfigurationResponse]],Nothing] = {
 
     basicRequest
-      .get(uri"https://localhost/api/configurations?namespace=${namespace}?name=${name}?snapshotId=${snapshotId}?snapshotComment=${snapshotComment}?synopsis=${synopsis}?documentation=${documentation}?owner=${owner}?payload=${payload}?entityType=${entityType}")
+      .get(uri"https://api.firecloud.org/api/configurations?namespace=${namespace}?name=${name}?snapshotId=${snapshotId}?snapshotComment=${snapshotComment}?synopsis=${synopsis}?documentation=${documentation}?owner=${owner}?payload=${payload}?entityType=${entityType}")
       .response(asJson[List[ConfigurationResponse]])
   }
 
@@ -478,7 +478,7 @@ class MethodRepositoryApi() {
     ): Request[Either[ResponseError[io.circe.Error],List[MethodResponse]],Nothing] = {
 
     basicRequest
-      .get(uri"https://localhost/api/methods?namespace=${namespace}?name=${name}?snapshotId=${snapshotId}?snapshotComment=${snapshotComment}?synopsis=${synopsis}?documentation=${documentation}?owner=${owner}?payload=${payload}?entityType=${entityType}")
+      .get(uri"https://api.firecloud.org/api/methods?namespace=${namespace}?name=${name}?snapshotId=${snapshotId}?snapshotComment=${snapshotComment}?synopsis=${synopsis}?documentation=${documentation}?owner=${owner}?payload=${payload}?entityType=${entityType}")
       .response(asJson[List[MethodResponse]])
   }
 
@@ -494,7 +494,7 @@ class MethodRepositoryApi() {
     assert(methodacls != null, "Missing required parameter 'methodacls' when calling MethodRepositoryApi->multiUpsertMethodsACL")
 
     basicRequest
-      .put(uri"https://localhost/api/methods/permissions")
+      .put(uri"https://api.firecloud.org/api/methods/permissions")
       .body(methodacls)
       .response(asJson[List[MethodAclPair]])
   }
@@ -520,7 +520,7 @@ class MethodRepositoryApi() {
     assert(payload != null, "Missing required parameter 'payload' when calling MethodRepositoryApi->setConfigACL")
 
     basicRequest
-      .post(uri"https://localhost/api/configurations/${namespace}/${name}/${snapshotId}/permissions")
+      .post(uri"https://api.firecloud.org/api/configurations/${namespace}/${name}/${snapshotId}/permissions")
       .body(payload)
       .response(asJson[MethodConfigACL])
   }
@@ -540,7 +540,7 @@ class MethodRepositoryApi() {
     assert(payload != null, "Missing required parameter 'payload' when calling MethodRepositoryApi->setConfigNamespaceACL")
 
     basicRequest
-      .post(uri"https://localhost/api/configurations/${namespace}/permissions")
+      .post(uri"https://api.firecloud.org/api/configurations/${namespace}/permissions")
       .body(payload)
       .response(asJson[List[MethodConfigACL]])
   }
@@ -566,7 +566,7 @@ class MethodRepositoryApi() {
     assert(payload != null, "Missing required parameter 'payload' when calling MethodRepositoryApi->setMethodACL")
 
     basicRequest
-      .post(uri"https://localhost/api/methods/${namespace}/${name}/${snapshotId}/permissions")
+      .post(uri"https://api.firecloud.org/api/methods/${namespace}/${name}/${snapshotId}/permissions")
       .body(payload)
       .response(asJson[MethodConfigACL])
   }
@@ -586,7 +586,7 @@ class MethodRepositoryApi() {
     assert(payload != null, "Missing required parameter 'payload' when calling MethodRepositoryApi->setMethodNamespaceACL")
 
     basicRequest
-      .post(uri"https://localhost/api/methods/${namespace}/permissions")
+      .post(uri"https://api.firecloud.org/api/methods/${namespace}/permissions")
       .body(payload)
       .response(asJson[MethodConfigACL])
   }

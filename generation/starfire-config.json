@@ -1,0 +1,4 @@
+{
+  "apiPackage": "org.broadinstitute.starfire.api",
+  "modelPackage": "org.broadinstitute.starfire.model"
+}

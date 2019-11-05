@@ -10,12 +10,12 @@
  * Do not edit the class manually.
  */
 
-package org.broadinstitute.starfire
+package io.swagger.sttp.utils
 
 import io.circe.{Decoder, DecodingFailure, HCursor}
 import java.util.Date
-import java.io.File
 import java.text.SimpleDateFormat
+import better.files.File
 
 import io.circe.Decoder.Result
 
@@ -45,7 +45,7 @@ object Decoders {
 
   implicit val fileDecoder: Decoder[File] = new Decoder[File] {
     override def apply(cursor: HCursor): Result[File] = {
-      cursor.as[String].map(new File(_))
+      cursor.as[String].map(File(_))
     }
   }
 }

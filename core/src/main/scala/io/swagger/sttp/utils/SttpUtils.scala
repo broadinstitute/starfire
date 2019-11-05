@@ -10,7 +10,7 @@
  * Do not edit the class manually.
  */
 
-package org.broadinstitute.starfire
+package io.swagger.sttp.utils
 
 import sttp.client.Request
 

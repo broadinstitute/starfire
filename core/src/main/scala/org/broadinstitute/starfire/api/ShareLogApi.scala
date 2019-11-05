@@ -19,11 +19,11 @@ import sttp.client._
 import sttp.client.circe._
 import io.circe.generic.auto._
 
-import org.broadinstitute.starfire.Decoders._
-import org.broadinstitute.starfire.Encoders._
-import org.broadinstitute.starfire.SttpUtils.Implicits._
+import io.swagger.sttp.utils.Decoders._
+import io.swagger.sttp.utils.Encoders._
+import io.swagger.sttp.utils.SttpUtils.Implicits._
 
-class ShareLogApi() {
+object ShareLogApi {
 
   /**
    * Get a list of users with whom current user has shared a Workspace. 
@@ -35,7 +35,7 @@ class ShareLogApi() {
     ): Request[Either[ResponseError[io.circe.Error],StringArray],Nothing] = {
 
     basicRequest
-      .get(uri"https://localhost/api/sharelog/sharees")
+      .get(uri"https://api.firecloud.org/api/sharelog/sharees")
       .response(asJson[StringArray])
   }
 

@@ -28,8 +28,8 @@ import org.broadinstitute.starfire.model.EntityQueryResponse
 import org.broadinstitute.starfire.model.EntityQueryResponse._
 import org.broadinstitute.starfire.model.ErrorReport
 import org.broadinstitute.starfire.model.ErrorReport._
-import java.io.File
-import java.io.File._
+import better.files.File
+import better.files.File._
 import org.broadinstitute.starfire.model.PFBRequest
 import org.broadinstitute.starfire.model.PFBRequest._
 
@@ -37,11 +37,11 @@ import sttp.client._
 import sttp.client.circe._
 import io.circe.generic.auto._
 
-import org.broadinstitute.starfire.Decoders._
-import org.broadinstitute.starfire.Encoders._
-import org.broadinstitute.starfire.SttpUtils.Implicits._
+import io.swagger.sttp.utils.Decoders._
+import io.swagger.sttp.utils.Encoders._
+import io.swagger.sttp.utils.SttpUtils.Implicits._
 
-class EntitiesApi() {
+object EntitiesApi {
 
   /**
    * TSV file containing workspace entities of the specified type 
@@ -69,7 +69,7 @@ class EntitiesApi() {
     assert(fCtoken != null, "Missing required parameter 'fCtoken' when calling EntitiesApi->browserDownloadEntitiesTSV")
 
     basicRequest
-      .post(uri"https://localhost/cookie-authed/workspaces/${workspaceNamespace}/${workspaceName}/entities/${entityType}/tsv")
+      .post(uri"https://api.firecloud.org/cookie-authed/workspaces/${workspaceNamespace}/${workspaceName}/entities/${entityType}/tsv")
       .response(asJson[File])
   }
 
@@ -96,7 +96,7 @@ class EntitiesApi() {
     assert(entityType != null, "Missing required parameter 'entityType' when calling EntitiesApi->browserDownloadEntitiesTSVGet")
 
     basicRequest
-      .get(uri"https://localhost/cookie-authed/workspaces/${workspaceNamespace}/${workspaceName}/entities/${entityType}/tsv?attributeNames=${attributeNames}?model=${model}")
+      .get(uri"https://api.firecloud.org/cookie-authed/workspaces/${workspaceNamespace}/${workspaceName}/entities/${entityType}/tsv?attributeNames=${attributeNames}?model=${model}")
       .response(asJson[File])
   }
 
@@ -121,7 +121,7 @@ class EntitiesApi() {
     assert(body != null, "Missing required parameter 'body' when calling EntitiesApi->copyEntities")
 
     basicRequest
-      .post(uri"https://localhost/api/workspaces/${workspaceNamespace}/${workspaceName}/entities/copy?linkExistingEntities=${linkExistingEntities}")
+      .post(uri"https://api.firecloud.org/api/workspaces/${workspaceNamespace}/${workspaceName}/entities/copy?linkExistingEntities=${linkExistingEntities}")
       .body(body)
       .response(asJson[EntityCopyResponse])
   }
@@ -144,7 +144,7 @@ class EntitiesApi() {
     assert(body != null, "Missing required parameter 'body' when calling EntitiesApi->deleteEntities")
 
     basicRequest
-      .post(uri"https://localhost/api/workspaces/${workspaceNamespace}/${workspaceName}/entities/delete")
+      .post(uri"https://api.firecloud.org/api/workspaces/${workspaceNamespace}/${workspaceName}/entities/delete")
       .body(body)
       .response(asJson[Unit])
   }
@@ -172,7 +172,7 @@ class EntitiesApi() {
     assert(entityType != null, "Missing required parameter 'entityType' when calling EntitiesApi->downloadEntitiesTSV")
 
     basicRequest
-      .get(uri"https://localhost/api/workspaces/${workspaceNamespace}/${workspaceName}/entities/${entityType}/tsv?attributeNames=${attributeNames}?model=${model}")
+      .get(uri"https://api.firecloud.org/api/workspaces/${workspaceNamespace}/${workspaceName}/entities/${entityType}/tsv?attributeNames=${attributeNames}?model=${model}")
       .response(asJson[File])
   }
 
@@ -205,7 +205,7 @@ class EntitiesApi() {
     assert(entityType != null, "Missing required parameter 'entityType' when calling EntitiesApi->entityQuery")
 
     basicRequest
-      .get(uri"https://localhost/api/workspaces/${workspaceNamespace}/${workspaceName}/entityQuery/${entityType}?page=${page}?pageSize=${pageSize}?sortField=${sortField}?sortDirection=${sortDirection}?filterTerms=${filterTerms}")
+      .get(uri"https://api.firecloud.org/api/workspaces/${workspaceNamespace}/${workspaceName}/entityQuery/${entityType}?page=${page}?pageSize=${pageSize}?sortField=${sortField}?sortDirection=${sortDirection}?filterTerms=${filterTerms}")
       .response(asJson[EntityQueryResponse])
   }
 
@@ -233,7 +233,7 @@ class EntitiesApi() {
     assert(expression != null, "Missing required parameter 'expression' when calling EntitiesApi->evaluateEntityExpression")
 
     basicRequest
-      .post(uri"https://localhost/api/workspaces/${workspaceNamespace}/${workspaceName}/entities/${entityType}/${entityName}/evaluate")
+      .post(uri"https://api.firecloud.org/api/workspaces/${workspaceNamespace}/${workspaceName}/entities/${entityType}/${entityName}/evaluate")
       .body(expression)
       .response(asJson[Unit])
   }
@@ -256,7 +256,7 @@ class EntitiesApi() {
     assert(entities != null, "Missing required parameter 'entities' when calling EntitiesApi->flexibleImportEntities")
 
     basicRequest
-      .post(uri"https://localhost/api/workspaces/${workspaceNamespace}/${workspaceName}/flexibleImportEntities")
+      .post(uri"https://api.firecloud.org/api/workspaces/${workspaceNamespace}/${workspaceName}/flexibleImportEntities")
       .response(asJson[Unit])
   }
 
@@ -278,7 +278,7 @@ class EntitiesApi() {
     assert(entityType != null, "Missing required parameter 'entityType' when calling EntitiesApi->getEntities")
 
     basicRequest
-      .get(uri"https://localhost/api/workspaces/${workspaceNamespace}/${workspaceName}/entities/${entityType}")
+      .get(uri"https://api.firecloud.org/api/workspaces/${workspaceNamespace}/${workspaceName}/entities/${entityType}")
       .response(asJson[List[Entity]])
   }
 
@@ -297,7 +297,7 @@ class EntitiesApi() {
     assert(workspaceName != null, "Missing required parameter 'workspaceName' when calling EntitiesApi->getEntitiesWithType")
 
     basicRequest
-      .get(uri"https://localhost/api/workspaces/${workspaceNamespace}/${workspaceName}/entities_with_type")
+      .get(uri"https://api.firecloud.org/api/workspaces/${workspaceNamespace}/${workspaceName}/entities_with_type")
       .response(asJson[Unit])
   }
 
@@ -322,7 +322,7 @@ class EntitiesApi() {
     assert(entityName != null, "Missing required parameter 'entityName' when calling EntitiesApi->getEntity")
 
     basicRequest
-      .get(uri"https://localhost/api/workspaces/${workspaceNamespace}/${workspaceName}/entities/${entityType}/${entityName}")
+      .get(uri"https://api.firecloud.org/api/workspaces/${workspaceNamespace}/${workspaceName}/entities/${entityType}/${entityName}")
       .response(asJson[Unit])
   }
 
@@ -341,7 +341,7 @@ class EntitiesApi() {
     assert(workspaceName != null, "Missing required parameter 'workspaceName' when calling EntitiesApi->getEntityTypes")
 
     basicRequest
-      .get(uri"https://localhost/api/workspaces/${workspaceNamespace}/${workspaceName}/entities")
+      .get(uri"https://api.firecloud.org/api/workspaces/${workspaceNamespace}/${workspaceName}/entities")
       .response(asJson[Unit])
   }
 
@@ -363,7 +363,7 @@ class EntitiesApi() {
     assert(bagitImportRequest != null, "Missing required parameter 'bagitImportRequest' when calling EntitiesApi->importBagit")
 
     basicRequest
-      .post(uri"https://localhost/api/workspaces/${workspaceNamespace}/${workspaceName}/importBagit")
+      .post(uri"https://api.firecloud.org/api/workspaces/${workspaceNamespace}/${workspaceName}/importBagit")
       .body(bagitImportRequest)
       .response(asJson[Unit])
   }
@@ -386,7 +386,7 @@ class EntitiesApi() {
     assert(entities != null, "Missing required parameter 'entities' when calling EntitiesApi->importEntities")
 
     basicRequest
-      .post(uri"https://localhost/api/workspaces/${workspaceNamespace}/${workspaceName}/importEntities")
+      .post(uri"https://api.firecloud.org/api/workspaces/${workspaceNamespace}/${workspaceName}/importEntities")
       .response(asJson[Unit])
   }
 
@@ -408,7 +408,7 @@ class EntitiesApi() {
     assert(pfbImportRequest != null, "Missing required parameter 'pfbImportRequest' when calling EntitiesApi->importPFB")
 
     basicRequest
-      .post(uri"https://localhost/api/workspaces/${workspaceNamespace}/${workspaceName}/importPFB")
+      .post(uri"https://api.firecloud.org/api/workspaces/${workspaceNamespace}/${workspaceName}/importPFB")
       .body(pfbImportRequest)
       .response(asJson[Unit])
   }
@@ -437,7 +437,7 @@ class EntitiesApi() {
     assert(entityName != null, "Missing required parameter 'entityName' when calling EntitiesApi->updateEntity")
 
     basicRequest
-      .patch(uri"https://localhost/api/workspaces/${workspaceNamespace}/${workspaceName}/entities/${entityType}/${entityName}")
+      .patch(uri"https://api.firecloud.org/api/workspaces/${workspaceNamespace}/${workspaceName}/entities/${entityType}/${entityName}")
       .body(attributeUpdateJson)
       .response(asJson[Entity])
   }

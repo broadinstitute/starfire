@@ -31,11 +31,11 @@ import sttp.client._
 import sttp.client.circe._
 import io.circe.generic.auto._
 
-import org.broadinstitute.starfire.Decoders._
-import org.broadinstitute.starfire.Encoders._
-import org.broadinstitute.starfire.SttpUtils.Implicits._
+import io.swagger.sttp.utils.Decoders._
+import io.swagger.sttp.utils.Encoders._
+import io.swagger.sttp.utils.SttpUtils.Implicits._
 
-class SubmissionsApi() {
+object SubmissionsApi {
 
   /**
    * abort a submission 
@@ -55,7 +55,7 @@ class SubmissionsApi() {
     assert(submissionId != null, "Missing required parameter 'submissionId' when calling SubmissionsApi->abortSubmission")
 
     basicRequest
-      .delete(uri"https://localhost/api/workspaces/${workspaceNamespace}/${workspaceName}/submissions/${submissionId}")
+      .delete(uri"https://api.firecloud.org/api/workspaces/${workspaceNamespace}/${workspaceName}/submissions/${submissionId}")
       .response(asJson[Unit])
   }
 
@@ -74,7 +74,7 @@ class SubmissionsApi() {
     assert(workspaceName != null, "Missing required parameter 'workspaceName' when calling SubmissionsApi->countSubmissions")
 
     basicRequest
-      .get(uri"https://localhost/api/workspaces/${workspaceNamespace}/${workspaceName}/submissionsCount")
+      .get(uri"https://api.firecloud.org/api/workspaces/${workspaceNamespace}/${workspaceName}/submissionsCount")
       .response(asJson[SubmissionsCountResponse])
   }
 
@@ -96,7 +96,7 @@ class SubmissionsApi() {
     assert(submission != null, "Missing required parameter 'submission' when calling SubmissionsApi->createSubmission")
 
     basicRequest
-      .post(uri"https://localhost/api/workspaces/${workspaceNamespace}/${workspaceName}/submissions")
+      .post(uri"https://api.firecloud.org/api/workspaces/${workspaceNamespace}/${workspaceName}/submissions")
       .body(submission)
       .response(asJson[Unit])
   }
@@ -116,7 +116,7 @@ class SubmissionsApi() {
     assert(workspaceName != null, "Missing required parameter 'workspaceName' when calling SubmissionsApi->listSubmissions")
 
     basicRequest
-      .get(uri"https://localhost/api/workspaces/${workspaceNamespace}/${workspaceName}/submissions")
+      .get(uri"https://api.firecloud.org/api/workspaces/${workspaceNamespace}/${workspaceName}/submissions")
       .response(asJson[Unit])
   }
 
@@ -138,7 +138,7 @@ class SubmissionsApi() {
     assert(submissionId != null, "Missing required parameter 'submissionId' when calling SubmissionsApi->monitorSubmission")
 
     basicRequest
-      .get(uri"https://localhost/api/workspaces/${workspaceNamespace}/${workspaceName}/submissions/${submissionId}")
+      .get(uri"https://api.firecloud.org/api/workspaces/${workspaceNamespace}/${workspaceName}/submissions/${submissionId}")
       .response(asJson[Submission])
   }
 
@@ -160,7 +160,7 @@ class SubmissionsApi() {
     assert(submission != null, "Missing required parameter 'submission' when calling SubmissionsApi->validateSubmission")
 
     basicRequest
-      .post(uri"https://localhost/api/workspaces/${workspaceNamespace}/${workspaceName}/submissions/validate")
+      .post(uri"https://api.firecloud.org/api/workspaces/${workspaceNamespace}/${workspaceName}/submissions/validate")
       .body(submission)
       .response(asJson[SubmissionValidationReport])
   }
@@ -186,7 +186,7 @@ class SubmissionsApi() {
     assert(workflowId != null, "Missing required parameter 'workflowId' when calling SubmissionsApi->workflowCostInSubmission")
 
     basicRequest
-      .get(uri"https://localhost/api/workspaces/${workspaceNamespace}/${workspaceName}/submissions/${submissionId}/workflows/${workflowId}/cost")
+      .get(uri"https://api.firecloud.org/api/workspaces/${workspaceNamespace}/${workspaceName}/submissions/${submissionId}/workflows/${workflowId}/cost")
       .response(asJson[WorkflowCost])
   }
 
@@ -218,7 +218,7 @@ class SubmissionsApi() {
     assert(workflowId != null, "Missing required parameter 'workflowId' when calling SubmissionsApi->workflowMetadata")
 
     basicRequest
-      .get(uri"https://localhost/api/workspaces/${workspaceNamespace}/${workspaceName}/submissions/${submissionId}/workflows/${workflowId}?includeKey=${includeKey}?excludeKey=${excludeKey}?expandSubWorkflows=${expandSubWorkflows}")
+      .get(uri"https://api.firecloud.org/api/workspaces/${workspaceNamespace}/${workspaceName}/submissions/${submissionId}/workflows/${workflowId}?includeKey=${includeKey}?excludeKey=${excludeKey}?expandSubWorkflows=${expandSubWorkflows}")
       .response(asJson[Unit])
   }
 
@@ -243,7 +243,7 @@ class SubmissionsApi() {
     assert(workflowId != null, "Missing required parameter 'workflowId' when calling SubmissionsApi->workflowOutputsInSubmission")
 
     basicRequest
-      .get(uri"https://localhost/api/workspaces/${workspaceNamespace}/${workspaceName}/submissions/${submissionId}/workflows/${workflowId}/outputs")
+      .get(uri"https://api.firecloud.org/api/workspaces/${workspaceNamespace}/${workspaceName}/submissions/${submissionId}/workflows/${workflowId}/outputs")
       .response(asJson[Unit])
   }
 
@@ -257,7 +257,7 @@ class SubmissionsApi() {
     ): Request[Either[ResponseError[io.circe.Error],WorkflowQueueStatusResponse],Nothing] = {
 
     basicRequest
-      .get(uri"https://localhost/api/submissions/queueStatus")
+      .get(uri"https://api.firecloud.org/api/submissions/queueStatus")
       .response(asJson[WorkflowQueueStatusResponse])
   }
 

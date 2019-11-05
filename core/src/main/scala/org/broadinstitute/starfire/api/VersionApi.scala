@@ -21,11 +21,11 @@ import sttp.client._
 import sttp.client.circe._
 import io.circe.generic.auto._
 
-import org.broadinstitute.starfire.Decoders._
-import org.broadinstitute.starfire.Encoders._
-import org.broadinstitute.starfire.SttpUtils.Implicits._
+import io.swagger.sttp.utils.Decoders._
+import io.swagger.sttp.utils.Encoders._
+import io.swagger.sttp.utils.SttpUtils.Implicits._
 
-class VersionApi() {
+object VersionApi {
 
   /**
    * Returns the currently deployed version of FireCloud&#39;s execution engine
@@ -37,7 +37,7 @@ class VersionApi() {
     ): Request[Either[ResponseError[io.circe.Error],ExecutionEngineVersion],Nothing] = {
 
     basicRequest
-      .get(uri"https://localhost/version/executionEngine")
+      .get(uri"https://api.firecloud.org/version/executionEngine")
       .response(asJson[ExecutionEngineVersion])
   }
 
@@ -51,7 +51,7 @@ class VersionApi() {
     ): Request[Either[ResponseError[io.circe.Error],OrchestrationVersion],Nothing] = {
 
     basicRequest
-      .get(uri"https://localhost/version")
+      .get(uri"https://api.firecloud.org/version")
       .response(asJson[OrchestrationVersion])
   }
 

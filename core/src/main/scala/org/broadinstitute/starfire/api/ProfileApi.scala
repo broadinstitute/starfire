@@ -43,11 +43,11 @@ import sttp.client._
 import sttp.client.circe._
 import io.circe.generic.auto._
 
-import org.broadinstitute.starfire.Decoders._
-import org.broadinstitute.starfire.Encoders._
-import org.broadinstitute.starfire.SttpUtils.Implicits._
+import io.swagger.sttp.utils.Decoders._
+import io.swagger.sttp.utils.Encoders._
+import io.swagger.sttp.utils.SttpUtils.Implicits._
 
-class ProfileApi() {
+object ProfileApi {
 
   /**
    * List billing projects for a user
@@ -59,7 +59,7 @@ class ProfileApi() {
     ): Request[Either[ResponseError[io.circe.Error],List[BillingProjectMembership]],Nothing] = {
 
     basicRequest
-      .get(uri"https://localhost/api/profile/billing")
+      .get(uri"https://api.firecloud.org/api/profile/billing")
       .response(asJson[List[BillingProjectMembership]])
   }
 
@@ -73,7 +73,7 @@ class ProfileApi() {
     ): Request[Either[ResponseError[io.circe.Error],List[BillingAccount]],Nothing] = {
 
     basicRequest
-      .get(uri"https://localhost/api/profile/billingAccounts")
+      .get(uri"https://api.firecloud.org/api/profile/billingAccounts")
       .response(asJson[List[BillingAccount]])
   }
 
@@ -89,7 +89,7 @@ class ProfileApi() {
     assert(projectName != null, "Missing required parameter 'projectName' when calling ProfileApi->billingProjectStatus")
 
     basicRequest
-      .get(uri"https://localhost/api/profile/billing/${projectName}")
+      .get(uri"https://api.firecloud.org/api/profile/billing/${projectName}")
       .response(asJson[BillingProjectStatus])
   }
 
@@ -103,7 +103,7 @@ class ProfileApi() {
     ): Request[Either[ResponseError[io.circe.Error],RegisterProfile],Nothing] = {
 
     basicRequest
-      .get(uri"https://localhost/register/profile")
+      .get(uri"https://api.firecloud.org/register/profile")
       .response(asJson[RegisterProfile])
   }
 
@@ -119,7 +119,7 @@ class ProfileApi() {
     assert(email != null, "Missing required parameter 'email' when calling ProfileApi->getProxyGroup")
 
     basicRequest
-      .get(uri"https://localhost/api/proxyGroup/${email}")
+      .get(uri"https://api.firecloud.org/api/proxyGroup/${email}")
       .response(asJson[String])
   }
 
@@ -133,7 +133,7 @@ class ProfileApi() {
     ): Request[Either[ResponseError[io.circe.Error],TerraPreference],Nothing] = {
 
     basicRequest
-      .get(uri"https://localhost/api/profile/terra")
+      .get(uri"https://api.firecloud.org/api/profile/terra")
       .response(asJson[TerraPreference])
   }
 
@@ -147,7 +147,7 @@ class ProfileApi() {
     ): Request[Either[ResponseError[io.circe.Error],RawlsMe],Nothing] = {
 
     basicRequest
-      .get(uri"https://localhost/register")
+      .get(uri"https://api.firecloud.org/register")
       .response(asJson[RawlsMe])
   }
 
@@ -161,7 +161,7 @@ class ProfileApi() {
     ): Request[Either[ResponseError[io.circe.Error],UserImportPermission],Nothing] = {
 
     basicRequest
-      .get(uri"https://localhost/api/profile/importstatus")
+      .get(uri"https://api.firecloud.org/api/profile/importstatus")
       .response(asJson[UserImportPermission])
   }
 
@@ -175,7 +175,7 @@ class ProfileApi() {
     ): Request[Either[ResponseError[io.circe.Error],CuratorStatus],Nothing] = {
 
     basicRequest
-      .get(uri"https://localhost/api/library/user/role/curator")
+      .get(uri"https://api.firecloud.org/api/library/user/role/curator")
       .response(asJson[CuratorStatus])
   }
 
@@ -189,7 +189,7 @@ class ProfileApi() {
     ): Request[Either[ResponseError[io.circe.Error],Me],Nothing] = {
 
     basicRequest
-      .get(uri"https://localhost/me")
+      .get(uri"https://api.firecloud.org/me")
       .response(asJson[Me])
   }
 
@@ -203,7 +203,7 @@ class ProfileApi() {
     ): Request[Either[ResponseError[io.circe.Error],Unit],Nothing] = {
 
     basicRequest
-      .put(uri"https://localhost/api/profile/trial/userAgreement")
+      .put(uri"https://api.firecloud.org/api/profile/trial/userAgreement")
       .response(asJson[Unit])
   }
 
@@ -217,7 +217,7 @@ class ProfileApi() {
     ): Request[Either[ResponseError[io.circe.Error],TerraPreference],Nothing] = {
 
     basicRequest
-      .delete(uri"https://localhost/api/profile/terra")
+      .delete(uri"https://api.firecloud.org/api/profile/terra")
       .response(asJson[TerraPreference])
   }
 
@@ -233,7 +233,7 @@ class ProfileApi() {
     ): Request[Either[ResponseError[io.circe.Error],Unit],Nothing] = {
 
     basicRequest
-      .post(uri"https://localhost/register/profile")
+      .post(uri"https://api.firecloud.org/register/profile")
       .body(profile)
       .response(asJson[Unit])
   }
@@ -248,7 +248,7 @@ class ProfileApi() {
     ): Request[Either[ResponseError[io.circe.Error],TerraPreference],Nothing] = {
 
     basicRequest
-      .post(uri"https://localhost/api/profile/terra")
+      .post(uri"https://api.firecloud.org/api/profile/terra")
       .response(asJson[TerraPreference])
   }
 
@@ -264,7 +264,7 @@ class ProfileApi() {
     assert(preferences != null, "Missing required parameter 'preferences' when calling ProfileApi->updateProfile")
 
     basicRequest
-      .post(uri"https://localhost/api/profile/preferences")
+      .post(uri"https://api.firecloud.org/api/profile/preferences")
       .body(preferences)
       .response(asJson[Unit])
   }
@@ -279,7 +279,7 @@ class ProfileApi() {
     ): Request[Either[ResponseError[io.circe.Error],Unit],Nothing] = {
 
     basicRequest
-      .get(uri"https://localhost/register/userinfo")
+      .get(uri"https://api.firecloud.org/register/userinfo")
       .response(asJson[Unit])
   }
 
@@ -295,7 +295,7 @@ class ProfileApi() {
     ): Request[Either[ResponseError[io.circe.Error],Unit],Nothing] = {
 
     basicRequest
-      .post(uri"https://localhost/api/profile/trial?operation=${operation}")
+      .post(uri"https://api.firecloud.org/api/profile/trial?operation=${operation}")
       .response(asJson[Unit])
   }
 

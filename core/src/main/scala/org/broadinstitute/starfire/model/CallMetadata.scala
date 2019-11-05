@@ -16,8 +16,8 @@ import io.circe.Json
 import io.circe.Json._
 import java.util.Date
 import java.util.Date._
-import org.broadinstitute.starfire.Decoders._
-import org.broadinstitute.starfire.Encoders._
+import io.swagger.sttp.utils.Decoders._
+import io.swagger.sttp.utils.Encoders._
 import io.circe.generic.JsonCodec
 
 @JsonCodec case class CallMetadata (

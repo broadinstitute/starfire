@@ -17,11 +17,11 @@ import sttp.client._
 import sttp.client.circe._
 import io.circe.generic.auto._
 
-import org.broadinstitute.starfire.Decoders._
-import org.broadinstitute.starfire.Encoders._
-import org.broadinstitute.starfire.SttpUtils.Implicits._
+import io.swagger.sttp.utils.Decoders._
+import io.swagger.sttp.utils.Encoders._
+import io.swagger.sttp.utils.SttpUtils.Implicits._
 
-class StaticNotebooksApi() {
+object StaticNotebooksApi {
 
   /**
    * Convert a Notebook ipynb file to a static HTML representation 
@@ -35,7 +35,7 @@ class StaticNotebooksApi() {
     assert(notebook != null, "Missing required parameter 'notebook' when calling StaticNotebooksApi->convertNotebook")
 
     basicRequest
-      .post(uri"https://localhost/api/staticNotebooks/convert")
+      .post(uri"https://api.firecloud.org/api/staticNotebooks/convert")
       .body(notebook)
       .response(asJson[Unit])
   }

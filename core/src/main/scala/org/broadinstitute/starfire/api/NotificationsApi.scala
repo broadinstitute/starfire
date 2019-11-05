@@ -19,11 +19,11 @@ import sttp.client._
 import sttp.client.circe._
 import io.circe.generic.auto._
 
-import org.broadinstitute.starfire.Decoders._
-import org.broadinstitute.starfire.Encoders._
-import org.broadinstitute.starfire.SttpUtils.Implicits._
+import io.swagger.sttp.utils.Decoders._
+import io.swagger.sttp.utils.Encoders._
+import io.swagger.sttp.utils.SttpUtils.Implicits._
 
-class NotificationsApi() {
+object NotificationsApi {
 
   /**
    * Gets the general notifications available
@@ -35,7 +35,7 @@ class NotificationsApi() {
     ): Request[Either[ResponseError[io.circe.Error],List[NotificationType]],Nothing] = {
 
     basicRequest
-      .get(uri"https://localhost/api/notifications/general")
+      .get(uri"https://api.firecloud.org/api/notifications/general")
       .response(asJson[List[NotificationType]])
   }
 
@@ -54,7 +54,7 @@ class NotificationsApi() {
     assert(workspaceName != null, "Missing required parameter 'workspaceName' when calling NotificationsApi->workspaceNotifications")
 
     basicRequest
-      .get(uri"https://localhost/api/notifications/workspace/${workspaceNamespace}/${workspaceName}")
+      .get(uri"https://api.firecloud.org/api/notifications/workspace/${workspaceNamespace}/${workspaceName}")
       .response(asJson[List[NotificationType]])
   }
 

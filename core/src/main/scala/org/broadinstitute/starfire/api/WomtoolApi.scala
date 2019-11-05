@@ -12,8 +12,8 @@
 
 package org.broadinstitute.starfire.api
 
-import java.io.File
-import java.io.File._
+import better.files.File
+import better.files.File._
 import org.broadinstitute.starfire.model.WorkflowDescription
 import org.broadinstitute.starfire.model.WorkflowDescription._
 
@@ -21,11 +21,11 @@ import sttp.client._
 import sttp.client.circe._
 import io.circe.generic.auto._
 
-import org.broadinstitute.starfire.Decoders._
-import org.broadinstitute.starfire.Encoders._
-import org.broadinstitute.starfire.SttpUtils.Implicits._
+import io.swagger.sttp.utils.Decoders._
+import io.swagger.sttp.utils.Encoders._
+import io.swagger.sttp.utils.SttpUtils.Implicits._
 
-class WomtoolApi() {
+object WomtoolApi {
 
   /**
    * Machine-readable description of a workflow, including inputs and outputs
@@ -50,7 +50,7 @@ class WomtoolApi() {
     assert(version != null, "Missing required parameter 'version' when calling WomtoolApi->describe")
 
     basicRequest
-      .post(uri"https://localhost/api/womtool/${version}/describe")
+      .post(uri"https://api.firecloud.org/api/womtool/${version}/describe")
       .response(asJson[WorkflowDescription])
   }
 
