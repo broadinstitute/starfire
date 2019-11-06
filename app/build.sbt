@@ -9,6 +9,7 @@ val sttpV = "2.0.0-M6"
 libraryDependencies ++= Seq(
   "com.softwaremill.sttp.client" %% "core" % sttpV,
   "com.github.pathikrit" %% "better-files" % "3.8.0",
+  "com.lihaoyi" %% "fastparse" % "2.1.3",
   "org.scalatest" %% "scalatest" % "3.0.8" % "test",
   "junit" % "junit" % "4.12" % "test"
 )

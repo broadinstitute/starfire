@@ -7,6 +7,8 @@ import sttp.client.HttpURLConnectionBackend
 object Starfire {
 
   def main(args: Array[String]): Unit = {
+    val commandLine = args.mkString(" ")
+    println(commandLine)
     implicit val backend = HttpURLConnectionBackend()
     val request = StatusApi.status()
     val response = request.send()
