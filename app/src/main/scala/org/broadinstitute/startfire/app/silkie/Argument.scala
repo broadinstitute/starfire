@@ -1,15 +1,17 @@
 package org.broadinstitute.startfire.app.silkie
 
-sealed trait Argument {
-  def id: Identifier
+sealed trait Argument extends SilkieElement {
+  def expression: Expression
 }
 
 object Argument {
-  sealed trait LiteralArgument[T] extends Argument {
-    def value: T
+
+  case class PositionalArgument(expression: Expression) extends Argument {
+    override def asSilkieCode: String = expression.asSilkieCode
   }
-  case class IntegerArgument(id: Identifier, value: Long) extends LiteralArgument[Long]
-  case class FloatArgument(id: Identifier, value: Double) extends LiteralArgument[Double]
-  case class StringArgument(id: Identifier, value: String) extends LiteralArgument[String]
-  case class IdentifierArgument(id: Identifier, rhsId: Identifier) extends Argument
+
+  case class NamedArgument(id: Identifier, expression: Expression) extends Argument {
+    override def asSilkieCode: String = id.asSilkieCode + "=" + expression.asSilkieCode
+  }
+
 }

@@ -1,12 +1,14 @@
 package org.broadinstitute.startfire.app.silkie
 
-case class Identifier(parentOpt: Option[Identifier], name: String) {
+case class Identifier(parentOpt: Option[Identifier], name: String) extends Expression {
   def /(childName: String): Identifier = Identifier(Some(this), childName)
 
   def asString: String = parentOpt match {
     case Some(parent) => parent.asString + "." + name
     case None => name
   }
+
+  override def asSilkieCode: String = asString
 }
 
 object Identifier {

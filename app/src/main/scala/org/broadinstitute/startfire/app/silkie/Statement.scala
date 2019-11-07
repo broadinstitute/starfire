@@ -1,16 +1,20 @@
 package org.broadinstitute.startfire.app.silkie
 
-sealed trait Statement {
+import org.broadinstitute.startfire.app.silkie.Argument.{NamedArgument, PositionalArgument}
+
+sealed trait Statement extends SilkieElement {
 
 }
 
 object Statement {
-  def parse(string: String): Either[Error, Statement] = {
-    ???
+
+  case class Command(identifier: Identifier,
+                     positionalArguments: Seq[PositionalArgument],
+                     namedArguments: Seq[NamedArgument]) extends Statement {
+    def arguments: Seq[Argument] = positionalArguments ++ namedArguments
+
+    override def asSilkieCode: String = (identifier +: arguments).map(_.asSilkieCode).mkString(" ")
   }
 
 }
 
-case class Command(identifier: Identifier, arguments: Seq[Argument]) extends Statement {
-
-}
