@@ -14,8 +14,8 @@ object Literal {
     override def asSilkieCode: String =
       "\"" + value.flatMap { char: Char =>
         char match {
-          case char: Char if StringLiteral.escapableChars => "\\" + char
-          case char: Char => "" + char
+          case char: Char if StringLiteral.escapableChars(char) => Seq("\\", char)
+          case char: Char => Seq(char)
         }
       } + "\""
   }

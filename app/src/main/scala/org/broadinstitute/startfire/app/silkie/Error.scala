@@ -2,6 +2,12 @@ package org.broadinstitute.startfire.app.silkie
 
 case class Error(message: String, causeOpt: Option[Error]) {
 
+  def allMessages: String = {
+    causeOpt match {
+      case Some(cause) => message + "\n" + cause.allMessages
+      case None => message
+    }
+  }
 }
 
 object Error {
