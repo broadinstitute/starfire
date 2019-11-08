@@ -39,7 +39,7 @@ object Parser {
 
   def expression[_ :P]: P[Expression] = P(identifier | integerLiteral | stringLiteral)
 
-  def positionalArgument[_ :P]: P[PositionalArgument] = P(expression).map(PositionalArgument)
+  def positionalArgument[_ :P]: P[PositionalArgument] = P(expression ~ !"=").map(PositionalArgument)
 
   def namedArgument[_ :P]: P[NamedArgument] = P(identifier ~ "=" ~ expression).map {
     case (identifier, expression) => NamedArgument(identifier, expression)

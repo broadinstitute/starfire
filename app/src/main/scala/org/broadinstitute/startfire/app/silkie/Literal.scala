@@ -11,13 +11,15 @@ object Literal {
   }
 
   case class StringLiteral(value: String) extends Literal[String] {
-    override def asSilkieCode: String =
-      "\"" + value.flatMap { char: Char =>
+    override def asSilkieCode: String = {
+      val charsEscaped = value.flatMap { char: Char =>
         char match {
-          case char: Char if StringLiteral.escapableChars(char) => Seq("\\", char)
+          case char: Char if StringLiteral.escapableChars(char) => Seq('\\', char)
           case char: Char => Seq(char)
         }
-      } + "\""
+      }
+      "\"" + new String(charsEscaped.toArray) + "\""
+    }
   }
 
   object StringLiteral {
