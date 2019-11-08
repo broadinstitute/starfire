@@ -22,7 +22,7 @@ object Starfire {
   }
 
   def main(args: Array[String]): Unit = {
-    val commandLine = "status.status 1 2 3 4 \"x\" y=3 z=\"yo\""// args.mkString(" ")
+    val commandLine = args.mkString(" ")
     println(commandLine)
     Parser.parseCommandLine(commandLine) match {
       case Right(command) => println(command.asSilkieCode)

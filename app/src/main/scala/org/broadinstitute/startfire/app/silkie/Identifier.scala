@@ -9,10 +9,31 @@ case class Identifier(parentOpt: Option[Identifier], name: String) extends Expre
   }
 
   override def asSilkieCode: String = asString
+
+  def isSinglePart: Boolean = parentOpt.isEmpty
+
+  def head: String = {
+    parentOpt match {
+      case Some(parent) => parent.head
+      case None => name
+    }
+  }
+
+  def tailOpt: Option[Identifier] = {
+    parentOpt match {
+      case Some(parent) =>
+        parent.tailOpt match {
+          case Some(parentTail) => Some(Identifier(parentTail, name))
+          case None => Some(Identifier(name))
+        }
+      case None => None
+    }
+  }
 }
 
 object Identifier {
   def apply(name: String): Identifier = Identifier(None, name)
+  def apply(parent: Identifier, name: String): Identifier = Identifier(Some(parent), name)
 
   def fromNonEmptyList(parts: Seq[String]): Identifier = {
     parts match {
