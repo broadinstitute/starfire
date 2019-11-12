@@ -1,4 +1,4 @@
-package org.broadinstitute.startfire.app.silkie
+package org.broadinstitute.startfire.app.silk
 
 case class Identifier(parentOpt: Option[Identifier], name: String) extends Expression {
   def /(childName: String): Identifier = Identifier(Some(this), childName)
@@ -8,7 +8,7 @@ case class Identifier(parentOpt: Option[Identifier], name: String) extends Expre
     case None => name
   }
 
-  override def asSilkieCode: String = asString
+  override def asSilkCode: String = asString
 
   def isSinglePart: Boolean = parentOpt.isEmpty
 

@@ -2,7 +2,7 @@ package org.broadinstitute.startfire.app
 
 import better.files.File
 import org.broadinstitute.starfire.api.StatusApi
-import org.broadinstitute.startfire.app.silkie.Parser
+import org.broadinstitute.startfire.app.silk.Parser
 import sttp.client.{HttpURLConnectionBackend, Identity, NothingT, SttpBackend}
 
 object Starfire {
@@ -25,7 +25,7 @@ object Starfire {
     val commandLine = args.mkString(" ")
     println(commandLine)
     Parser.parseCommandLine(commandLine) match {
-      case Right(command) => println(command.asSilkieCode)
+      case Right(command) => println(command.asSilkCode)
       case Left(error) => println(error.allMessages)
     }
   }

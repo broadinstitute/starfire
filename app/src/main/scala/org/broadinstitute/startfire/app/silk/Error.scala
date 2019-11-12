@@ -1,4 +1,4 @@
-package org.broadinstitute.startfire.app.silkie
+package org.broadinstitute.startfire.app.silk
 
 case class Error(message: String, causeOpt: Option[Error]) {
 

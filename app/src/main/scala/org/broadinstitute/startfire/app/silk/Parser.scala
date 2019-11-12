@@ -1,10 +1,10 @@
-package org.broadinstitute.startfire.app.silkie
+package org.broadinstitute.startfire.app.silk
 
 import fastparse.NoWhitespace._
 import fastparse._
-import org.broadinstitute.startfire.app.silkie.Argument.{NamedArgument, PositionalArgument}
-import org.broadinstitute.startfire.app.silkie.Literal.{IntegerLiteral, StringLiteral}
-import org.broadinstitute.startfire.app.silkie.Statement.Command
+import org.broadinstitute.startfire.app.silk.Argument.{NamedArgument, PositionalArgument}
+import org.broadinstitute.startfire.app.silk.SilkLiteral.{SilkIntegerLiteral, SilkStringLiteral}
+import org.broadinstitute.startfire.app.silk.Statement.Command
 
 object Parser {
 
@@ -29,15 +29,15 @@ object Parser {
 
     def whitespace[_: P]: P[Unit] = P(CharsWhile(Character.isWhitespace))
 
-    def integerLiteral[_: P]: P[IntegerLiteral] =
-      P((CharIn("+\\-").? ~ CharIn("1-9") ~ CharIn("0-9").rep ~ !CharIn("0-9")).!).map(_.toLong).map(IntegerLiteral)
+    def integerLiteral[_: P]: P[SilkIntegerLiteral] =
+      P((CharIn("+\\-").? ~ CharIn("1-9") ~ CharIn("0-9").rep ~ !CharIn("0-9")).!).map(_.toLong).map(SilkIntegerLiteral)
 
-    def stringNotEscapedChar[_: P]: P[String] = P(CharPred(!StringLiteral.escapableChars.contains(_)).!)
+    def stringNotEscapedChar[_: P]: P[String] = P(CharPred(!SilkStringLiteral.escapableChars.contains(_)).!)
 
-    def stringEscape[_: P]: P[String] = P("\\" ~ CharPred(StringLiteral.escapableChars).!)
+    def stringEscape[_: P]: P[String] = P("\\" ~ CharPred(SilkStringLiteral.escapableChars).!)
 
-    def stringLiteral[_: P]: P[StringLiteral] =
-      P("\"" ~ (stringEscape | stringNotEscapedChar).rep ~ "\"").map(_.mkString("")).map(StringLiteral(_))
+    def stringLiteral[_: P]: P[SilkStringLiteral] =
+      P("\"" ~ (stringEscape | stringNotEscapedChar).rep ~ "\"").map(_.mkString("")).map(SilkStringLiteral(_))
 
     def expression[_: P]: P[Expression] = P(identifier | integerLiteral | stringLiteral)
 

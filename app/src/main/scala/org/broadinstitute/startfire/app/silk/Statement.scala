@@ -1,8 +1,8 @@
-package org.broadinstitute.startfire.app.silkie
+package org.broadinstitute.startfire.app.silk
 
-import org.broadinstitute.startfire.app.silkie.Argument.{NamedArgument, PositionalArgument}
+import org.broadinstitute.startfire.app.silk.Argument.{NamedArgument, PositionalArgument}
 
-sealed trait Statement extends SilkieElement {
+sealed trait Statement extends SilkElement {
 
 }
 
@@ -13,7 +13,7 @@ object Statement {
                      namedArguments: Seq[NamedArgument]) extends Statement {
     def arguments: Seq[Argument] = positionalArguments ++ namedArguments
 
-    override def asSilkieCode: String = (identifier +: arguments).map(_.asSilkieCode).mkString(" ")
+    override def asSilkCode: String = (identifier +: arguments).map(_.asSilkCode).mkString(" ")
   }
 
 }
