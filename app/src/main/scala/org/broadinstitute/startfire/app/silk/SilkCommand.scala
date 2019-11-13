@@ -16,5 +16,5 @@ object SilkCommand {
   object Ref {
     def create: Ref = Ref(UUID.randomUUID())
   }
-  case class Parameter(name: String, silkType: SilkType, isRequired: Boolean)
+  case class Parameter(id: Identifier, silkType: SilkType, isRequired: Boolean)
 }
