@@ -1,7 +1,7 @@
 package org.broadinstitute.startfire.app.silk
 
 import org.broadinstitute.startfire.app.silk.SilkLiteral.{SilkFloatLiteral, SilkIntegerLiteral, SilkStringLiteral}
-import org.broadinstitute.startfire.app.silk.SilkType.{SilkFloatType, SilkIntegerType, SilkObjectType, SilkStringType}
+import org.broadinstitute.startfire.app.silk.SilkType.{SilkCommandType, SilkFloatType, SilkIntegerType, SilkObjectType, SilkStringType}
 
 trait SilkValue {
   def silkType: SilkType
@@ -62,23 +62,51 @@ object SilkValue {
     def add(id: Identifier, value: SilkValue): SilkObjectValue = {
       id.tailOpt match {
         case None => add(id.name, value)
-        case Some(tail) =>
+        case Some(idTail) =>
           val idHead = id.head
           val childObject = values.get(idHead) match {
             case Some(child: SilkObjectValue) => child
             case _ => SilkObjectValue.empty
           }
-          add(idHead, childObject.add(tail, value))
+          add(idHead, childObject.add(idTail, value))
       }
     }
 
     def remove(id: Identifier): SilkObjectValue = {
-      ???
+      id.tailOpt match {
+        case None => remove(id.name)
+        case Some(idTail) =>
+          val idHead = id.head
+          values.get(idHead) match {
+            case Some(childObject: SilkObjectValue) => add(idHead, childObject.remove(idTail))
+            case _ => this
+          }
+      }
     }
+
+    def get(key: String): Option[SilkValue] = values.get(key)
+
+    def get(id: Identifier): Option[SilkValue] = {
+      id.tailOpt match {
+        case None => get(id.name)
+        case Some(idTail) =>
+          val idHead = id.head
+          values.get(idHead) match {
+            case Some(childObject: SilkObjectValue) => childObject.get(idTail)
+            case _ => None
+          }
+      }
+    }
+
+    def isEmpty: Boolean = keys.isEmpty
   }
 
   object SilkObjectValue {
     val empty: SilkObjectValue = SilkObjectValue(Seq.empty, Map.empty)
+  }
+
+  case class SilkCommandValue(ref: SilkCommand.Ref) extends SilkValue {
+    override def silkType: SilkCommandType.type = SilkCommandType
   }
 
 }

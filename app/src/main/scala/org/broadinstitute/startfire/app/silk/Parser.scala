@@ -4,7 +4,6 @@ import fastparse.NoWhitespace._
 import fastparse._
 import org.broadinstitute.startfire.app.silk.Argument.{NamedArgument, PositionalArgument}
 import org.broadinstitute.startfire.app.silk.SilkLiteral.{SilkIntegerLiteral, SilkStringLiteral}
-import org.broadinstitute.startfire.app.silk.Statement.Command
 
 object Parser {
 
@@ -47,23 +46,20 @@ object Parser {
       case (identifier, expression) => NamedArgument(identifier, expression)
     }
 
-    def command[_: P]: P[Command] =
+    def command[_: P]: P[Statement] =
       P(identifier ~ (whitespace ~ positionalArgument).rep ~ (whitespace ~ namedArgument).rep).map {
-        case (identifier, positionalArguments, namedArguments) => Command(identifier, positionalArguments, namedArguments)
+        case (identifier, positionalArguments, namedArguments) =>
+          Statement(identifier, positionalArguments, namedArguments)
       }
 
-    def commandLine[_: P]: P[Command] = P(Start ~ whitespace.? ~ command ~ whitespace.? ~ End)
+    def commandLine[_: P]: P[Statement] = P(Start ~ whitespace.? ~ command ~ whitespace.? ~ End)
   }
 
-  def parseCommandLine(string: String): Either[Error, Command] = {
+  def parseCommandLine(string: String): Either[Error, Statement] = {
     parse(string, ElementParsers.commandLine(_)) match {
-      case Parsed.Success(command, _) => Right(command)
+      case Parsed.Success(statement, _) => Right(statement)
       case failure: Parsed.Failure =>
         val tracedFailure = failure.trace()
-        println(tracedFailure.msg)
-        println(tracedFailure.longMsg)
-        println(tracedFailure.aggregateMsg)
-        println(tracedFailure.longAggregateMsg)
         Left(Error("Parse failure", Error(tracedFailure.longMsg)))
     }
   }
