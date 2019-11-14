@@ -10,8 +10,6 @@ object SilkEngine {
 
   case class ParameterArgumentPair(parameter: Parameter, argument: Argument)
 
-  case class ArgumentMapping(id: Identifier, value: SilkValue)
-
   def evaluateArgument(expression: Expression,
                        env: SilkObjectValue,
                        requiredType: SilkType): Either[Error, SilkValue] = {
@@ -35,40 +33,8 @@ object SilkEngine {
     }
   }
 
-  def createPositionalArgumentMappings(parameters: Seq[SilkCommand.Parameter],
-                                       arguments: Seq[PositionalArgument],
-                                       env: SilkObjectValue): Either[Error, Seq[ArgumentMapping]] = {
-    var errorOpt: Option[Error] = None
-    var index: Int = 0
-    var mappings: Seq[ArgumentMapping] = Seq.empty
-    while(errorOpt.isEmpty && index < parameters.size && index < arguments.size) {
-      val parameter = parameters(index)
-      val argument = arguments(index)
-      evaluateArgument(argument.expression, env, parameter.silkType) match {
-        case Left(error) => errorOpt = Some(error)
-        case Right(value) => mappings :+= ArgumentMapping(parameter.id, value)
-      }
-      index += 1
-    }
-    errorOpt match {
-      case Some(error) => Left(error)
-      case None => Right(mappings)
-    }
-  }
-
-  def createNamedArgumentMappings(parameters: Seq[SilkCommand.Parameter],
-                                  namedArguments: Seq[NamedArgument]): Either[Error, Seq[ArgumentMapping]] = {
-    ???
-  }
-
-  def createArgumentMappings(parameters: Seq[SilkCommand.Parameter],
-                             positionalArguments: Seq[PositionalArgument],
-                             namedArguments: Seq[NamedArgument]): Either[Error, Seq[ArgumentMapping]] = {
-    ???
-  }
-
-  def pairUpPositionalArguments(parameters: Seq[SilkCommand.Parameter],
-                                positionalArguments: Seq[PositionalArgument]): Seq[ParameterArgumentPair] = {
+  def mapPositionalArguments(parameters: Seq[SilkCommand.Parameter],
+                             positionalArguments: Seq[PositionalArgument]): Seq[ParameterArgumentPair] = {
     positionalArguments.zipWithIndex.map {
       case (argument, index) =>
         val parameter =
@@ -81,13 +47,38 @@ object SilkEngine {
     }
   }
 
-  def pairUpNamedArguments(parameters: Seq[SilkCommand.Parameter],
-                           namedArguments: Seq[NamedArgument]): Seq[ParameterArgumentPair] = {
+  def mapNamedArguments(parameters: Seq[SilkCommand.Parameter],
+                        namedArguments: Seq[NamedArgument]): Seq[ParameterArgumentPair] = {
     val parametersById = parameters.map(parameter => (parameter.id, parameter)).toMap
     namedArguments.map { argument =>
       val parameter = parametersById.getOrElse(argument.id, Parameter(argument.id, SilkAny, isRequired = false))
       ParameterArgumentPair(parameter, argument)
     }
+  }
+
+  def errorIfDuplicateParameter(parameterArgumentPairs: Seq[ParameterArgumentPair]): Option[Error] = {
+    parameterArgumentPairs.groupBy(_.parameter.id).collectFirst {
+      case (id, pairs) if pairs.size > 1 => (id, pairs)
+    }.map {
+      case (id, pairs) =>
+        val nPositionalArg = pairs.map(_.argument).count(_.isInstanceOf[PositionalArgument])
+        val nNamedArg = pairs.map(_.argument).count(_.isInstanceOf[NamedArgument])
+        val argsText = (nPositionalArg, nNamedArg) match {
+          case (2, 0) => "two positional arguments"
+          case (1,1) => "one positional and one named argument"
+          case (0, 2) => "two named arguments"
+          case (_, 0) => "multiple positional arguments"
+          case (0, _) => "multiple named arguments"
+          case (_, _) => "multiple arguments"
+        }
+        Error(s"Duplicated parameter $id has been used for $argsText.")
+    }
+  }
+
+  def mapArguments(parameters: Seq[SilkCommand.Parameter],
+                   positionalArguments: Seq[PositionalArgument],
+                   namedArguments: Seq[NamedArgument]): Either[Error, Seq[ParameterArgumentPair]] = {
+    ???
   }
 
   def run(statement: Statement, env: SilkObjectValue): Either[Error, SilkObjectValue] = {
@@ -99,11 +90,7 @@ object SilkEngine {
           case None => Left(Error("Command not found."))
           case Some(command) =>
             val parameters = command.parameters
-            for ((arg, index) <- statement.positionalArguments.zipWithIndex) {
-              if (index < parameters.size) {
-                val parameter = parameters(index)
-              }
-            }
+
             ???
         }
       case Some(value) => Left(Error(s"$commandId needs to refer to command, but I have $value"))
