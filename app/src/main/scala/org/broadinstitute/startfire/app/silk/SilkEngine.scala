@@ -10,10 +10,9 @@ object SilkEngine {
 
   case class ParameterArgumentPair(parameter: Parameter, argument: Argument)
 
-  def evaluateArgument(expression: Expression,
-                       env: SilkObjectValue,
-                       requiredType: SilkType): Either[Error, SilkValue] = {
-    val errorOrValue = expression match {
+  def evaluateArgument(parameterArgumentPair: ParameterArgumentPair,
+                       env: SilkObjectValue): Either[Error, SilkValue] = {
+    val errorOrValue = parameterArgumentPair.argument.expression match {
       case literal: SilkLiteral[_] => Right(literal.asValue)
       case identifier: Identifier =>
         env.get(identifier) match {
@@ -21,15 +20,31 @@ object SilkEngine {
           case None => Left(Error(s"$identifier is not defined"))
         }
     }
-    errorOrValue match {
-      case Left(error) => Left(error)
-      case Right(value) =>
-        val valueType = value.silkType
-        if(valueType.canBeUsedAs(requiredType)) {
-          Right(value)
-        } else {
-          Left(Error(s"Value of type ${value.silkType} found, but ${requiredType} required."))
-        }
+    errorOrValue.flatMap { value =>
+      val requiredType = parameterArgumentPair.parameter.silkType
+      val valueType = value.silkType
+      if (valueType.canBeUsedAs(requiredType)) {
+        Right(value)
+      } else Left(Error(s"Value of type ${value.silkType} found, but $requiredType required."))
+    }
+  }
+
+  def evaluateArguments(parameterArgumentPairs: Seq[ParameterArgumentPair],
+                        env: SilkObjectValue): Either[Error, SilkObjectValue] = {
+    var envWithArgs: SilkObjectValue = env
+    val paramArgPairIter = parameterArgumentPairs.iterator
+    var errorOpt: Option[Error] = None
+    while(errorOpt.isEmpty && paramArgPairIter.hasNext) {
+      val paramArgPair = paramArgPairIter.next()
+      evaluateArgument(paramArgPair, envWithArgs) match {
+        case Left(error) => errorOpt = Some(error)
+        case Right(value) =>
+          envWithArgs = envWithArgs.add(paramArgPair.parameter.id, value)
+      }
+    }
+    errorOpt match {
+      case Some(error) => Left(error)
+      case None => Right(envWithArgs)
     }
   }
 
@@ -38,7 +53,7 @@ object SilkEngine {
     positionalArguments.zipWithIndex.map {
       case (argument, index) =>
         val parameter =
-          if(index < parameters.size) {
+          if (index < parameters.size) {
             parameters(index)
           } else {
             Parameter(Identifier("arg" + index), SilkAny, isRequired = false)
@@ -56,29 +71,46 @@ object SilkEngine {
     }
   }
 
-  def errorIfDuplicateParameter(parameterArgumentPairs: Seq[ParameterArgumentPair]): Option[Error] = {
+  def errorIfDuplicateParameter(parameterArgumentPairs: Seq[ParameterArgumentPair],
+                                argsSummary: String): Option[Error] = {
     parameterArgumentPairs.groupBy(_.parameter.id).collectFirst {
       case (id, pairs) if pairs.size > 1 => (id, pairs)
     }.map {
-      case (id, pairs) =>
-        val nPositionalArg = pairs.map(_.argument).count(_.isInstanceOf[PositionalArgument])
-        val nNamedArg = pairs.map(_.argument).count(_.isInstanceOf[NamedArgument])
-        val argsText = (nPositionalArg, nNamedArg) match {
-          case (2, 0) => "two positional arguments"
-          case (1,1) => "one positional and one named argument"
-          case (0, 2) => "two named arguments"
-          case (_, 0) => "multiple positional arguments"
-          case (0, _) => "multiple named arguments"
-          case (_, _) => "multiple arguments"
-        }
-        Error(s"Duplicated parameter $id has been used for $argsText.")
+      case (id, _) =>
+        Error(s"Duplicated parameter $id. It has been used for $argsSummary.")
     }
+  }
+
+  def errorIfRequiredParamMissing(parameters: Seq[Parameter],
+                                  parameterArgumentPairs: Seq[ParameterArgumentPair]): Option[Error] = {
+    val requiredIds = parameters.filter(_.isRequired).map(_.id).toSet
+    val givenIds = parameterArgumentPairs.map(_.parameter.id).toSet
+    val missingIds = requiredIds -- givenIds
+    missingIds.headOption.map(id => Error(s"Missing required parameter $id."))
   }
 
   def mapArguments(parameters: Seq[SilkCommand.Parameter],
                    positionalArguments: Seq[PositionalArgument],
                    namedArguments: Seq[NamedArgument]): Either[Error, Seq[ParameterArgumentPair]] = {
-    ???
+    val posParArgs = mapPositionalArguments(parameters, positionalArguments)
+    errorIfDuplicateParameter(posParArgs, "multiple positional arguments") match {
+      case Some(error) => Left(error)
+      case None =>
+        val namedParArgs = mapNamedArguments(parameters, namedArguments)
+        errorIfDuplicateParameter(namedParArgs, "multiple named arguments") match {
+          case Some(error) => Left(error)
+          case None =>
+            val parArgs = posParArgs ++ namedParArgs
+            errorIfDuplicateParameter(parArgs, "a positional and a named argument") match {
+              case Some(error) => Left(error)
+              case None =>
+                errorIfRequiredParamMissing(parameters, parArgs) match {
+                  case Some(error) => Left(error)
+                  case None => Right(parArgs)
+                }
+            }
+        }
+    }
   }
 
   def run(statement: Statement, env: SilkObjectValue): Either[Error, SilkObjectValue] = {
@@ -90,8 +122,14 @@ object SilkEngine {
           case None => Left(Error("Command not found."))
           case Some(command) =>
             val parameters = command.parameters
-
-            ???
+            mapArguments(parameters, statement.positionalArguments, statement.namedArguments) match {
+              case Left(error) => Left(error)
+              case Right(paramArgPairs) =>
+                evaluateArguments(paramArgPairs, env) match {
+                  case Left(error) => Left(error)
+                  case Right(envWithArgs) => command.execute(envWithArgs)
+                }
+            }
         }
       case Some(value) => Left(Error(s"$commandId needs to refer to command, but I have $value"))
     }
