@@ -77,7 +77,7 @@ object SilkEngine {
       case (id, pairs) if pairs.size > 1 => (id, pairs)
     }.map {
       case (id, _) =>
-        Error(s"Duplicated parameter $id. It has been used for $argsSummary.")
+        Error(s"Duplicated parameter ${id.asSilkCode}. It has been used for $argsSummary.")
     }
   }
 
@@ -86,7 +86,7 @@ object SilkEngine {
     val requiredIds = parameters.filter(_.isRequired).map(_.id).toSet
     val givenIds = parameterArgumentPairs.map(_.parameter.id).toSet
     val missingIds = requiredIds -- givenIds
-    missingIds.headOption.map(id => Error(s"Missing required parameter $id."))
+    missingIds.headOption.map(id => Error(s"Missing required parameter ${id.asSilkCode}."))
   }
 
   def mapArguments(parameters: Seq[SilkCommand.Parameter],

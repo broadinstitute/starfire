@@ -3,8 +3,10 @@ package org.broadinstitute.starfire.app.silk.predef
 import org.broadinstitute.starfire.api.StatusApi
 import org.broadinstitute.starfire.app.silk.SilkCommand.Parameter
 import org.broadinstitute.starfire.app.silk.SilkConfig.sttpBackend
-import org.broadinstitute.starfire.app.silk.SilkValue.SilkObjectValue
-import org.broadinstitute.starfire.app.silk.{Error, SilkCommand}
+import org.broadinstitute.starfire.app.silk.SilkType.SilkStringType
+import org.broadinstitute.starfire.app.silk.SilkValue.{SilkObjectValue, SilkStringValue}
+import org.broadinstitute.starfire.app.silk.{Error, Identifier, SilkCommand}
+import org.broadinstitute.starfire.app.silk.predef.PredefUtils.Implicits._
 
 object PredefCommands {
 
@@ -23,7 +25,21 @@ object PredefCommands {
     }
   }
 
-  val all: Set[SilkCommand] = Set(statusStatus)
+  val helloWorld: SilkCommand = new SilkCommand {
+    val addresseeId: Identifier = "hello" / "world" / "addressee"
+    override def ref: SilkCommand.Ref = SilkCommand.Ref.fromString("e4e55248-8cd3-41f1-a629-1bf3cff8c8e4")
+
+    override def parameters: Seq[Parameter] =
+      Seq(Parameter(addresseeId, SilkStringType, isRequired = true))
+
+    override def execute(env: SilkObjectValue): Either[Error, SilkObjectValue] = {
+      val addressee = env.get(addresseeId).get.asInstanceOf[SilkStringValue].value
+      println(s"Hello, $addressee!")
+      Right(SilkObjectValue.empty)
+    }
+  }
+
+  val all: Set[SilkCommand] = Set(statusStatus, helloWorld)
   val allByRef: Map[SilkCommand.Ref, SilkCommand] = all.map(command => (command.ref, command)).toMap
 
   def get(ref: SilkCommand.Ref): Option[SilkCommand] = allByRef.get(ref)
