@@ -1,6 +1,6 @@
-package org.broadinstitute.startfire.app.silk
+package org.broadinstitute.starfire.app.silk
 
-import org.broadinstitute.startfire.app.silk.SilkValue.{SilkFloatValue, SilkIntegerValue, SilkPrimitiveValue, SilkStringValue}
+import org.broadinstitute.starfire.app.silk.SilkValue.{SilkFloatValue, SilkIntegerValue, SilkPrimitiveValue, SilkStringValue}
 
 trait SilkLiteral[T] extends Expression {
   def value: T

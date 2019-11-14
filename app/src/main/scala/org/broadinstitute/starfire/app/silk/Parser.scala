@@ -1,9 +1,9 @@
-package org.broadinstitute.startfire.app.silk
+package org.broadinstitute.starfire.app.silk
 
 import fastparse.NoWhitespace._
 import fastparse._
-import org.broadinstitute.startfire.app.silk.Argument.{NamedArgument, PositionalArgument}
-import org.broadinstitute.startfire.app.silk.SilkLiteral.{SilkIntegerLiteral, SilkStringLiteral}
+import org.broadinstitute.starfire.app.silk.Argument.{NamedArgument, PositionalArgument}
+import org.broadinstitute.starfire.app.silk.SilkLiteral.{SilkIntegerLiteral, SilkStringLiteral}
 
 object Parser {
 

@@ -1,10 +1,10 @@
-package org.broadinstitute.startfire.app.silk
+package org.broadinstitute.starfire.app.silk
 
-import org.broadinstitute.startfire.app.silk.Argument.{NamedArgument, PositionalArgument}
-import org.broadinstitute.startfire.app.silk.SilkCommand.Parameter
-import org.broadinstitute.startfire.app.silk.SilkType.SilkAny
-import org.broadinstitute.startfire.app.silk.SilkValue.{SilkCommandValue, SilkObjectValue}
-import org.broadinstitute.startfire.app.silk.predef.PredefCommands
+import org.broadinstitute.starfire.app.silk.Argument.{NamedArgument, PositionalArgument}
+import org.broadinstitute.starfire.app.silk.SilkCommand.Parameter
+import org.broadinstitute.starfire.app.silk.SilkType.SilkAny
+import org.broadinstitute.starfire.app.silk.SilkValue.{SilkCommandValue, SilkObjectValue}
+import org.broadinstitute.starfire.app.silk.predef.PredefCommands
 
 object SilkEngine {
 

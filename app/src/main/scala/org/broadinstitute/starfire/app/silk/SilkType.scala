@@ -1,4 +1,4 @@
-package org.broadinstitute.startfire.app.silk
+package org.broadinstitute.starfire.app.silk
 
 sealed trait SilkType {
   def canBeUsedAs(oType: SilkType): Boolean

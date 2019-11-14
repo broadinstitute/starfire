@@ -1,7 +1,7 @@
-package org.broadinstitute.startfire.app.silk
+package org.broadinstitute.starfire.app.silk
 
-import org.broadinstitute.startfire.app.silk.SilkLiteral.{SilkFloatLiteral, SilkIntegerLiteral, SilkStringLiteral}
-import org.broadinstitute.startfire.app.silk.SilkType.{SilkCommandType, SilkFloatType, SilkIntegerType, SilkObjectType, SilkStringType}
+import org.broadinstitute.starfire.app.silk.SilkLiteral.{SilkFloatLiteral, SilkIntegerLiteral, SilkStringLiteral}
+import org.broadinstitute.starfire.app.silk.SilkType._
 
 trait SilkValue {
   def silkType: SilkType

@@ -1,9 +1,8 @@
-package org.broadinstitute.startfire.app
+package org.broadinstitute.starfire.app
 
-import better.files.File
 import org.broadinstitute.starfire.api.StatusApi
-import org.broadinstitute.startfire.app.silk.predef.PredefEnv
-import org.broadinstitute.startfire.app.silk.{Parser, SilkEngine}
+import org.broadinstitute.starfire.app.silk.predef.PredefEnv
+import org.broadinstitute.starfire.app.silk.{Parser, SilkEngine}
 import sttp.client.{HttpURLConnectionBackend, Identity, NothingT, SttpBackend}
 
 object Starfire {

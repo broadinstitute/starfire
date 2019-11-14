@@ -1,4 +1,4 @@
-package org.broadinstitute.startfire.app.silk
+package org.broadinstitute.starfire.app.silk
 
 case class Identifier(parentOpt: Option[Identifier], name: String) extends Expression {
   def /(childName: String): Identifier = Identifier(Some(this), childName)

@@ -1,6 +1,6 @@
-package org.broadinstitute.startfire.app.silk
+package org.broadinstitute.starfire.app.silk
 
-import org.broadinstitute.startfire.app.silk.Argument.{NamedArgument, PositionalArgument}
+import Argument.{NamedArgument, PositionalArgument}
 
 case class Statement(identifier: Identifier,
                      positionalArguments: Seq[PositionalArgument],

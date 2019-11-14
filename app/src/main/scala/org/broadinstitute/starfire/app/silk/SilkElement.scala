@@ -1,4 +1,4 @@
-package org.broadinstitute.startfire.app.silk
+package org.broadinstitute.starfire.app.silk
 
 trait SilkElement {
   def asSilkCode: String
