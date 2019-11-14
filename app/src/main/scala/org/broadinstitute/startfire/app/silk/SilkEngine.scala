@@ -4,7 +4,7 @@ import org.broadinstitute.startfire.app.silk.Argument.{NamedArgument, Positional
 import org.broadinstitute.startfire.app.silk.SilkCommand.Parameter
 import org.broadinstitute.startfire.app.silk.SilkType.SilkAny
 import org.broadinstitute.startfire.app.silk.SilkValue.{SilkCommandValue, SilkObjectValue}
-import org.broadinstitute.startfire.app.silk.commands.PredefCommands
+import org.broadinstitute.startfire.app.silk.predef.PredefCommands
 
 object SilkEngine {
 
@@ -116,7 +116,7 @@ object SilkEngine {
   def run(statement: Statement, env: SilkObjectValue): Either[Error, SilkObjectValue] = {
     val commandId = statement.identifier
     env.get(commandId) match {
-      case None => Left(Error(s"Cannot find command with id $commandId"))
+      case None => Left(Error(s"Cannot find command with id ${commandId.asSilkCode}"))
       case Some(commandValue: SilkCommandValue) =>
         PredefCommands.get(commandValue.ref) match {
           case None => Left(Error("Command not found."))

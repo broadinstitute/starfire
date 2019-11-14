@@ -1,4 +1,4 @@
-package org.broadinstitute.startfire.app.silk.commands
+package org.broadinstitute.startfire.app.silk.predef
 
 import org.broadinstitute.startfire.app.silk.SilkCommand
 
