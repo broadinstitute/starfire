@@ -1,25 +1,9 @@
 package org.broadinstitute.starfire.app
 
-import org.broadinstitute.starfire.api.StatusApi
 import org.broadinstitute.starfire.app.silk.predef.PredefEnv
 import org.broadinstitute.starfire.app.silk.{Parser, SilkEngine}
-import sttp.client.{HttpURLConnectionBackend, Identity, NothingT, SttpBackend}
 
 object Starfire {
-
-  def queryStatus(): Unit = {
-    implicit val backend: SttpBackend[Identity, Nothing, NothingT] = HttpURLConnectionBackend()
-    val request = StatusApi.status()
-    val response = request.send()
-    response.body match {
-      case Left(error) => println(error.getMessage)
-      case Right(status) =>
-        println(s"It is OK: ${status.ok}")
-        for((key, value) <- status.systems) {
-          println(s"$key: ${value.toString()}")
-        }
-    }
-  }
 
   def main(args: Array[String]): Unit = {
     val commandLine = args.mkString(" ")
@@ -30,9 +14,16 @@ object Starfire {
         val env = PredefEnv.env
         SilkEngine.run(statement, env) match {
           case Left(error) => println("Error: " + error.message)
-          case Right(value) =>
+          case Right(outputValues) =>
             println("Success!")
-            println(value)
+            if(outputValues.isEmpty) {
+              println("[no output]")
+            } else {
+              for(entry <- outputValues.entries) {
+                println(entry.asReadableString)
+              }
+              println()
+            }
         }
     }
   }

@@ -13,7 +13,7 @@ object SilkEngine {
   def evaluateArgument(parameterArgumentPair: ParameterArgumentPair,
                        env: SilkObjectValue): Either[Error, SilkValue] = {
     val errorOrValue = parameterArgumentPair.argument.expression match {
-      case literal: SilkLiteral[_] => Right(literal.asValue)
+      case literal: SilkLiteral => Right(literal.asValue)
       case identifier: Identifier =>
         env.get(identifier) match {
           case Some(value) => Right(value)

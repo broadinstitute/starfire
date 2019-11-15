@@ -1,9 +1,9 @@
 package org.broadinstitute.starfire.app.silk
 
-import java.util.UUID
-
 import org.broadinstitute.starfire.app.silk.SilkCommand.{Parameter, Ref}
 import org.broadinstitute.starfire.app.silk.SilkValue.SilkObjectValue
+import org.broadinstitute.starfire.utils.StringToLongHash
+import org.joda.time.DateTime
 
 trait SilkCommand {
   def ref: Ref
@@ -15,12 +15,13 @@ trait SilkCommand {
 
 object SilkCommand {
 
-  case class Ref(uuid: UUID)
+  case class Ref(time: Long, hash: Long)
 
   object Ref {
-    def create: Ref = Ref(UUID.randomUUID())
+    def apply(dateTime: DateTime, string: String): Ref = Ref(dateTime.getMillis, StringToLongHash.hash(string))
 
-    def fromString(string: String): Ref = Ref(UUID.fromString(string))
+    def apply(year: Int, month: Int, day: Int, hour: Int, minute: Int, second: Int, string: String): Ref =
+      apply(new DateTime(year, month, day, hour, minute, second), string)
   }
 
   case class Parameter(id: Identifier, silkType: SilkType, isRequired: Boolean)

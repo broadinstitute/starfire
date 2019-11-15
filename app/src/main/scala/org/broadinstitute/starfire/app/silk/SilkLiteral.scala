@@ -1,21 +1,26 @@
 package org.broadinstitute.starfire.app.silk
 
-import org.broadinstitute.starfire.app.silk.SilkValue.{SilkFloatValue, SilkIntegerValue, SilkPrimitiveValue, SilkStringValue}
+import org.broadinstitute.starfire.app.silk.SilkValue.{SilkFloatValue, SilkIntegerValue, SilkPrimitiveValue, SilkStringValue, SilkTypedPrimitiveValue}
 
-trait SilkLiteral[T] extends Expression {
-  def value: T
-  def asValue: SilkPrimitiveValue[T]
+trait SilkLiteral extends Expression {
+  def value: Any
+  def asValue: SilkPrimitiveValue
 }
 
 object SilkLiteral {
 
-  case class SilkIntegerLiteral(value: Long) extends SilkLiteral[Long] {
+  trait SilkTypedLiteral[T] extends SilkLiteral {
+    def value: T
+    def asValue: SilkTypedPrimitiveValue[T]
+  }
+
+  case class SilkIntegerLiteral(value: Long) extends SilkTypedLiteral[Long] {
     override def asSilkCode: String = value.toString
 
     override def asValue: SilkIntegerValue = SilkIntegerValue(value)
   }
 
-  case class SilkFloatLiteral(value: Double) extends SilkLiteral[Double] {
+  case class SilkFloatLiteral(value: Double) extends SilkTypedLiteral[Double] {
     override def asSilkCode: String = {
       val simpleString = value.toString
       if(simpleString.forall(char => char.isDigit || char == '+' || char == '-')) {
@@ -28,7 +33,7 @@ object SilkLiteral {
     override def asValue: SilkFloatValue = SilkFloatValue(value)
   }
 
-  case class SilkStringLiteral(value: String) extends SilkLiteral[String] {
+  case class SilkStringLiteral(value: String) extends SilkTypedLiteral[String] {
     override def asSilkCode: String = {
       val charsEscaped = value.flatMap { char: Char =>
         char match {

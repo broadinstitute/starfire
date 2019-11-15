@@ -29,10 +29,18 @@ case class Identifier(parentOpt: Option[Identifier], name: String) extends Expre
       case None => None
     }
   }
+
+  def prepend(first: String): Identifier = {
+    parentOpt match {
+      case None => Identifier.fromNonEmptyList(Seq(first, name))
+      case Some(parent) => Identifier(parent.prepend(first), name)
+    }
+  }
 }
 
 object Identifier {
   def apply(name: String): Identifier = Identifier(None, name)
+
   def apply(parent: Identifier, name: String): Identifier = Identifier(Some(parent), name)
 
   def fromNonEmptyList(parts: Seq[String]): Identifier = {

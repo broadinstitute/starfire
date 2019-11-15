@@ -29,7 +29,7 @@ object Parser {
     def whitespace[_: P]: P[Unit] = P(CharsWhile(Character.isWhitespace))
 
     def integerLiteral[_: P]: P[SilkIntegerLiteral] =
-      P((CharIn("+\\-").? ~ CharIn("1-9") ~ CharIn("0-9").rep ~ !CharIn("0-9")).!).map(_.toLong).map(SilkIntegerLiteral)
+      P((CharIn("+\\-").? ~ CharIn("1-9") ~ CharIn("0-9").rep ~ !CharIn("0-9.")).!).map(_.toLong).map(SilkIntegerLiteral)
 
     def stringNotEscapedChar[_: P]: P[String] = P(CharPred(!SilkStringLiteral.escapableChars.contains(_)).!)
 

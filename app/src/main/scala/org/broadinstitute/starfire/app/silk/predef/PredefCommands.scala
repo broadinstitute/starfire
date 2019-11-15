@@ -4,14 +4,15 @@ import org.broadinstitute.starfire.api.StatusApi
 import org.broadinstitute.starfire.app.silk.SilkCommand.Parameter
 import org.broadinstitute.starfire.app.silk.SilkConfig.sttpBackend
 import org.broadinstitute.starfire.app.silk.SilkType.SilkStringType
-import org.broadinstitute.starfire.app.silk.SilkValue.{SilkObjectValue, SilkStringValue}
+import org.broadinstitute.starfire.app.silk.SilkValue.{SilkIntegerValue, SilkObjectValue, SilkStringValue}
 import org.broadinstitute.starfire.app.silk.{Error, Identifier, SilkCommand}
 import org.broadinstitute.starfire.app.silk.predef.PredefUtils.Implicits._
+import org.joda.time.DateTime
 
 object PredefCommands {
 
   val statusStatus: SilkCommand = new SilkCommand {
-    override def ref: SilkCommand.Ref = SilkCommand.Ref.fromString("9bb9643e-0085-4c35-96d9-c7681ef20ee4")
+    override def ref: SilkCommand.Ref = SilkCommand.Ref(2019, 11, 15, 12, 52, 44, "status.status")
 
     override def parameters: Seq[Parameter] = Seq.empty
 
@@ -27,7 +28,7 @@ object PredefCommands {
 
   val helloWorld: SilkCommand = new SilkCommand {
     val addresseeId: Identifier = "hello" / "world" / "addressee"
-    override def ref: SilkCommand.Ref = SilkCommand.Ref.fromString("e4e55248-8cd3-41f1-a629-1bf3cff8c8e4")
+    override def ref: SilkCommand.Ref = SilkCommand.Ref(2019, 11, 15, 12, 54, 4, "hello.world")
 
     override def parameters: Seq[Parameter] =
       Seq(Parameter(addresseeId, SilkStringType, isRequired = true))
@@ -39,7 +40,33 @@ object PredefCommands {
     }
   }
 
-  val all: Set[SilkCommand] = Set(statusStatus, helloWorld)
+  val silkUtilGetTime: SilkCommand = new SilkCommand {
+    override def ref: SilkCommand.Ref = SilkCommand.Ref(2019, 11, 15, 13, 38, 40, "silk.util.getTime")
+
+    override def parameters: Seq[Parameter] = Seq.empty
+
+    override def execute(env: SilkObjectValue): Either[Error, SilkObjectValue] = {
+      val timeNowMillis = System.currentTimeMillis()
+      val dateTimeNow = new DateTime(timeNowMillis)
+      val dateTimeString =  dateTimeNow.toString()
+      Right(SilkObjectValue(
+        "dateTime" -> SilkIntegerValue(timeNowMillis),
+        "dateTimeString" -> SilkStringValue(dateTimeString)
+      ))
+    }
+  }
+
+  val set: SilkCommand = new SilkCommand {
+    override def ref: SilkCommand.Ref = SilkCommand.Ref(2019, 11, 15, 15, 3, 18, "set")
+
+    override def parameters: Seq[Parameter] = Seq.empty
+
+    override def execute(env: SilkObjectValue): Either[Error, SilkObjectValue] = {
+      Right(env)
+    }
+  }
+
+  val all: Set[SilkCommand] = Set(statusStatus, helloWorld, silkUtilGetTime, set)
   val allByRef: Map[SilkCommand.Ref, SilkCommand] = all.map(command => (command.ref, command)).toMap
 
   def get(ref: SilkCommand.Ref): Option[SilkCommand] = allByRef.get(ref)
