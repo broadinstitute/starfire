@@ -5,7 +5,7 @@ import org.broadinstitute.starfire.app.silk.SilkCommand.Parameter
 import org.broadinstitute.starfire.app.silk.SilkConfig.sttpBackend
 import org.broadinstitute.starfire.app.silk.SilkType.SilkStringType
 import org.broadinstitute.starfire.app.silk.SilkValue.{SilkIntegerValue, SilkObjectValue, SilkStringValue}
-import org.broadinstitute.starfire.app.silk.{Error, Identifier, SilkCommand}
+import org.broadinstitute.starfire.app.silk.{SilkError, Identifier, SilkCommand}
 import org.broadinstitute.starfire.app.silk.predef.PredefUtils.Implicits._
 import org.joda.time.DateTime
 
@@ -16,9 +16,9 @@ object PredefCommands {
 
     override def parameters: Seq[Parameter] = Seq.empty
 
-    override def execute(env: SilkObjectValue): Either[Error, SilkObjectValue] = {
+    override def execute(env: SilkObjectValue): Either[SilkError, SilkObjectValue] = {
       StatusApi.status().send().body match {
-        case Left(responseError) => Left(Error(responseError.getMessage))
+        case Left(responseError) => Left(SilkError(responseError.getMessage))
         case Right(systemStatus) =>
           println(systemStatus)
           Right(SilkObjectValue.empty)
@@ -33,7 +33,7 @@ object PredefCommands {
     override def parameters: Seq[Parameter] =
       Seq(Parameter(addresseeId, SilkStringType, isRequired = true))
 
-    override def execute(env: SilkObjectValue): Either[Error, SilkObjectValue] = {
+    override def execute(env: SilkObjectValue): Either[SilkError, SilkObjectValue] = {
       val addressee = env.get(addresseeId).get.asInstanceOf[SilkStringValue].value
       println(s"Hello, $addressee!")
       Right(SilkObjectValue.empty)
@@ -45,7 +45,7 @@ object PredefCommands {
 
     override def parameters: Seq[Parameter] = Seq.empty
 
-    override def execute(env: SilkObjectValue): Either[Error, SilkObjectValue] = {
+    override def execute(env: SilkObjectValue): Either[SilkError, SilkObjectValue] = {
       val timeNowMillis = System.currentTimeMillis()
       val dateTimeNow = new DateTime(timeNowMillis)
       val dateTimeString =  dateTimeNow.toString()
@@ -61,7 +61,7 @@ object PredefCommands {
 
     override def parameters: Seq[Parameter] = Seq.empty
 
-    override def execute(env: SilkObjectValue): Either[Error, SilkObjectValue] = {
+    override def execute(env: SilkObjectValue): Either[SilkError, SilkObjectValue] = {
       Right(env)
     }
   }

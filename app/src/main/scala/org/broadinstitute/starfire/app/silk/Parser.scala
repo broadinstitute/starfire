@@ -55,12 +55,12 @@ object Parser {
     def commandLine[_: P]: P[Statement] = P(Start ~ whitespace.? ~ command ~ whitespace.? ~ End)
   }
 
-  def parseCommandLine(string: String): Either[Error, Statement] = {
+  def parseCommandLine(string: String): Either[SilkError, Statement] = {
     parse(string, ElementParsers.commandLine(_)) match {
       case Parsed.Success(statement, _) => Right(statement)
       case failure: Parsed.Failure =>
         val tracedFailure = failure.trace()
-        Left(Error("Parse failure", Error(tracedFailure.longMsg)))
+        Left(SilkError("Parse failure", SilkError(tracedFailure.longMsg)))
     }
   }
 

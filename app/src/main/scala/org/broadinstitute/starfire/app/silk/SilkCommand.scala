@@ -10,7 +10,7 @@ trait SilkCommand {
 
   def parameters: Seq[Parameter]
 
-  def execute(env: SilkObjectValue): Either[Error, SilkObjectValue]
+  def execute(env: SilkObjectValue): Either[SilkError, SilkObjectValue]
 }
 
 object SilkCommand {

@@ -67,6 +67,14 @@ object SilkValue {
       add(key, value)
     }
 
+    def ++(oObj: SilkObjectValue): SilkObjectValue = {
+      var objNew: SilkObjectValue = this
+      for(entry <- oObj.entries) {
+        objNew = objNew.add(entry.id, entry.value)
+      }
+      objNew
+    }
+
     def remove(key: String): SilkObjectValue = {
       SilkObjectValue(keys.filter(_ != key), values - key)
     }

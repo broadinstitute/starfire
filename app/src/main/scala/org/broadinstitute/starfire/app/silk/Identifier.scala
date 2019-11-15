@@ -50,9 +50,9 @@ object Identifier {
     }
   }
 
-  def apply(parts: Seq[String]): Either[Error, Identifier] = {
+  def apply(parts: Seq[String]): Either[SilkError, Identifier] = {
     if (parts.isEmpty) {
-      Left(Error("Wanted to build identifier, but got empty list of parts."))
+      Left(SilkError("Wanted to build identifier, but got empty list of parts."))
     } else {
       Right(fromNonEmptyList(parts))
     }
