@@ -13,6 +13,7 @@ object PredefEnv {
       .add("status" / "status", PredefCommands.statusStatus)
       .add("silk" / "util" / "getTime", PredefCommands.silkUtilGetTime)
       .add(Identifier("set"), PredefCommands.set)
+      .add("silk" / "debug" / "dump", PredefCommands.silkDebugDump)
 
   def env: SilkObjectValue = theEnv
 

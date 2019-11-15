@@ -66,7 +66,20 @@ object PredefCommands {
     }
   }
 
-  val all: Set[SilkCommand] = Set(statusStatus, helloWorld, silkUtilGetTime, set)
+  val silkDebugDump: SilkCommand = new SilkCommand {
+    override def ref: SilkCommand.Ref = SilkCommand.Ref(2019, 11, 15, 17, 6, 19, "silk.debug.dump")
+
+    override def parameters: Seq[Parameter] = Seq.empty
+
+    override def execute(env: SilkObjectValue): Either[SilkError, SilkObjectValue] = {
+      for(entry <- env.entries) {
+        println(entry.asReadableString)
+      }
+      Right(SilkObjectValue.empty)
+    }
+  }
+
+  val all: Set[SilkCommand] = Set(statusStatus, helloWorld, silkUtilGetTime, set, silkDebugDump)
   val allByRef: Map[SilkCommand.Ref, SilkCommand] = all.map(command => (command.ref, command)).toMap
 
   def get(ref: SilkCommand.Ref): Option[SilkCommand] = allByRef.get(ref)

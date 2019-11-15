@@ -1,7 +1,7 @@
 package org.broadinstitute.starfire.app
 
 import org.broadinstitute.starfire.app.silk.predef.PredefEnv
-import org.broadinstitute.starfire.app.silk.{Parser, SilkConfig, SilkEngine, SilkValue, SilkError}
+import org.broadinstitute.starfire.app.silk.{SilkConfig, SilkEngine}
 
 object Starfire {
 
@@ -12,14 +12,6 @@ object Starfire {
       case Left(error) => println(error.allMessages)
       case Right(outputValues) =>
         println("Success!")
-        if(outputValues.isEmpty) {
-          println("[no output]")
-        } else {
-          for(entry <- outputValues.entries) {
-            println(entry.asReadableString)
-          }
-          println()
-        }
         SilkConfig.writeConfigFile(env ++ outputValues)
     }
   }
