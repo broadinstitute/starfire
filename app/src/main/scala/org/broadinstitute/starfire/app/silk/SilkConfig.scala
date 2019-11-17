@@ -8,9 +8,9 @@ object SilkConfig {
 
   implicit val sttpBackend: SttpBackend[Identity, Nothing, NothingT] = HttpURLConnectionBackend()
 
-  val silkDirectory: File = File(System.getProperty("user.home")) / ".silk"
+  val silkDirectory: File = File(System.getProperty("user.home")) / ".starfire"
 
-  val configFile: File = silkDirectory / "silkrc"
+  val configFile: File = silkDirectory / "starfirerc"
 
   def writeConfigFile(env: SilkObjectValue): Unit = {
     if(!silkDirectory.exists) {
@@ -22,5 +22,11 @@ object SilkConfig {
     }
   }
 
-  def configFileLines: Seq[String] = configFile.lines.toSeq
+  def configFileLines: Seq[String] = {
+    if(configFile.exists) {
+      configFile.lines.toSeq
+    } else {
+      Seq.empty
+    }
+  }
 }
