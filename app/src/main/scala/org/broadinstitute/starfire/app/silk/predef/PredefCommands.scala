@@ -1,12 +1,13 @@
 package org.broadinstitute.starfire.app.silk.predef
 
-import org.broadinstitute.starfire.api.StatusApi
+import org.broadinstitute.starfire.api.{ProfileApi, StatusApi}
 import org.broadinstitute.starfire.app.silk.SilkCommand.Parameter
 import org.broadinstitute.starfire.app.silk.SilkConfig.sttpBackend
 import org.broadinstitute.starfire.app.silk.SilkType.SilkStringType
 import org.broadinstitute.starfire.app.silk.SilkValue.{SilkIntegerValue, SilkObjectValue, SilkStringValue}
-import org.broadinstitute.starfire.app.silk.{SilkError, Identifier, SilkCommand}
+import org.broadinstitute.starfire.app.silk.{Identifier, SilkCommand, SilkError}
 import org.broadinstitute.starfire.app.silk.predef.PredefUtils.Implicits._
+import org.broadinstitute.starfire.model.Profile
 import org.joda.time.DateTime
 
 object PredefCommands {
@@ -76,6 +77,50 @@ object PredefCommands {
         println(entry.asReadableString)
       }
       Right(SilkObjectValue.empty)
+    }
+  }
+
+  val profileSetProfile: SilkCommand = new SilkCommand {
+    override def ref: SilkCommand.Ref = SilkCommand.Ref(2019, 11, 17, 12, 8, 50, "profile.setProfile")
+
+    val firstNameParam: Parameter =
+      Parameter(CommonIds.starfireAccount / "firstName", SilkStringType, isRequired = true)
+    val lastNameParam: Parameter =
+      Parameter(CommonIds.starfireAccount / "lastName", SilkStringType, isRequired = true)
+    val titleParam: Parameter =
+      Parameter(CommonIds.starfireAccount / "title", SilkStringType, isRequired = true)
+    val instituteParam: Parameter =
+      Parameter(CommonIds.starfireAccount / "institute", SilkStringType, isRequired = true)
+    val institutionalProgramParam: Parameter =
+      Parameter(CommonIds.starfireAccount / "institutalProgram", SilkStringType, isRequired = true)
+    val programLocationCityParam: Parameter =
+      Parameter(CommonIds.starfireAccount / "programLocationCity", SilkStringType, isRequired = true)
+    val programLocationStateParam: Parameter =
+      Parameter(CommonIds.starfireAccount / "programLocationState", SilkStringType, isRequired = true)
+    val programLocationCountryParam: Parameter =
+      Parameter(CommonIds.starfireAccount / "programLocationCountry", SilkStringType, isRequired = true)
+    val piParam: Parameter =
+      Parameter(CommonIds.starfireAccount / "pi", SilkStringType, isRequired = true)
+    val nonProfitStatusParam: Parameter =
+      Parameter(CommonIds.starfireAccount / "nonProfitStatus", SilkStringType, isRequired = true)
+
+    override def parameters: Seq[Parameter] = Seq()
+
+    override def execute(env: SilkObjectValue): Either[SilkError, SilkObjectValue] = {
+      val profile = Profile(
+        firstName = env.getString(firstNameParam.id).get,
+        lastName = env.getString(lastNameParam.id).get,
+        title = env.getString(titleParam.id).get,
+        institute = env.getString(instituteParam.id).get,
+        institutionalProgram = env.getString(institutionalProgramParam.id).get,
+        programLocationCity = env.getString(programLocationCityParam.id).get,
+        programLocationState = env.getString(programLocationStateParam.id).get,
+        programLocationCountry = env.getString(programLocationCountryParam.id).get,
+        pi = env.getString(piParam.id).get,
+        nonProfitStatus = env.getString(nonProfitStatusParam.id).get,
+      )
+      val response = ProfileApi.setProfile(Some(profile)).send()
+      ???  // TODO
     }
   }
 
