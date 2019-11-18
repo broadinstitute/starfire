@@ -8,6 +8,7 @@ import org.broadinstitute.starfire.app.silk.SilkValue.{SilkIntegerValue, SilkObj
 import org.broadinstitute.starfire.app.silk.{Identifier, SilkCommand, SilkError}
 import org.broadinstitute.starfire.app.silk.predef.PredefUtils.Implicits._
 import org.broadinstitute.starfire.model.Profile
+import org.broadinstitute.starfire.utils.HttpUtils
 import org.joda.time.DateTime
 
 object PredefCommands {
@@ -18,11 +19,10 @@ object PredefCommands {
     override def parameters: Seq[Parameter] = Seq.empty
 
     override def execute(env: SilkObjectValue): Either[SilkError, SilkObjectValue] = {
-      StatusApi.status().send().body match {
-        case Left(responseError) => Left(SilkError(responseError.getMessage))
-        case Right(systemStatus) =>
-          println(systemStatus)
-          Right(SilkObjectValue.empty)
+      val errorOrStatus = HttpUtils.send(StatusApi.status())
+      errorOrStatus.map { systemStatus =>
+        println(systemStatus)
+        SilkObjectValue.empty
       }
     }
   }
@@ -92,7 +92,7 @@ object PredefCommands {
     val instituteParam: Parameter =
       Parameter(CommonIds.starfireAccount / "institute", SilkStringType, isRequired = true)
     val institutionalProgramParam: Parameter =
-      Parameter(CommonIds.starfireAccount / "institutalProgram", SilkStringType, isRequired = true)
+      Parameter(CommonIds.starfireAccount / "institutionalProgram", SilkStringType, isRequired = true)
     val programLocationCityParam: Parameter =
       Parameter(CommonIds.starfireAccount / "programLocationCity", SilkStringType, isRequired = true)
     val programLocationStateParam: Parameter =
@@ -104,9 +104,15 @@ object PredefCommands {
     val nonProfitStatusParam: Parameter =
       Parameter(CommonIds.starfireAccount / "nonProfitStatus", SilkStringType, isRequired = true)
 
-    override def parameters: Seq[Parameter] = Seq()
+    override def parameters: Seq[Parameter] =
+      Seq(
+        CommonParameters.accountEmail, CommonParameters.accountKeyFile, firstNameParam, lastNameParam, titleParam,
+        instituteParam, institutionalProgramParam, programLocationCityParam, programLocationStateParam,
+        programLocationCountryParam, piParam, nonProfitStatusParam
+      )
 
     override def execute(env: SilkObjectValue): Either[SilkError, SilkObjectValue] = {
+
       val profile = Profile(
         firstName = env.getString(firstNameParam.id).get,
         lastName = env.getString(lastNameParam.id).get,
@@ -119,12 +125,14 @@ object PredefCommands {
         pi = env.getString(piParam.id).get,
         nonProfitStatus = env.getString(nonProfitStatusParam.id).get,
       )
-      val response = ProfileApi.setProfile(Some(profile)).send()
-      ???  // TODO
+      val request = ProfileApi.setProfile(Some(profile))
+      HttpUtils.send(request).map { _ =>
+        SilkObjectValue.empty
+      }
     }
   }
 
-  val all: Set[SilkCommand] = Set(statusStatus, helloWorld, silkUtilGetTime, set, silkDebugDump)
+  val all: Set[SilkCommand] = Set(statusStatus, helloWorld, silkUtilGetTime, set, silkDebugDump, profileSetProfile)
   val allByRef: Map[SilkCommand.Ref, SilkCommand] = all.map(command => (command.ref, command)).toMap
 
   def get(ref: SilkCommand.Ref): Option[SilkCommand] = allByRef.get(ref)
