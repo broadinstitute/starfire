@@ -2,7 +2,7 @@ package org.broadinstitute.starfire.app.silk
 
 import org.broadinstitute.starfire.app.silk.SilkCommand.{Parameter, Ref}
 import org.broadinstitute.starfire.app.silk.SilkValue.SilkObjectValue
-import org.broadinstitute.starfire.util.SnagOld
+import org.broadinstitute.starfire.util.Snag
 import org.broadinstitute.starfire.utils.StringToLongHash
 import org.joda.time.DateTime
 
@@ -11,7 +11,7 @@ trait SilkCommand {
 
   def parameters: Seq[Parameter]
 
-  def execute(env: SilkObjectValue): Either[SnagOld, SilkObjectValue]
+  def execute(env: SilkObjectValue): Either[Snag, SilkObjectValue]
 }
 
 object SilkCommand {

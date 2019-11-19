@@ -5,20 +5,20 @@ import org.broadinstitute.starfire.app.silk.SilkCommand.Parameter
 import org.broadinstitute.starfire.app.silk.SilkType.SilkAny
 import org.broadinstitute.starfire.app.silk.SilkValue.{SilkCommandValue, SilkObjectValue}
 import org.broadinstitute.starfire.app.silk.predef.PredefCommands
-import org.broadinstitute.starfire.util.SnagOld
+import org.broadinstitute.starfire.util.Snag
 
 object SilkEngine {
 
   case class ParameterArgumentPair(parameter: Parameter, argument: Argument)
 
   def evaluateArgument(parameterArgumentPair: ParameterArgumentPair,
-                       env: SilkObjectValue): Either[SnagOld, SilkValue] = {
+                       env: SilkObjectValue): Either[Snag, SilkValue] = {
     val errorOrValue = parameterArgumentPair.argument.expression match {
       case literal: SilkLiteral => Right(literal.asValue)
       case identifier: Identifier =>
         env.get(identifier) match {
           case Some(value) => Right(value)
-          case None => Left(SnagOld(s"$identifier is not defined"))
+          case None => Left(Snag(s"$identifier is not defined"))
         }
     }
     errorOrValue.flatMap { value =>
@@ -26,15 +26,15 @@ object SilkEngine {
       val valueType = value.silkType
       if (valueType.canBeUsedAs(requiredType)) {
         Right(value)
-      } else Left(SnagOld(s"Value of type ${value.silkType} found, but $requiredType required."))
+      } else Left(Snag(s"Value of type ${value.silkType} found, but $requiredType required."))
     }
   }
 
   def evaluateArguments(parameterArgumentPairs: Seq[ParameterArgumentPair],
-                        env: SilkObjectValue): Either[SnagOld, SilkObjectValue] = {
+                        env: SilkObjectValue): Either[Snag, SilkObjectValue] = {
     var envWithArgs: SilkObjectValue = env
     val paramArgPairIter = parameterArgumentPairs.iterator
-    var errorOpt: Option[SnagOld] = None
+    var errorOpt: Option[Snag] = None
     while(errorOpt.isEmpty && paramArgPairIter.hasNext) {
       val paramArgPair = paramArgPairIter.next()
       evaluateArgument(paramArgPair, envWithArgs) match {
@@ -73,29 +73,29 @@ object SilkEngine {
   }
 
   def errorIfDuplicateParameter(parameterArgumentPairs: Seq[ParameterArgumentPair],
-                                argsSummary: String): Option[SnagOld] = {
+                                argsSummary: String): Option[Snag] = {
     parameterArgumentPairs.groupBy(_.parameter.id).collectFirst {
       case (id, pairs) if pairs.size > 1 => (id, pairs)
     }.map {
       case (id, _) =>
-        SnagOld(s"Duplicated parameter ${id.asSilkCode}. It has been used for $argsSummary.")
+        Snag(s"Duplicated parameter ${id.asSilkCode}. It has been used for $argsSummary.")
     }
   }
 
   def errorIfRequiredParamMissing(parameters: Seq[Parameter],
                                   parameterArgumentPairs: Seq[ParameterArgumentPair],
-                                  env: SilkObjectValue): Option[SnagOld] = {
+                                  env: SilkObjectValue): Option[Snag] = {
     val requiredIds = parameters.filter(_.isRequired).map(_.id).toSet
     val givenIds = parameterArgumentPairs.map(_.parameter.id).toSet
     val idsNotOnCommandLine = requiredIds -- givenIds
     val missingIds = idsNotOnCommandLine.filter(env.get(_).isEmpty)
-    missingIds.headOption.map(id => SnagOld(s"Missing required parameter ${id.asSilkCode}."))
+    missingIds.headOption.map(id => Snag(s"Missing required parameter ${id.asSilkCode}."))
   }
 
   def mapArguments(parameters: Seq[SilkCommand.Parameter],
                    positionalArguments: Seq[PositionalArgument],
                    namedArguments: Seq[NamedArgument],
-                   env: SilkObjectValue): Either[SnagOld, Seq[ParameterArgumentPair]] = {
+                   env: SilkObjectValue): Either[Snag, Seq[ParameterArgumentPair]] = {
     val posParArgs = mapPositionalArguments(parameters, positionalArguments)
     errorIfDuplicateParameter(posParArgs, "multiple positional arguments") match {
       case Some(error) => Left(error)
@@ -117,13 +117,13 @@ object SilkEngine {
     }
   }
 
-  def run(statement: Statement, env: SilkObjectValue): Either[SnagOld, SilkObjectValue] = {
+  def run(statement: Statement, env: SilkObjectValue): Either[Snag, SilkObjectValue] = {
     val commandId = statement.identifier
     env.get(commandId) match {
-      case None => Left(SnagOld(s"Cannot find command with id ${commandId.asSilkCode}"))
+      case None => Left(Snag(s"Cannot find command with id ${commandId.asSilkCode}"))
       case Some(commandValue: SilkCommandValue) =>
         PredefCommands.get(commandValue.ref) match {
-          case None => Left(SnagOld("Command not found."))
+          case None => Left(Snag("Command not found."))
           case Some(command) =>
             val parameters = command.parameters
             mapArguments(parameters, statement.positionalArguments, statement.namedArguments, env) match {
@@ -135,19 +135,19 @@ object SilkEngine {
                 }
             }
         }
-      case Some(value) => Left(SnagOld(s"$commandId needs to refer to command, but I have $value"))
+      case Some(value) => Left(Snag(s"$commandId needs to refer to command, but I have $value"))
     }
   }
 
-  def run(commandLine: String, env: SilkValue.SilkObjectValue): Either[SnagOld, SilkValue.SilkObjectValue] = {
+  def run(commandLine: String, env: SilkValue.SilkObjectValue): Either[Snag, SilkValue.SilkObjectValue] = {
     Parser.parseCommandLine(commandLine) match {
       case Left(error) => Left(error)
       case Right(statement) => SilkEngine.run(statement, env)
     }
   }
 
-  def run(commandLines: Seq[String], env: SilkValue.SilkObjectValue): Either[SnagOld, SilkValue.SilkObjectValue] = {
-    var errorOpt: Option[SnagOld] = None
+  def run(commandLines: Seq[String], env: SilkValue.SilkObjectValue): Either[Snag, SilkValue.SilkObjectValue] = {
+    var errorOpt: Option[Snag] = None
     var envCurrent: SilkObjectValue = env
     val commandLineIter = commandLines.iterator
     while(errorOpt.isEmpty && commandLineIter.hasNext) {

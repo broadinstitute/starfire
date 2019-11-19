@@ -4,7 +4,7 @@ import fastparse.NoWhitespace._
 import fastparse._
 import org.broadinstitute.starfire.app.silk.Argument.{NamedArgument, PositionalArgument}
 import org.broadinstitute.starfire.app.silk.SilkLiteral.{SilkIntegerLiteral, SilkStringLiteral}
-import org.broadinstitute.starfire.util.SnagOld
+import org.broadinstitute.starfire.util.Snag
 
 object Parser {
 
@@ -56,12 +56,12 @@ object Parser {
     def commandLine[_: P]: P[Statement] = P(Start ~ whitespace.? ~ command ~ whitespace.? ~ End)
   }
 
-  def parseCommandLine(string: String): Either[SnagOld, Statement] = {
+  def parseCommandLine(string: String): Either[Snag, Statement] = {
     parse(string, ElementParsers.commandLine(_)) match {
       case Parsed.Success(statement, _) => Right(statement)
       case failure: Parsed.Failure =>
         val tracedFailure = failure.trace()
-        Left(SnagOld("Parse failure", SnagOld(tracedFailure.longMsg)))
+        Left(Snag("Parse failure", Snag(tracedFailure.longMsg)))
     }
   }
 

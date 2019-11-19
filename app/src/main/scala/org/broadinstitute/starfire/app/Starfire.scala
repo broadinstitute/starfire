@@ -11,7 +11,7 @@ object Starfire {
     SilkEngine.run(commandLines, env) match {
       case Left(error) =>
         println("Error!")
-        println(error.allMessages)
+        println(error.report)
       case Right(outputValues) =>
         println("Success!")
         SilkConfig.writeConfigFile(env ++ outputValues)
