@@ -164,13 +164,13 @@ object MethodConfigurationsApi {
     workspaceNamespace: String,
     workspaceName: String,
     allRepos: Option[Boolean] = Option(false)
-    ): Request[Either[ResponseError[io.circe.Error],Unit],Nothing] = {
+    ): Request[Either[ResponseError[io.circe.Error],io.circe.Json],Nothing] = {
     assert(workspaceNamespace != null, "Missing required parameter 'workspaceNamespace' when calling MethodConfigurationsApi->listWorkspaceMethodConfigs")
     assert(workspaceName != null, "Missing required parameter 'workspaceName' when calling MethodConfigurationsApi->listWorkspaceMethodConfigs")
 
     basicRequest
       .get(uri"https://api.firecloud.org/api/workspaces/${workspaceNamespace}/${workspaceName}/methodconfigs?allRepos=${allRepos}")
-      .response(asJson[Unit])
+      .response(asJson[io.circe.Json])
   }
 
   /**

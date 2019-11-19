@@ -1,12 +1,12 @@
 package org.broadinstitute.starfire.app.silk.predef
 
-import org.broadinstitute.starfire.api.{ProfileApi, StatusApi}
+import org.broadinstitute.starfire.api.{EntitiesApi, MethodConfigurationsApi, ProfileApi, StatusApi}
 import org.broadinstitute.starfire.app.silk.SilkCommand.Parameter
 import org.broadinstitute.starfire.app.silk.SilkConfig.sttpBackend
 import org.broadinstitute.starfire.app.silk.SilkType.SilkStringType
 import org.broadinstitute.starfire.app.silk.SilkValue.{SilkIntegerValue, SilkObjectValue, SilkStringValue}
 import org.broadinstitute.starfire.app.silk.predef.PredefUtils.Implicits._
-import org.broadinstitute.starfire.app.silk.{Identifier, SilkCommand}
+import org.broadinstitute.starfire.app.silk.{Identifier, SilkCommand, SilkHttpUtils}
 import org.broadinstitute.starfire.model.Profile
 import org.broadinstitute.starfire.util.Snag
 import org.broadinstitute.starfire.utils.HttpUtils
@@ -107,9 +107,9 @@ object PredefCommands {
 
     override def parameters: Seq[Parameter] =
       Seq(
-        CommonParameters.accountEmail, CommonParameters.accountKeyFile, firstNameParam, lastNameParam, titleParam,
-        instituteParam, institutionalProgramParam, programLocationCityParam, programLocationStateParam,
-        programLocationCountryParam, piParam, nonProfitStatusParam
+        CommonParameters.accountKeyFile, firstNameParam, lastNameParam, titleParam, instituteParam,
+        institutionalProgramParam, programLocationCityParam, programLocationStateParam, programLocationCountryParam,
+        piParam, nonProfitStatusParam
       )
 
     override def execute(env: SilkObjectValue): Either[Snag, SilkObjectValue] = {
@@ -126,17 +126,56 @@ object PredefCommands {
         pi = env.getString(piParam.id).get,
         nonProfitStatus = env.getString(nonProfitStatusParam.id).get,
       )
-      val keyFile = CommandUtils.getKeyFile(env)
       val request = ProfileApi.setProfile(Some(profile))
-      val scopes = Seq("openid", "email", "profile", "https://www.googleapis.com/auth/cloud-billing")
-      HttpUtils.sendAuthorized(request, keyFile, scopes).map { json =>
+      SilkHttpUtils.sendAuthorized(request, env).map { json =>
         println(json)
         SilkObjectValue.empty
       }
     }
   }
 
-  val all: Set[SilkCommand] = Set(statusStatus, helloWorld, silkUtilGetTime, set, silkDebugDump, profileSetProfile)
+  val entitiesGetEntitiesWithType: SilkCommand = new SilkCommand {
+    override def ref: SilkCommand.Ref = SilkCommand.Ref(2019, 11, 19, 17, 33, 37, "entities.getEntitiesWithType")
+
+    val workspaceNamespaceParam: Parameter = Parameter("workspaceNamespace", SilkStringType, isRequired = true)
+    val workspaceNameParam: Parameter = Parameter("workspaceName", SilkStringType, isRequired = true)
+
+    override def parameters: Seq[Parameter] =
+      Seq(CommonParameters.accountKeyFile, CommonParameters.workspaceNamespace, CommonParameters.workspaceName)
+
+    override def execute(env: SilkObjectValue): Either[Snag, SilkObjectValue] = {
+      val workspaceNamespace = env.getString(CommonParameters.workspaceNamespace.id).get
+      val workspaceName = env.getString(CommonParameters.workspaceName.id).get
+      val request = EntitiesApi.getEntitiesWithType(workspaceNamespace, workspaceName)
+      SilkHttpUtils.sendAuthorized(request, env).map { json =>
+        println(json)
+        SilkObjectValue.empty
+      }
+    }
+  }
+
+  val methodConfigurationsListWorkspaceMethodConfigs: SilkCommand = new SilkCommand {
+    override def ref: SilkCommand.Ref =
+      SilkCommand.Ref(2019, 11, 19, 17, 48, 57, "methodConfigurations.listWorkspaceMethodConfigs")
+
+    override def parameters: Seq[Parameter] = Seq(CommonParameters.workspaceNamespace, CommonParameters.workspaceName)
+
+    override def execute(env: SilkObjectValue): Either[Snag, SilkObjectValue] = {
+      val workspaceNamespace = env.getString(CommonParameters.workspaceNamespace.id).get
+      val workspaceName = env.getString(CommonParameters.workspaceName.id).get
+      val request = MethodConfigurationsApi.listWorkspaceMethodConfigs(workspaceNamespace, workspaceName)
+      SilkHttpUtils.sendAuthorized(request, env).map { json =>
+        println(json)
+        SilkObjectValue.empty
+      }
+    }
+  }
+
+  val all: Set[SilkCommand] =
+    Set(
+      statusStatus, helloWorld, silkUtilGetTime, set, silkDebugDump, profileSetProfile, entitiesGetEntitiesWithType,
+      methodConfigurationsListWorkspaceMethodConfigs
+    )
   val allByRef: Map[SilkCommand.Ref, SilkCommand] = all.map(command => (command.ref, command)).toMap
 
   def get(ref: SilkCommand.Ref): Option[SilkCommand] = allByRef.get(ref)

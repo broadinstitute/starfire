@@ -292,13 +292,13 @@ object EntitiesApi {
    */
   def getEntitiesWithType(
     workspaceNamespace: String,
-    workspaceName: String): Request[Either[ResponseError[io.circe.Error],Unit],Nothing] = {
+    workspaceName: String): Request[Either[ResponseError[io.circe.Error],io.circe.Json],Nothing] = {
     assert(workspaceNamespace != null, "Missing required parameter 'workspaceNamespace' when calling EntitiesApi->getEntitiesWithType")
     assert(workspaceName != null, "Missing required parameter 'workspaceName' when calling EntitiesApi->getEntitiesWithType")
 
     basicRequest
       .get(uri"https://api.firecloud.org/api/workspaces/${workspaceNamespace}/${workspaceName}/entities_with_type")
-      .response(asJson[Unit])
+      .response(asJson[io.circe.Json])
   }
 
   /**

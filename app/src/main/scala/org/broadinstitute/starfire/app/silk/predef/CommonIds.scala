@@ -7,5 +7,7 @@ object CommonIds {
   val starfireAccountEmail: Identifier = "starfire" / "account" / "email"
   val starfireAccountKeyFile: Identifier = "starfire" / "account" / "keyFile"
   val starfireAccount: Identifier = "starfire" / "account"
+  val workspaceNamespace: Identifier = "workspaceNamespace"
+  val workspaceName: Identifier = "workspaceName"
 
 }

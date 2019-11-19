@@ -15,6 +15,9 @@ object PredefEnv {
       .add(Identifier("set"), PredefCommands.set)
       .add("silk" / "debug" / "dump", PredefCommands.silkDebugDump)
       .add("profile" / "setProfile", PredefCommands.profileSetProfile)
+      .add("entities" / "getEntitiesWithType", PredefCommands.entitiesGetEntitiesWithType)
+      .add("methodConfigurations" / "listWorkspaceMethodConfigs",
+        PredefCommands.methodConfigurationsListWorkspaceMethodConfigs)
 
   def env: SilkObjectValue = theEnv
 
