@@ -6,6 +6,8 @@ import better.files.File
 import com.google.auth.oauth2.{AccessToken, GoogleCredentials, ServiceAccountCredentials}
 import sttp.client.Request
 
+import scala.util.Try
+
 
 object OAuthUtils {
 
@@ -13,8 +15,8 @@ object OAuthUtils {
     GoogleCredentials.getApplicationDefault
   }
 
-  def readServiceAccountCredentials(file: File): ServiceAccountCredentials = {
-    ServiceAccountCredentials.fromStream(file.newFileInputStream)
+  def readServiceAccountCredentials(file: File): Try[ServiceAccountCredentials] = {
+    Try(ServiceAccountCredentials.fromStream(file.newFileInputStream))
   }
 
   def withScopes(credentials: GoogleCredentials, scopes: String*): GoogleCredentials = {
@@ -37,5 +39,4 @@ object OAuthUtils {
   def addAccessToken[T, S](request: Request[T, S], credentials: GoogleCredentials): Request[T, S] = {
     addAccessToken(request, accessTokenOpt(credentials).get)
   }
-
 }

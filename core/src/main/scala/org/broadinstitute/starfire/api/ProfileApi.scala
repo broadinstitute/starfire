@@ -230,12 +230,12 @@ object ProfileApi {
    */
   def setProfile(
     profile: Option[Profile] = None
-    ): Request[Either[ResponseError[io.circe.Error],Unit],Nothing] = {
+    ): Request[Either[ResponseError[io.circe.Error],io.circe.Json],Nothing] = {
 
     basicRequest
       .post(uri"https://api.firecloud.org/register/profile")
       .body(profile)
-      .response(asJson[Unit])
+      .response(asJson[io.circe.Json])
   }
 
   /**

@@ -5,9 +5,10 @@ import org.broadinstitute.starfire.app.silk.SilkCommand.Parameter
 import org.broadinstitute.starfire.app.silk.SilkConfig.sttpBackend
 import org.broadinstitute.starfire.app.silk.SilkType.SilkStringType
 import org.broadinstitute.starfire.app.silk.SilkValue.{SilkIntegerValue, SilkObjectValue, SilkStringValue}
-import org.broadinstitute.starfire.app.silk.{Identifier, SilkCommand, SilkError}
+import org.broadinstitute.starfire.app.silk.{Identifier, SilkCommand}
 import org.broadinstitute.starfire.app.silk.predef.PredefUtils.Implicits._
 import org.broadinstitute.starfire.model.Profile
+import org.broadinstitute.starfire.util.SnagOld
 import org.broadinstitute.starfire.utils.HttpUtils
 import org.joda.time.DateTime
 
@@ -18,7 +19,7 @@ object PredefCommands {
 
     override def parameters: Seq[Parameter] = Seq.empty
 
-    override def execute(env: SilkObjectValue): Either[SilkError, SilkObjectValue] = {
+    override def execute(env: SilkObjectValue): Either[SnagOld, SilkObjectValue] = {
       val errorOrStatus = HttpUtils.send(StatusApi.status())
       errorOrStatus.map { systemStatus =>
         println(systemStatus)
@@ -34,7 +35,7 @@ object PredefCommands {
     override def parameters: Seq[Parameter] =
       Seq(Parameter(addresseeId, SilkStringType, isRequired = true))
 
-    override def execute(env: SilkObjectValue): Either[SilkError, SilkObjectValue] = {
+    override def execute(env: SilkObjectValue): Either[SnagOld, SilkObjectValue] = {
       val addressee = env.get(addresseeId).get.asInstanceOf[SilkStringValue].value
       println(s"Hello, $addressee!")
       Right(SilkObjectValue.empty)
@@ -46,7 +47,7 @@ object PredefCommands {
 
     override def parameters: Seq[Parameter] = Seq.empty
 
-    override def execute(env: SilkObjectValue): Either[SilkError, SilkObjectValue] = {
+    override def execute(env: SilkObjectValue): Either[SnagOld, SilkObjectValue] = {
       val timeNowMillis = System.currentTimeMillis()
       val dateTimeNow = new DateTime(timeNowMillis)
       val dateTimeString =  dateTimeNow.toString()
@@ -62,7 +63,7 @@ object PredefCommands {
 
     override def parameters: Seq[Parameter] = Seq.empty
 
-    override def execute(env: SilkObjectValue): Either[SilkError, SilkObjectValue] = {
+    override def execute(env: SilkObjectValue): Either[SnagOld, SilkObjectValue] = {
       Right(env)
     }
   }
@@ -72,7 +73,7 @@ object PredefCommands {
 
     override def parameters: Seq[Parameter] = Seq.empty
 
-    override def execute(env: SilkObjectValue): Either[SilkError, SilkObjectValue] = {
+    override def execute(env: SilkObjectValue): Either[SnagOld, SilkObjectValue] = {
       for(entry <- env.entries) {
         println(entry.asReadableString)
       }
@@ -111,7 +112,7 @@ object PredefCommands {
         programLocationCountryParam, piParam, nonProfitStatusParam
       )
 
-    override def execute(env: SilkObjectValue): Either[SilkError, SilkObjectValue] = {
+    override def execute(env: SilkObjectValue): Either[SnagOld, SilkObjectValue] = {
 
       val profile = Profile(
         firstName = env.getString(firstNameParam.id).get,
@@ -125,8 +126,11 @@ object PredefCommands {
         pi = env.getString(piParam.id).get,
         nonProfitStatus = env.getString(nonProfitStatusParam.id).get,
       )
+      val keyFile = CommandUtils.getKeyFile(env)
       val request = ProfileApi.setProfile(Some(profile))
-      HttpUtils.send(request).map { _ =>
+      val scopes = Seq("openid", "email", "profile", "https://www.googleapis.com/auth/cloud-billing")
+      HttpUtils.sendAuthorized(request, keyFile, scopes).map { json =>
+        println(json)
         SilkObjectValue.empty
       }
     }

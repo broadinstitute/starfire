@@ -1,5 +1,7 @@
 package org.broadinstitute.starfire.app.silk
 
+import org.broadinstitute.starfire.util.SnagOld
+
 case class Identifier(parentOpt: Option[Identifier], name: String) extends Expression {
   def /(childName: String): Identifier = Identifier(Some(this), childName)
 
@@ -50,9 +52,9 @@ object Identifier {
     }
   }
 
-  def apply(parts: Seq[String]): Either[SilkError, Identifier] = {
+  def apply(parts: Seq[String]): Either[SnagOld, Identifier] = {
     if (parts.isEmpty) {
-      Left(SilkError("Wanted to build identifier, but got empty list of parts."))
+      Left(SnagOld("Wanted to build identifier, but got empty list of parts."))
     } else {
       Right(fromNonEmptyList(parts))
     }

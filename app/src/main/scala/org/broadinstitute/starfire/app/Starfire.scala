@@ -9,7 +9,9 @@ object Starfire {
     val commandLines = SilkConfig.configFileLines :+ args.mkString(" ")
     val env = PredefEnv.env
     SilkEngine.run(commandLines, env) match {
-      case Left(error) => println(error.allMessages)
+      case Left(error) =>
+        println("Error!")
+        println(error.allMessages)
       case Right(outputValues) =>
         println("Success!")
         SilkConfig.writeConfigFile(env ++ outputValues)
