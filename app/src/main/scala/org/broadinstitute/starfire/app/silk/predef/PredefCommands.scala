@@ -1,13 +1,13 @@
 package org.broadinstitute.starfire.app.silk.predef
 
-import org.broadinstitute.starfire.api.{EntitiesApi, MethodConfigurationsApi, ProfileApi, StatusApi}
+import org.broadinstitute.starfire.api.{EntitiesApi, MethodConfigurationsApi, ProfileApi, StatusApi, SubmissionsApi}
 import org.broadinstitute.starfire.app.silk.SilkCommand.Parameter
 import org.broadinstitute.starfire.app.silk.SilkConfig.sttpBackend
 import org.broadinstitute.starfire.app.silk.SilkType.SilkStringType
 import org.broadinstitute.starfire.app.silk.SilkValue.{SilkIntegerValue, SilkObjectValue, SilkStringValue}
 import org.broadinstitute.starfire.app.silk.predef.PredefUtils.Implicits._
 import org.broadinstitute.starfire.app.silk.{Identifier, SilkCommand, SilkHttpUtils}
-import org.broadinstitute.starfire.model.Profile
+import org.broadinstitute.starfire.model.{Profile, SubmissionRequest}
 import org.broadinstitute.starfire.util.Snag
 import org.broadinstitute.starfire.utils.HttpUtils
 import org.joda.time.DateTime
@@ -115,22 +115,19 @@ object PredefCommands {
     override def execute(env: SilkObjectValue): Either[Snag, SilkObjectValue] = {
 
       val profile = Profile(
-        firstName = env.getString(firstNameParam.id).get,
-        lastName = env.getString(lastNameParam.id).get,
-        title = env.getString(titleParam.id).get,
-        institute = env.getString(instituteParam.id).get,
-        institutionalProgram = env.getString(institutionalProgramParam.id).get,
-        programLocationCity = env.getString(programLocationCityParam.id).get,
-        programLocationState = env.getString(programLocationStateParam.id).get,
-        programLocationCountry = env.getString(programLocationCountryParam.id).get,
-        pi = env.getString(piParam.id).get,
-        nonProfitStatus = env.getString(nonProfitStatusParam.id).get,
+        firstName = env.getString(firstNameParam),
+        lastName = env.getString(lastNameParam),
+        title = env.getString(titleParam),
+        institute = env.getString(instituteParam),
+        institutionalProgram = env.getString(institutionalProgramParam),
+        programLocationCity = env.getString(programLocationCityParam),
+        programLocationState = env.getString(programLocationStateParam),
+        programLocationCountry = env.getString(programLocationCountryParam),
+        pi = env.getString(piParam),
+        nonProfitStatus = env.getString(nonProfitStatusParam),
       )
       val request = ProfileApi.setProfile(Some(profile))
-      SilkHttpUtils.sendAuthorized(request, env).map { json =>
-        println(json)
-        SilkObjectValue.empty
-      }
+      SilkHttpUtils.sendAuthorizedPrintResponseReturnEmpty(request, env)
     }
   }
 
@@ -144,13 +141,10 @@ object PredefCommands {
       Seq(CommonParameters.accountKeyFile, CommonParameters.workspaceNamespace, CommonParameters.workspaceName)
 
     override def execute(env: SilkObjectValue): Either[Snag, SilkObjectValue] = {
-      val workspaceNamespace = env.getString(CommonParameters.workspaceNamespace.id).get
-      val workspaceName = env.getString(CommonParameters.workspaceName.id).get
+      val workspaceNamespace = env.getString(CommonParameters.workspaceNamespace)
+      val workspaceName = env.getString(CommonParameters.workspaceName)
       val request = EntitiesApi.getEntitiesWithType(workspaceNamespace, workspaceName)
-      SilkHttpUtils.sendAuthorized(request, env).map { json =>
-        println(json)
-        SilkObjectValue.empty
-      }
+      SilkHttpUtils.sendAuthorizedPrintResponseReturnEmpty(request, env)
     }
   }
 
@@ -161,20 +155,60 @@ object PredefCommands {
     override def parameters: Seq[Parameter] = Seq(CommonParameters.workspaceNamespace, CommonParameters.workspaceName)
 
     override def execute(env: SilkObjectValue): Either[Snag, SilkObjectValue] = {
-      val workspaceNamespace = env.getString(CommonParameters.workspaceNamespace.id).get
-      val workspaceName = env.getString(CommonParameters.workspaceName.id).get
+      val workspaceNamespace = env.getString(CommonParameters.workspaceNamespace)
+      val workspaceName = env.getString(CommonParameters.workspaceName)
       val request = MethodConfigurationsApi.listWorkspaceMethodConfigs(workspaceNamespace, workspaceName)
-      SilkHttpUtils.sendAuthorized(request, env).map { json =>
-        println(json)
-        SilkObjectValue.empty
-      }
+      SilkHttpUtils.sendAuthorizedPrintResponseReturnEmpty(request, env)
+    }
+  }
+
+  val submissionsCreateSubmission: SilkCommand = new SilkCommand {
+    override def ref: SilkCommand.Ref = SilkCommand.Ref(2019, 11, 21, 17, 1, 6, "submissions.createSubmission")
+
+    val methodConfigurationNamespaceParam: Parameter =
+      Parameter("methodConfigurationNamespace", SilkStringType, isRequired = true)
+    val methodConfigurationNameParam: Parameter =
+      Parameter("methodConfigurationName", SilkStringType, isRequired = true)
+
+    override def parameters: Seq[Parameter] =
+      Seq(
+        CommonParameters.workspaceNamespace, CommonParameters.workspaceName, methodConfigurationNamespaceParam,
+        methodConfigurationNameParam
+      )
+
+    override def execute(env: SilkObjectValue): Either[Snag, SilkObjectValue] = {
+      val workspaceNamespace = env.getString(CommonParameters.workspaceNamespace)
+      val workspaceName = env.getString(CommonParameters.workspaceName)
+      val methodConfigurationNamespace = env.getString(methodConfigurationNamespaceParam)
+      val methodConfigurationName = env.getString(methodConfigurationNameParam)
+      val submissionRequest =
+        SubmissionRequest(methodConfigurationNamespace, methodConfigurationName, useCallCache = true)
+      val request = SubmissionsApi.createSubmission(workspaceNamespace, workspaceName, submissionRequest)
+      SilkHttpUtils.sendAuthorizedPrintResponseReturnEmpty(request, env)
+    }
+  }
+
+  val submissionsMonitorSubmission: SilkCommand = new SilkCommand {
+    override def ref: SilkCommand.Ref = SilkCommand.Ref(2019, 11, 21, 18, 4, 31, "submissions.monitorSubmission")
+
+    val submissionIdParam: Parameter = Parameter("submissionId", SilkStringType, isRequired = true)
+
+    override def parameters: Seq[Parameter] =
+      Seq(CommonParameters.workspaceNamespace, CommonParameters.workspaceName, submissionIdParam)
+
+    override def execute(env: SilkObjectValue): Either[Snag, SilkObjectValue] = {
+      val workspaceNamespace = env.getString(CommonParameters.workspaceNamespace)
+      val workspaceName = env.getString(CommonParameters.workspaceName)
+      val submissionId = env.getString(submissionIdParam)
+      val request = SubmissionsApi.monitorSubmission(workspaceNamespace, workspaceName, submissionId)
+      SilkHttpUtils.sendAuthorizedPrintResponseReturnEmpty(request, env)
     }
   }
 
   val all: Set[SilkCommand] =
     Set(
       statusStatus, helloWorld, silkUtilGetTime, set, silkDebugDump, profileSetProfile, entitiesGetEntitiesWithType,
-      methodConfigurationsListWorkspaceMethodConfigs
+      methodConfigurationsListWorkspaceMethodConfigs, submissionsCreateSubmission, submissionsMonitorSubmission
     )
   val allByRef: Map[SilkCommand.Ref, SilkCommand] = all.map(command => (command.ref, command)).toMap
 

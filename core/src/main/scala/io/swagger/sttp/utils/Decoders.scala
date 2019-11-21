@@ -14,21 +14,28 @@ package io.swagger.sttp.utils
 
 import io.circe.{Decoder, DecodingFailure, HCursor}
 import java.util.Date
-import java.text.SimpleDateFormat
-import better.files.File
+import java.text.{ParseException, SimpleDateFormat}
 
+import better.files.File
 import io.circe.Decoder.Result
 
 object Decoders {
 
-  val dateFormats: Seq[SimpleDateFormat] = Seq("dd/MM/yyyy").map(new SimpleDateFormat(_))
+  // 2019-11-21T22:59:53.233Z
+
+  val dateFormats: Seq[SimpleDateFormat] =
+    Seq("dd/MM/yyyy", "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'").map(new SimpleDateFormat(_))
 
   def parseDate(string: String): Either[String, Date] = {
     var date: Date = null
     val dateFormatIter = dateFormats.iterator
     while (date == null && dateFormatIter.hasNext) {
       val dateFormat = dateFormatIter.next()
-      date = dateFormat.parse(string)
+      try {
+        date = dateFormat.parse(string)
+      } catch {
+        case e: ParseException => ()
+      }
     }
     if (date != null) {
       Right(date)

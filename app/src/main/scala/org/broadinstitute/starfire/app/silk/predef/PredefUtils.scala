@@ -1,5 +1,6 @@
 package org.broadinstitute.starfire.app.silk.predef
 
+import org.broadinstitute.starfire.app.silk.SilkCommand.Parameter
 import org.broadinstitute.starfire.app.silk.SilkValue.{SilkCommandValue, SilkObjectValue}
 import org.broadinstitute.starfire.app.silk.{Identifier, SilkCommand}
 
@@ -14,6 +15,8 @@ object PredefUtils {
       def add(id: Identifier, command: SilkCommand): SilkObjectValue = {
         env.add(id, SilkCommandValue(command.ref))
       }
+      def getStringOpt(parameter: Parameter): Option[String] = env.getString(parameter.id)
+      def getString(parameter: Parameter): String = getStringOpt(parameter).get
     }
 
   }

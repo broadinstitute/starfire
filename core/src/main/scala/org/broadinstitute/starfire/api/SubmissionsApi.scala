@@ -90,7 +90,7 @@ object SubmissionsApi {
   def createSubmission(
     workspaceNamespace: String,
     workspaceName: String,
-    submission: SubmissionRequest): Request[Either[ResponseError[io.circe.Error],Unit],Nothing] = {
+    submission: SubmissionRequest): Request[Either[ResponseError[io.circe.Error],io.circe.Json],Nothing] = {
     assert(workspaceNamespace != null, "Missing required parameter 'workspaceNamespace' when calling SubmissionsApi->createSubmission")
     assert(workspaceName != null, "Missing required parameter 'workspaceName' when calling SubmissionsApi->createSubmission")
     assert(submission != null, "Missing required parameter 'submission' when calling SubmissionsApi->createSubmission")
@@ -98,7 +98,7 @@ object SubmissionsApi {
     basicRequest
       .post(uri"https://api.firecloud.org/api/workspaces/${workspaceNamespace}/${workspaceName}/submissions")
       .body(submission)
-      .response(asJson[Unit])
+      .response(asJson[io.circe.Json])
   }
 
   /**

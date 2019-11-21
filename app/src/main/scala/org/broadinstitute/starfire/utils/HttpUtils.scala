@@ -3,7 +3,7 @@ package org.broadinstitute.starfire.utils
 import better.files.File
 import org.broadinstitute.starfire.auth.OAuthUtils
 import org.broadinstitute.starfire.util.Snag
-import sttp.client.{Identity, NothingT, Request, Response, ResponseError, SttpBackend}
+import sttp.client.{DeserializationError, HttpError, Identity, NothingT, Request, Response, ResponseError, SttpBackend}
 
 import scala.jdk.CollectionConverters._
 import scala.util.{Failure, Success}
@@ -35,6 +35,13 @@ object HttpUtils {
         } else {
           statusMessage(response)
         }
+        println(responseError.getClass)
+        responseError match {
+          case HttpError(body) => println(body)
+          case DeserializationError(original, error) =>
+            println(original)
+            println(error)
+        }
         Left(Snag(message))
       case Right(value) => Right(value)
     }
@@ -56,7 +63,7 @@ object HttpUtils {
   def sendAuthorized[T](request: Request[Either[ResponseError[io.circe.Error], T], Nothing],
                         keyFile: File,
                         scopes: Iterable[String]
-                   )(implicit backend: SttpBackend[Identity, Nothing, NothingT]): Either[Snag, T] = {
+                       )(implicit backend: SttpBackend[Identity, Nothing, NothingT]): Either[Snag, T] = {
     authorize(request, keyFile, scopes) match {
       case Left(error) => Left(error)
       case Right(authorizedRequest) => send(authorizedRequest)

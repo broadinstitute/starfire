@@ -17,4 +17,14 @@ object SilkHttpUtils {
     HttpUtils.sendAuthorized(request, keyFile, scopes)
   }
 
+  def sendAuthorizedPrintResponseReturnEmpty[T](request: Request[Either[ResponseError[io.circe.Error], T], Nothing],
+                                                env: SilkObjectValue
+                                               )(implicit backend: SttpBackend[Identity, Nothing, NothingT]):
+  Either[Snag, SilkObjectValue] = {
+    sendAuthorized(request, env).map { value =>
+      println(value)
+      SilkObjectValue.empty
+    }
+  }
+
 }
