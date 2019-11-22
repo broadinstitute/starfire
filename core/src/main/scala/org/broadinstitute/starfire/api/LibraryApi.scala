@@ -46,16 +46,16 @@ object LibraryApi {
    * The ingest API will take the answers to consent questions and return the elasticsearch structure to persist with the data reference.
    *
    * @param body Structured Data Request 
-   * @return Option[Unit]
+   * @return Option[io.circe.Json]
    */
   def dataIngest(
-    body: StructuredDataRequest): Request[Either[ResponseError[io.circe.Error],Unit],Nothing] = {
+    body: StructuredDataRequest): Request[Either[ResponseError[io.circe.Error],io.circe.Json],Nothing] = {
     assert(body != null, "Missing required parameter 'body' when calling LibraryApi->dataIngest")
 
     basicRequest
       .post(uri"https://api.firecloud.org/duos/structuredData")
       .body(body)
-      .response(asJson[Unit])
+      .response(asJson[io.circe.Json])
   }
 
   /**
@@ -63,15 +63,15 @@ object LibraryApi {
    * 
    *
    * @param queryTerm The query term (word fragment) which the service should try and complete. 
-   * @return Option[Unit]
+   * @return Option[io.circe.Json]
    */
   def duosAutocomplete(
-    queryTerm: String): Request[Either[ResponseError[io.circe.Error],Unit],Nothing] = {
+    queryTerm: String): Request[Either[ResponseError[io.circe.Error],io.circe.Json],Nothing] = {
     assert(queryTerm != null, "Missing required parameter 'queryTerm' when calling LibraryApi->duosAutocomplete")
 
     basicRequest
       .get(uri"https://api.firecloud.org/duos/autocomplete/${queryTerm}")
-      .response(asJson[Unit])
+      .response(asJson[io.circe.Json])
   }
 
   /**
@@ -95,16 +95,16 @@ object LibraryApi {
    * 
    *
    * @param body Research Purpose Request 
-   * @return Option[Unit]
+   * @return Option[io.circe.Json]
    */
   def duosResearchPurposeQuery(
-    body: ResearchPurposeRequest): Request[Either[ResponseError[io.circe.Error],Unit],Nothing] = {
+    body: ResearchPurposeRequest): Request[Either[ResponseError[io.circe.Error],io.circe.Json],Nothing] = {
     assert(body != null, "Missing required parameter 'body' when calling LibraryApi->duosResearchPurposeQuery")
 
     basicRequest
       .post(uri"https://api.firecloud.org/duos/researchPurposeQuery")
       .body(body)
-      .response(asJson[Unit])
+      .response(asJson[io.circe.Json])
   }
 
   /**
@@ -112,16 +112,16 @@ object LibraryApi {
    * 
    *
    * @param searchParams Search terms and pagination parameters (optional)
-   * @return Option[Unit]
+   * @return Option[io.circe.Json]
    */
   def findDocuments(
     searchParams: Option[SearchTermRef] = None
-    ): Request[Either[ResponseError[io.circe.Error],Unit],Nothing] = {
+    ): Request[Either[ResponseError[io.circe.Error],io.circe.Json],Nothing] = {
 
     basicRequest
       .post(uri"https://api.firecloud.org/api/library/search")
       .body(searchParams)
-      .response(asJson[Unit])
+      .response(asJson[io.circe.Json])
   }
 
   /**
@@ -182,17 +182,17 @@ object LibraryApi {
    *
    * @param field the property to get suggestions for 
    * @param q the initial text to complete 
-   * @return Option[Unit]
+   * @return Option[io.circe.Json]
    */
   def populateSuggest(
     field: String,
-    q: String): Request[Either[ResponseError[io.circe.Error],Unit],Nothing] = {
+    q: String): Request[Either[ResponseError[io.circe.Error],io.circe.Json],Nothing] = {
     assert(field != null, "Missing required parameter 'field' when calling LibraryApi->populateSuggest")
     assert(q != null, "Missing required parameter 'q' when calling LibraryApi->populateSuggest")
 
     basicRequest
       .get(uri"https://api.firecloud.org/api/library/populate/suggest/${field}?q=${q}")
-      .response(asJson[Unit])
+      .response(asJson[io.circe.Json])
   }
 
   /**
@@ -259,16 +259,16 @@ object LibraryApi {
    * 
    *
    * @param searchParams Search terms and pagination parameters (optional)
-   * @return Option[Unit]
+   * @return Option[io.circe.Json]
    */
   def searchSuggest(
     searchParams: Option[SearchTermRef] = None
-    ): Request[Either[ResponseError[io.circe.Error],Unit],Nothing] = {
+    ): Request[Either[ResponseError[io.circe.Error],io.circe.Json],Nothing] = {
 
     basicRequest
       .post(uri"https://api.firecloud.org/api/library/suggest")
       .body(searchParams)
-      .response(asJson[Unit])
+      .response(asJson[io.circe.Json])
   }
 
   /**

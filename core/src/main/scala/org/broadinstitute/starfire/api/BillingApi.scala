@@ -36,19 +36,19 @@ object BillingApi {
    * @param projectId Project ID 
    * @param workbenchRole role of user for project 
    * @param email email of user or group to add 
-   * @return Option[Unit]
+   * @return Option[io.circe.Json]
    */
   def addUserToBillingProject(
     projectId: String,
     workbenchRole: String,
-    email: String): Request[Either[ResponseError[io.circe.Error],Unit],Nothing] = {
+    email: String): Request[Either[ResponseError[io.circe.Error],io.circe.Json],Nothing] = {
     assert(projectId != null, "Missing required parameter 'projectId' when calling BillingApi->addUserToBillingProject")
     assert(workbenchRole != null, "Missing required parameter 'workbenchRole' when calling BillingApi->addUserToBillingProject")
     assert(email != null, "Missing required parameter 'email' when calling BillingApi->addUserToBillingProject")
 
     basicRequest
       .put(uri"https://api.firecloud.org/api/billing/${projectId}/${workbenchRole}/${email}")
-      .response(asJson[Unit])
+      .response(asJson[io.circe.Json])
   }
 
   /**
@@ -56,16 +56,16 @@ object BillingApi {
    * 
    *
    * @param createProjectRequest create project request 
-   * @return Option[Unit]
+   * @return Option[io.circe.Json]
    */
   def createBillingProjectFull(
-    createProjectRequest: CreateRawlsBillingProjectFullRequest): Request[Either[ResponseError[io.circe.Error],Unit],Nothing] = {
+    createProjectRequest: CreateRawlsBillingProjectFullRequest): Request[Either[ResponseError[io.circe.Error],io.circe.Json],Nothing] = {
     assert(createProjectRequest != null, "Missing required parameter 'createProjectRequest' when calling BillingApi->createBillingProjectFull")
 
     basicRequest
       .post(uri"https://api.firecloud.org/api/billing")
       .body(createProjectRequest)
-      .response(asJson[Unit])
+      .response(asJson[io.circe.Json])
   }
 
   /**
@@ -75,19 +75,19 @@ object BillingApi {
    * @param projectId Project ID 
    * @param role google role of user for project 
    * @param email email of user 
-   * @return Option[Unit]
+   * @return Option[io.circe.Json]
    */
   def grantGoogleRoleToUser(
     projectId: String,
     role: String,
-    email: String): Request[Either[ResponseError[io.circe.Error],Unit],Nothing] = {
+    email: String): Request[Either[ResponseError[io.circe.Error],io.circe.Json],Nothing] = {
     assert(projectId != null, "Missing required parameter 'projectId' when calling BillingApi->grantGoogleRoleToUser")
     assert(role != null, "Missing required parameter 'role' when calling BillingApi->grantGoogleRoleToUser")
     assert(email != null, "Missing required parameter 'email' when calling BillingApi->grantGoogleRoleToUser")
 
     basicRequest
       .put(uri"https://api.firecloud.org/api/billing/${projectId}/googleRole/${role}/${email}")
-      .response(asJson[Unit])
+      .response(asJson[io.circe.Json])
   }
 
   /**
@@ -113,19 +113,19 @@ object BillingApi {
    * @param projectId Project ID 
    * @param role google role of user for project 
    * @param email email of user 
-   * @return Option[Unit]
+   * @return Option[io.circe.Json]
    */
   def removeGoogleRoleFromUser(
     projectId: String,
     role: String,
-    email: String): Request[Either[ResponseError[io.circe.Error],Unit],Nothing] = {
+    email: String): Request[Either[ResponseError[io.circe.Error],io.circe.Json],Nothing] = {
     assert(projectId != null, "Missing required parameter 'projectId' when calling BillingApi->removeGoogleRoleFromUser")
     assert(role != null, "Missing required parameter 'role' when calling BillingApi->removeGoogleRoleFromUser")
     assert(email != null, "Missing required parameter 'email' when calling BillingApi->removeGoogleRoleFromUser")
 
     basicRequest
       .delete(uri"https://api.firecloud.org/api/billing/${projectId}/googleRole/${role}/${email}")
-      .response(asJson[Unit])
+      .response(asJson[io.circe.Json])
   }
 
   /**
@@ -135,19 +135,19 @@ object BillingApi {
    * @param projectId Project ID 
    * @param workbenchRole role of user for project 
    * @param email email of user or group to remove 
-   * @return Option[Unit]
+   * @return Option[io.circe.Json]
    */
   def removeUserFromBillingProject(
     projectId: String,
     workbenchRole: String,
-    email: String): Request[Either[ResponseError[io.circe.Error],Unit],Nothing] = {
+    email: String): Request[Either[ResponseError[io.circe.Error],io.circe.Json],Nothing] = {
     assert(projectId != null, "Missing required parameter 'projectId' when calling BillingApi->removeUserFromBillingProject")
     assert(workbenchRole != null, "Missing required parameter 'workbenchRole' when calling BillingApi->removeUserFromBillingProject")
     assert(email != null, "Missing required parameter 'email' when calling BillingApi->removeUserFromBillingProject")
 
     basicRequest
       .delete(uri"https://api.firecloud.org/api/billing/${projectId}/${workbenchRole}/${email}")
-      .response(asJson[Unit])
+      .response(asJson[io.circe.Json])
   }
 
 }

@@ -63,19 +63,19 @@ object CromIAMWorkflowsForJobManagerApi {
    * @param version API Version 
    * @param id Workflow ID 
    * @param backendId Backend ID, must be a job that is part of the workflow 
-   * @return Option[Unit]
+   * @return Option[io.circe.Json]
    */
   def apiWorkflowsVersionIdBackendMetadataBackendIdGet(
     version: String,
     id: String,
-    backendId: String): Request[Either[ResponseError[io.circe.Error],Unit],Nothing] = {
+    backendId: String): Request[Either[ResponseError[io.circe.Error],io.circe.Json],Nothing] = {
     assert(version != null, "Missing required parameter 'version' when calling CromIAMWorkflowsForJobManagerApi->apiWorkflowsVersionIdBackendMetadataBackendIdGet")
     assert(id != null, "Missing required parameter 'id' when calling CromIAMWorkflowsForJobManagerApi->apiWorkflowsVersionIdBackendMetadataBackendIdGet")
     assert(backendId != null, "Missing required parameter 'backendId' when calling CromIAMWorkflowsForJobManagerApi->apiWorkflowsVersionIdBackendMetadataBackendIdGet")
 
     basicRequest
       .get(uri"https://api.firecloud.org/api/workflows/${version}/${id}/backend/metadata/${backendId}")
-      .response(asJson[Unit])
+      .response(asJson[io.circe.Json])
   }
 
   /**

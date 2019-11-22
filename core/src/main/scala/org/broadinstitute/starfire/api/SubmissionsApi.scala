@@ -44,19 +44,19 @@ object SubmissionsApi {
    * @param workspaceNamespace Workspace Namespace 
    * @param workspaceName Workspace Name 
    * @param submissionId Submission ID 
-   * @return Option[Unit]
+   * @return Option[io.circe.Json]
    */
   def abortSubmission(
     workspaceNamespace: String,
     workspaceName: String,
-    submissionId: String): Request[Either[ResponseError[io.circe.Error],Unit],Nothing] = {
+    submissionId: String): Request[Either[ResponseError[io.circe.Error],io.circe.Json],Nothing] = {
     assert(workspaceNamespace != null, "Missing required parameter 'workspaceNamespace' when calling SubmissionsApi->abortSubmission")
     assert(workspaceName != null, "Missing required parameter 'workspaceName' when calling SubmissionsApi->abortSubmission")
     assert(submissionId != null, "Missing required parameter 'submissionId' when calling SubmissionsApi->abortSubmission")
 
     basicRequest
       .delete(uri"https://api.firecloud.org/api/workspaces/${workspaceNamespace}/${workspaceName}/submissions/${submissionId}")
-      .response(asJson[Unit])
+      .response(asJson[io.circe.Json])
   }
 
   /**
@@ -85,7 +85,7 @@ object SubmissionsApi {
    * @param workspaceNamespace Workspace Namespace 
    * @param workspaceName Workspace Name 
    * @param submission Post Submission 
-   * @return Option[Unit]
+   * @return Option[io.circe.Json]
    */
   def createSubmission(
     workspaceNamespace: String,
@@ -107,17 +107,17 @@ object SubmissionsApi {
    *
    * @param workspaceNamespace Workspace Namespace 
    * @param workspaceName Workspace Name 
-   * @return Option[Unit]
+   * @return Option[io.circe.Json]
    */
   def listSubmissions(
     workspaceNamespace: String,
-    workspaceName: String): Request[Either[ResponseError[io.circe.Error],Unit],Nothing] = {
+    workspaceName: String): Request[Either[ResponseError[io.circe.Error],io.circe.Json],Nothing] = {
     assert(workspaceNamespace != null, "Missing required parameter 'workspaceNamespace' when calling SubmissionsApi->listSubmissions")
     assert(workspaceName != null, "Missing required parameter 'workspaceName' when calling SubmissionsApi->listSubmissions")
 
     basicRequest
       .get(uri"https://api.firecloud.org/api/workspaces/${workspaceNamespace}/${workspaceName}/submissions")
-      .response(asJson[Unit])
+      .response(asJson[io.circe.Json])
   }
 
   /**
@@ -201,7 +201,7 @@ object SubmissionsApi {
    * @param includeKey When specified, return only these keys in the response. Matches any key in the response, including within nested blocks. May not be used with excludeKey.  (optional)
    * @param excludeKey When specified, omit these keys from the response. Matches any key in the response, including within nested blocks. May not be used with includeKey.  (optional)
    * @param expandSubWorkflows When true, metadata for sub workflows will be fetched and inserted automatically in the metadata response.  (optional, default to false)
-   * @return Option[Unit]
+   * @return Option[io.circe.Json]
    */
   def workflowMetadata(
     workspaceNamespace: String,
@@ -211,7 +211,7 @@ object SubmissionsApi {
     includeKey: Option[List[String]] = None,
     excludeKey: Option[List[String]] = None,
     expandSubWorkflows: Option[Boolean] = Option(false)
-    ): Request[Either[ResponseError[io.circe.Error],Unit],Nothing] = {
+    ): Request[Either[ResponseError[io.circe.Error],io.circe.Json],Nothing] = {
     assert(workspaceNamespace != null, "Missing required parameter 'workspaceNamespace' when calling SubmissionsApi->workflowMetadata")
     assert(workspaceName != null, "Missing required parameter 'workspaceName' when calling SubmissionsApi->workflowMetadata")
     assert(submissionId != null, "Missing required parameter 'submissionId' when calling SubmissionsApi->workflowMetadata")
@@ -219,7 +219,7 @@ object SubmissionsApi {
 
     basicRequest
       .get(uri"https://api.firecloud.org/api/workspaces/${workspaceNamespace}/${workspaceName}/submissions/${submissionId}/workflows/${workflowId}?includeKey=${includeKey}?excludeKey=${excludeKey}?expandSubWorkflows=${expandSubWorkflows}")
-      .response(asJson[Unit])
+      .response(asJson[io.circe.Json])
   }
 
   /**
@@ -230,13 +230,13 @@ object SubmissionsApi {
    * @param workspaceName Workspace Name 
    * @param submissionId Submission ID 
    * @param workflowId Workflow ID 
-   * @return Option[Unit]
+   * @return Option[io.circe.Json]
    */
   def workflowOutputsInSubmission(
     workspaceNamespace: String,
     workspaceName: String,
     submissionId: String,
-    workflowId: String): Request[Either[ResponseError[io.circe.Error],Unit],Nothing] = {
+    workflowId: String): Request[Either[ResponseError[io.circe.Error],io.circe.Json],Nothing] = {
     assert(workspaceNamespace != null, "Missing required parameter 'workspaceNamespace' when calling SubmissionsApi->workflowOutputsInSubmission")
     assert(workspaceName != null, "Missing required parameter 'workspaceName' when calling SubmissionsApi->workflowOutputsInSubmission")
     assert(submissionId != null, "Missing required parameter 'submissionId' when calling SubmissionsApi->workflowOutputsInSubmission")
@@ -244,7 +244,7 @@ object SubmissionsApi {
 
     basicRequest
       .get(uri"https://api.firecloud.org/api/workspaces/${workspaceNamespace}/${workspaceName}/submissions/${submissionId}/workflows/${workflowId}/outputs")
-      .response(asJson[Unit])
+      .response(asJson[io.circe.Json])
   }
 
   /**

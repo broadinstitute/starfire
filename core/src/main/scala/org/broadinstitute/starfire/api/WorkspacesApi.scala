@@ -82,17 +82,17 @@ object WorkspacesApi {
    *
    * @param workspaceNamespace workspace namespace 
    * @param workspaceName workspace name 
-   * @return Option[Unit]
+   * @return Option[io.circe.Json]
    */
   def changedWorkspaceNotification(
     workspaceNamespace: String,
-    workspaceName: String): Request[Either[ResponseError[io.circe.Error],Unit],Nothing] = {
+    workspaceName: String): Request[Either[ResponseError[io.circe.Error],io.circe.Json],Nothing] = {
     assert(workspaceNamespace != null, "Missing required parameter 'workspaceNamespace' when calling WorkspacesApi->changedWorkspaceNotification")
     assert(workspaceName != null, "Missing required parameter 'workspaceName' when calling WorkspacesApi->changedWorkspaceNotification")
 
     basicRequest
       .post(uri"https://api.firecloud.org/api/workspaces/${workspaceNamespace}/${workspaceName}/sendChangeNotification")
-      .response(asJson[Unit])
+      .response(asJson[io.circe.Json])
   }
 
   /**
@@ -102,12 +102,12 @@ object WorkspacesApi {
    * @param workspaceNamespace Workspace Namespace 
    * @param workspaceName Workspace Name 
    * @param workspace Cloned workspace information 
-   * @return Option[Unit]
+   * @return Option[io.circe.Json]
    */
   def cloneWorkspace(
     workspaceNamespace: String,
     workspaceName: String,
-    workspace: WorkspaceIngest): Request[Either[ResponseError[io.circe.Error],Unit],Nothing] = {
+    workspace: WorkspaceIngest): Request[Either[ResponseError[io.circe.Error],io.circe.Json],Nothing] = {
     assert(workspaceNamespace != null, "Missing required parameter 'workspaceNamespace' when calling WorkspacesApi->cloneWorkspace")
     assert(workspaceName != null, "Missing required parameter 'workspaceName' when calling WorkspacesApi->cloneWorkspace")
     assert(workspace != null, "Missing required parameter 'workspace' when calling WorkspacesApi->cloneWorkspace")
@@ -115,7 +115,7 @@ object WorkspacesApi {
     basicRequest
       .post(uri"https://api.firecloud.org/api/workspaces/${workspaceNamespace}/${workspaceName}/clone")
       .body(workspace)
-      .response(asJson[Unit])
+      .response(asJson[io.circe.Json])
   }
 
   /**
@@ -123,16 +123,16 @@ object WorkspacesApi {
    * 
    *
    * @param workspace New workspace information 
-   * @return Option[Unit]
+   * @return Option[io.circe.Json]
    */
   def createWorkspace(
-    workspace: WorkspaceIngest): Request[Either[ResponseError[io.circe.Error],Unit],Nothing] = {
+    workspace: WorkspaceIngest): Request[Either[ResponseError[io.circe.Error],io.circe.Json],Nothing] = {
     assert(workspace != null, "Missing required parameter 'workspace' when calling WorkspacesApi->createWorkspace")
 
     basicRequest
       .post(uri"https://api.firecloud.org/api/workspaces")
       .body(workspace)
-      .response(asJson[Unit])
+      .response(asJson[io.circe.Json])
   }
 
   /**
@@ -141,17 +141,17 @@ object WorkspacesApi {
    *
    * @param workspaceNamespace Workspace Namespace 
    * @param workspaceName Workspace Name 
-   * @return Option[Unit]
+   * @return Option[io.circe.Json]
    */
   def deleteWorkspace(
     workspaceNamespace: String,
-    workspaceName: String): Request[Either[ResponseError[io.circe.Error],Unit],Nothing] = {
+    workspaceName: String): Request[Either[ResponseError[io.circe.Error],io.circe.Json],Nothing] = {
     assert(workspaceNamespace != null, "Missing required parameter 'workspaceNamespace' when calling WorkspacesApi->deleteWorkspace")
     assert(workspaceName != null, "Missing required parameter 'workspaceName' when calling WorkspacesApi->deleteWorkspace")
 
     basicRequest
       .delete(uri"https://api.firecloud.org/api/workspaces/${workspaceNamespace}/${workspaceName}")
-      .response(asJson[Unit])
+      .response(asJson[io.circe.Json])
   }
 
   /**
@@ -202,17 +202,17 @@ object WorkspacesApi {
    *
    * @param workspaceNamespace Workspace Namespace 
    * @param workspaceName Workspace Name 
-   * @return Option[Unit]
+   * @return Option[io.circe.Json]
    */
   def getBucketUsage(
     workspaceNamespace: String,
-    workspaceName: String): Request[Either[ResponseError[io.circe.Error],Unit],Nothing] = {
+    workspaceName: String): Request[Either[ResponseError[io.circe.Error],io.circe.Json],Nothing] = {
     assert(workspaceNamespace != null, "Missing required parameter 'workspaceNamespace' when calling WorkspacesApi->getBucketUsage")
     assert(workspaceName != null, "Missing required parameter 'workspaceName' when calling WorkspacesApi->getBucketUsage")
 
     basicRequest
       .get(uri"https://api.firecloud.org/api/workspaces/${workspaceNamespace}/${workspaceName}/bucketUsage")
-      .response(asJson[Unit])
+      .response(asJson[io.circe.Json])
   }
 
   /**
@@ -240,17 +240,17 @@ object WorkspacesApi {
    *
    * @param workspaceNamespace Workspace Namespace 
    * @param workspaceName Workspace Name 
-   * @return Option[Unit]
+   * @return Option[io.circe.Json]
    */
   def getStorageCostEstimate(
     workspaceNamespace: String,
-    workspaceName: String): Request[Either[ResponseError[io.circe.Error],Unit],Nothing] = {
+    workspaceName: String): Request[Either[ResponseError[io.circe.Error],io.circe.Json],Nothing] = {
     assert(workspaceNamespace != null, "Missing required parameter 'workspaceNamespace' when calling WorkspacesApi->getStorageCostEstimate")
     assert(workspaceName != null, "Missing required parameter 'workspaceName' when calling WorkspacesApi->getStorageCostEstimate")
 
     basicRequest
       .get(uri"https://api.firecloud.org/api/workspaces/${workspaceNamespace}/${workspaceName}/storageCostEstimate")
-      .response(asJson[Unit])
+      .response(asJson[io.circe.Json])
   }
 
   /**
@@ -276,19 +276,19 @@ object WorkspacesApi {
    * @param workspaceNamespace Workspace Namespace 
    * @param workspaceName Workspace Name 
    * @param fields When specified, include only these keys in the response payload and exclude other keys. Accepts a comma-delimited list of values. To include a nested key, specify the key&#39;s path using a dot delimiter; for example, to include {\&quot;workspace\&quot;: {\&quot;attributes\&quot;: {}}}, specify \&quot;workspace.attributes\&quot;. Legal values are any first-level key in the response, any first-level key inside the {\&quot;workspace\&quot;: {}} object, and any first-level key inside the {\&quot;workspace\&quot;: {\&quot;attributes\&quot;: {}}} object. If omitted, will return the full response payload.  (optional)
-   * @return Option[Unit]
+   * @return Option[io.circe.Json]
    */
   def getWorkspace(
     workspaceNamespace: String,
     workspaceName: String,
     fields: Option[List[String]] = None
-    ): Request[Either[ResponseError[io.circe.Error],Unit],Nothing] = {
+    ): Request[Either[ResponseError[io.circe.Error],io.circe.Json],Nothing] = {
     assert(workspaceNamespace != null, "Missing required parameter 'workspaceNamespace' when calling WorkspacesApi->getWorkspace")
     assert(workspaceName != null, "Missing required parameter 'workspaceName' when calling WorkspacesApi->getWorkspace")
 
     basicRequest
       .get(uri"https://api.firecloud.org/api/workspaces/${workspaceNamespace}/${workspaceName}?fields=${fields}")
-      .response(asJson[Unit])
+      .response(asJson[io.circe.Json])
   }
 
   /**
@@ -374,19 +374,19 @@ object WorkspacesApi {
    * @param workspaceNamespace Workspace Namespace 
    * @param workspaceName Workspace Name 
    * @param attributes A valid TSV import file 
-   * @return Option[Unit]
+   * @return Option[io.circe.Json]
    */
   def importAttributesTSV(
     workspaceNamespace: String,
     workspaceName: String,
-    attributes: File): Request[Either[ResponseError[io.circe.Error],Unit],Nothing] = {
+    attributes: File): Request[Either[ResponseError[io.circe.Error],io.circe.Json],Nothing] = {
     assert(workspaceNamespace != null, "Missing required parameter 'workspaceNamespace' when calling WorkspacesApi->importAttributesTSV")
     assert(workspaceName != null, "Missing required parameter 'workspaceName' when calling WorkspacesApi->importAttributesTSV")
     assert(attributes != null, "Missing required parameter 'attributes' when calling WorkspacesApi->importAttributesTSV")
 
     basicRequest
       .post(uri"https://api.firecloud.org/api/workspaces/${workspaceNamespace}/${workspaceName}/importAttributesTSV")
-      .response(asJson[Unit])
+      .response(asJson[io.circe.Json])
   }
 
   /**
@@ -396,19 +396,19 @@ object WorkspacesApi {
    * @param workspaceNamespace Workspace Namespace 
    * @param workspaceName Workspace Name 
    * @param allRepos Configs for all repos, not just Agora (optional, default to false)
-   * @return Option[Unit]
+   * @return Option[io.circe.Json]
    */
   def listWorkspaceMethodConfigs(
     workspaceNamespace: String,
     workspaceName: String,
     allRepos: Option[Boolean] = Option(false)
-    ): Request[Either[ResponseError[io.circe.Error],Unit],Nothing] = {
+    ): Request[Either[ResponseError[io.circe.Error],io.circe.Json],Nothing] = {
     assert(workspaceNamespace != null, "Missing required parameter 'workspaceNamespace' when calling WorkspacesApi->listWorkspaceMethodConfigs")
     assert(workspaceName != null, "Missing required parameter 'workspaceName' when calling WorkspacesApi->listWorkspaceMethodConfigs")
 
     basicRequest
       .get(uri"https://api.firecloud.org/api/workspaces/${workspaceNamespace}/${workspaceName}/methodconfigs?allRepos=${allRepos}")
-      .response(asJson[Unit])
+      .response(asJson[io.circe.Json])
   }
 
   /**
@@ -416,15 +416,15 @@ object WorkspacesApi {
    * 
    *
    * @param fields When specified, include only these keys in the response payload and exclude other keys. Accepts a comma-delimited list of values. To include a nested key, specify the key&#39;s path using a dot delimiter; for example, to include {\&quot;workspace\&quot;: {\&quot;attributes\&quot;: {}}}, specify \&quot;workspace.attributes\&quot;. Legal values are any first-level key in the response, any first-level key inside the {\&quot;workspace\&quot;: {}} object, and any first-level key inside the {\&quot;workspace\&quot;: {\&quot;attributes\&quot;: {}}} object. If omitted, will return the full response payload.  (optional)
-   * @return Option[Unit]
+   * @return Option[io.circe.Json]
    */
   def listWorkspaces(
     fields: Option[List[String]] = None
-    ): Request[Either[ResponseError[io.circe.Error],Unit],Nothing] = {
+    ): Request[Either[ResponseError[io.circe.Error],io.circe.Json],Nothing] = {
 
     basicRequest
       .get(uri"https://api.firecloud.org/api/workspaces?fields=${fields}")
-      .response(asJson[Unit])
+      .response(asJson[io.circe.Json])
   }
 
   /**
@@ -433,17 +433,17 @@ object WorkspacesApi {
    *
    * @param workspaceNamespace Workspace Namespace 
    * @param workspaceName Workspace Name 
-   * @return Option[Unit]
+   * @return Option[io.circe.Json]
    */
   def lockWorkspace(
     workspaceNamespace: String,
-    workspaceName: String): Request[Either[ResponseError[io.circe.Error],Unit],Nothing] = {
+    workspaceName: String): Request[Either[ResponseError[io.circe.Error],io.circe.Json],Nothing] = {
     assert(workspaceNamespace != null, "Missing required parameter 'workspaceNamespace' when calling WorkspacesApi->lockWorkspace")
     assert(workspaceName != null, "Missing required parameter 'workspaceName' when calling WorkspacesApi->lockWorkspace")
 
     basicRequest
       .put(uri"https://api.firecloud.org/api/workspaces/${workspaceNamespace}/${workspaceName}/lock")
-      .response(asJson[Unit])
+      .response(asJson[io.circe.Json])
   }
 
   /**
@@ -476,12 +476,12 @@ object WorkspacesApi {
    * @param workspaceNamespace Workspace Namespace 
    * @param workspaceName Workspace Name 
    * @param methodConfigJson Method Configuration contents 
-   * @return Option[Unit]
+   * @return Option[io.circe.Json]
    */
   def postWorkspaceMethodConfig(
     workspaceNamespace: String,
     workspaceName: String,
-    methodConfigJson: NewMethodConfigIngest): Request[Either[ResponseError[io.circe.Error],Unit],Nothing] = {
+    methodConfigJson: NewMethodConfigIngest): Request[Either[ResponseError[io.circe.Error],io.circe.Json],Nothing] = {
     assert(workspaceNamespace != null, "Missing required parameter 'workspaceNamespace' when calling WorkspacesApi->postWorkspaceMethodConfig")
     assert(workspaceName != null, "Missing required parameter 'workspaceName' when calling WorkspacesApi->postWorkspaceMethodConfig")
     assert(methodConfigJson != null, "Missing required parameter 'methodConfigJson' when calling WorkspacesApi->postWorkspaceMethodConfig")
@@ -489,7 +489,7 @@ object WorkspacesApi {
     basicRequest
       .post(uri"https://api.firecloud.org/api/workspaces/${workspaceNamespace}/${workspaceName}/methodconfigs")
       .body(methodConfigJson)
-      .response(asJson[Unit])
+      .response(asJson[io.circe.Json])
   }
 
   /**
@@ -521,17 +521,17 @@ object WorkspacesApi {
    *
    * @param workspaceNamespace Workspace Namespace 
    * @param workspaceName Workspace Name 
-   * @return Option[Unit]
+   * @return Option[io.circe.Json]
    */
   def readBucket(
     workspaceNamespace: String,
-    workspaceName: String): Request[Either[ResponseError[io.circe.Error],Unit],Nothing] = {
+    workspaceName: String): Request[Either[ResponseError[io.circe.Error],io.circe.Json],Nothing] = {
     assert(workspaceNamespace != null, "Missing required parameter 'workspaceNamespace' when calling WorkspacesApi->readBucket")
     assert(workspaceName != null, "Missing required parameter 'workspaceName' when calling WorkspacesApi->readBucket")
 
     basicRequest
       .get(uri"https://api.firecloud.org/api/workspaces/${workspaceNamespace}/${workspaceName}/checkBucketReadAccess")
-      .response(asJson[Unit])
+      .response(asJson[io.circe.Json])
   }
 
   /**
@@ -541,12 +541,12 @@ object WorkspacesApi {
    * @param workspaceNamespace Workspace Namespace 
    * @param workspaceName Workspace Name 
    * @param newAttributes New attribute values, as Map[String, Attribute]. WARNING! This should not be used to change library metadata (republish will not happen). Use UpdateAttributes in the library section 
-   * @return Option[Unit]
+   * @return Option[io.circe.Json]
    */
   def setAttributes(
     workspaceNamespace: String,
     workspaceName: String,
-    newAttributes: Json): Request[Either[ResponseError[io.circe.Error],Unit],Nothing] = {
+    newAttributes: Json): Request[Either[ResponseError[io.circe.Error],io.circe.Json],Nothing] = {
     assert(workspaceNamespace != null, "Missing required parameter 'workspaceNamespace' when calling WorkspacesApi->setAttributes")
     assert(workspaceName != null, "Missing required parameter 'workspaceName' when calling WorkspacesApi->setAttributes")
     assert(newAttributes != null, "Missing required parameter 'newAttributes' when calling WorkspacesApi->setAttributes")
@@ -554,7 +554,7 @@ object WorkspacesApi {
     basicRequest
       .patch(uri"https://api.firecloud.org/api/workspaces/${workspaceNamespace}/${workspaceName}/setAttributes")
       .body(newAttributes)
-      .response(asJson[Unit])
+      .response(asJson[io.circe.Json])
   }
 
   /**
@@ -563,17 +563,17 @@ object WorkspacesApi {
    *
    * @param workspaceNamespace Workspace Namespace 
    * @param workspaceName Workspace Name 
-   * @return Option[Unit]
+   * @return Option[io.circe.Json]
    */
   def unlockWorkspace(
     workspaceNamespace: String,
-    workspaceName: String): Request[Either[ResponseError[io.circe.Error],Unit],Nothing] = {
+    workspaceName: String): Request[Either[ResponseError[io.circe.Error],io.circe.Json],Nothing] = {
     assert(workspaceNamespace != null, "Missing required parameter 'workspaceNamespace' when calling WorkspacesApi->unlockWorkspace")
     assert(workspaceName != null, "Missing required parameter 'workspaceName' when calling WorkspacesApi->unlockWorkspace")
 
     basicRequest
       .put(uri"https://api.firecloud.org/api/workspaces/${workspaceNamespace}/${workspaceName}/unlock")
-      .response(asJson[Unit])
+      .response(asJson[io.circe.Json])
   }
 
   /**
@@ -583,12 +583,12 @@ object WorkspacesApi {
    * @param workspaceNamespace Workspace Namespace 
    * @param workspaceName Workspace Name 
    * @param workspaceUpdateJson Attribute operations. WARNING! This should not be used to change library metadata (republish will not happen). Use UpdateAttributes in the library section. 
-   * @return Option[Unit]
+   * @return Option[io.circe.Json]
    */
   def updateAttributes(
     workspaceNamespace: String,
     workspaceName: String,
-    workspaceUpdateJson: List[AttributeUpdateOperation]): Request[Either[ResponseError[io.circe.Error],Unit],Nothing] = {
+    workspaceUpdateJson: List[AttributeUpdateOperation]): Request[Either[ResponseError[io.circe.Error],io.circe.Json],Nothing] = {
     assert(workspaceNamespace != null, "Missing required parameter 'workspaceNamespace' when calling WorkspacesApi->updateAttributes")
     assert(workspaceName != null, "Missing required parameter 'workspaceName' when calling WorkspacesApi->updateAttributes")
     assert(workspaceUpdateJson != null, "Missing required parameter 'workspaceUpdateJson' when calling WorkspacesApi->updateAttributes")
@@ -596,7 +596,7 @@ object WorkspacesApi {
     basicRequest
       .patch(uri"https://api.firecloud.org/api/workspaces/${workspaceNamespace}/${workspaceName}/updateAttributes")
       .body(workspaceUpdateJson)
-      .response(asJson[Unit])
+      .response(asJson[io.circe.Json])
   }
 
   /**

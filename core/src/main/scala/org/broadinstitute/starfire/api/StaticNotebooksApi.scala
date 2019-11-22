@@ -28,16 +28,16 @@ object StaticNotebooksApi {
    * Convert a Notebook ipynb file to a static HTML representation 
    *
    * @param notebook Notebook ipynb file 
-   * @return Option[Unit]
+   * @return Option[io.circe.Json]
    */
   def convertNotebook(
-    notebook: String): Request[Either[ResponseError[io.circe.Error],Unit],Nothing] = {
+    notebook: String): Request[Either[ResponseError[io.circe.Error],io.circe.Json],Nothing] = {
     assert(notebook != null, "Missing required parameter 'notebook' when calling StaticNotebooksApi->convertNotebook")
 
     basicRequest
       .post(uri"https://api.firecloud.org/api/staticNotebooks/convert")
       .body(notebook)
-      .response(asJson[Unit])
+      .response(asJson[io.circe.Json])
   }
 
 }

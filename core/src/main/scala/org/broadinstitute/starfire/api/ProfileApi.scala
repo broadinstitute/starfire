@@ -197,14 +197,14 @@ object ProfileApi {
    * Set userAgreed flag to true
    * 
    *
-   * @return Option[Unit]
+   * @return Option[io.circe.Json]
    */
   def recordUserAgreement(
-    ): Request[Either[ResponseError[io.circe.Error],Unit],Nothing] = {
+    ): Request[Either[ResponseError[io.circe.Error],io.circe.Json],Nothing] = {
 
     basicRequest
       .put(uri"https://api.firecloud.org/api/profile/trial/userAgreement")
-      .response(asJson[Unit])
+      .response(asJson[io.circe.Json])
   }
 
   /**
@@ -226,7 +226,7 @@ object ProfileApi {
    * 
    *
    * @param profile A complete profile (optional)
-   * @return Option[Unit]
+   * @return Option[io.circe.Json]
    */
   def setProfile(
     profile: Option[Profile] = None
@@ -257,30 +257,30 @@ object ProfileApi {
    * 
    *
    * @param preferences The preferences to set as a Map[String, String] 
-   * @return Option[Unit]
+   * @return Option[io.circe.Json]
    */
   def updateProfile(
-    preferences: Json): Request[Either[ResponseError[io.circe.Error],Unit],Nothing] = {
+    preferences: Json): Request[Either[ResponseError[io.circe.Error],io.circe.Json],Nothing] = {
     assert(preferences != null, "Missing required parameter 'preferences' when calling ProfileApi->updateProfile")
 
     basicRequest
       .post(uri"https://api.firecloud.org/api/profile/preferences")
       .body(preferences)
-      .response(asJson[Unit])
+      .response(asJson[io.circe.Json])
   }
 
   /**
    * Passes through to Google&#39;s userinfo API and returns its response
    * See https://developers.google.com/+/web/api/rest/openidconnect/getOpenIdConnect for response info. Userinfo endpoint lives at https://www.googleapis.com/oauth2/v3/userinfo. 
    *
-   * @return Option[Unit]
+   * @return Option[io.circe.Json]
    */
   def userInfo(
-    ): Request[Either[ResponseError[io.circe.Error],Unit],Nothing] = {
+    ): Request[Either[ResponseError[io.circe.Error],io.circe.Json],Nothing] = {
 
     basicRequest
       .get(uri"https://api.firecloud.org/register/userinfo")
-      .response(asJson[Unit])
+      .response(asJson[io.circe.Json])
   }
 
   /**
@@ -288,15 +288,15 @@ object ProfileApi {
    * * **Enroll:** starts an enabled user&#39;s trial and adds them to a billing project. * **Finalize:** concludes a terminated user&#39;s trial progress. 
    *
    * @param operation operation user can perform (optional, default to enroll)
-   * @return Option[Unit]
+   * @return Option[io.circe.Json]
    */
   def userTrial(
     operation: Option[String] = Option("enroll")
-    ): Request[Either[ResponseError[io.circe.Error],Unit],Nothing] = {
+    ): Request[Either[ResponseError[io.circe.Error],io.circe.Json],Nothing] = {
 
     basicRequest
       .post(uri"https://api.firecloud.org/api/profile/trial?operation=${operation}")
-      .response(asJson[Unit])
+      .response(asJson[io.circe.Json])
   }
 
 }

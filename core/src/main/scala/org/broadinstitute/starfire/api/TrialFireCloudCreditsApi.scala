@@ -34,18 +34,18 @@ object TrialFireCloudCreditsApi {
    * @param operation operation to perform on projects. \&quot;Create\&quot; will create projects and verify those projects. \&quot;Verify\&quot; will verify all unverified projects in the pool. \&quot;Count\&quot; will return the number of projects in various statuses. \&quot;Adopt\&quot; will enter a previously-created project into the pool without verifying it. \&quot;Scratch\&quot; will mark a pool project as unavailable/errored and disassociate it from any user that claimed it. \&quot;Report\&quot; will return a report of all claimed projects.  
    * @param count number of projects to create; only used for create operation (optional)
    * @param project name of project to adopt or scratch; only used for adopt and scratch operations (optional)
-   * @return Option[Unit]
+   * @return Option[io.circe.Json]
    */
   def manageTrialProjects(
     operation: String = "count",
     count: Option[Integer] = None,
     project: Option[String] = None
-    ): Request[Either[ResponseError[io.circe.Error],Unit],Nothing] = {
+    ): Request[Either[ResponseError[io.circe.Error],io.circe.Json],Nothing] = {
     assert(operation != null, "Missing required parameter 'operation' when calling TrialFireCloudCreditsApi->manageTrialProjects")
 
     basicRequest
       .post(uri"https://api.firecloud.org/api/trial/manager/projects?operation=${operation}?count=${count}?project=${project}")
-      .response(asJson[Unit])
+      .response(asJson[io.circe.Json])
   }
 
   /**

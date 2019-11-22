@@ -46,16 +46,16 @@ object OAuthApi {
    * This API is a deprecated noop. Previously, it allowed the server to acquire a refresh token. Since refresh tokens are no longer used in the back end, this API is now hardcoded to respond as if it successfully acquired a refresh token, without doing any actual work. This API may be removed in a future release. 
    *
    * @param body  (optional)
-   * @return Option[Unit]
+   * @return Option[io.circe.Json]
    */
   def handleOauthCode(
     body: Option[Body1] = None
-    ): Request[Either[ResponseError[io.circe.Error],Unit],Nothing] = {
+    ): Request[Either[ResponseError[io.circe.Error],io.circe.Json],Nothing] = {
 
     basicRequest
       .post(uri"https://api.firecloud.org/handle-oauth-code")
       .body(body)
-      .response(asJson[Unit])
+      .response(asJson[io.circe.Json])
   }
 
 }

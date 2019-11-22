@@ -48,12 +48,12 @@ object MethodConfigurationsApi {
    * @param workspaceNamespace Workspace Namespace 
    * @param workspaceName Workspace Name 
    * @param configToCopy Method Configuration to Copy 
-   * @return Option[Unit]
+   * @return Option[io.circe.Json]
    */
   def copyFromMethodRepo(
     workspaceNamespace: String,
     workspaceName: String,
-    configToCopy: CopyConfigurationIngest): Request[Either[ResponseError[io.circe.Error],Unit],Nothing] = {
+    configToCopy: CopyConfigurationIngest): Request[Either[ResponseError[io.circe.Error],io.circe.Json],Nothing] = {
     assert(workspaceNamespace != null, "Missing required parameter 'workspaceNamespace' when calling MethodConfigurationsApi->copyFromMethodRepo")
     assert(workspaceName != null, "Missing required parameter 'workspaceName' when calling MethodConfigurationsApi->copyFromMethodRepo")
     assert(configToCopy != null, "Missing required parameter 'configToCopy' when calling MethodConfigurationsApi->copyFromMethodRepo")
@@ -61,7 +61,7 @@ object MethodConfigurationsApi {
     basicRequest
       .post(uri"https://api.firecloud.org/api/workspaces/${workspaceNamespace}/${workspaceName}/method_configs/copyFromMethodRepo")
       .body(configToCopy)
-      .response(asJson[Unit])
+      .response(asJson[io.circe.Json])
   }
 
   /**
@@ -71,12 +71,12 @@ object MethodConfigurationsApi {
    * @param workspaceNamespace Workspace Namespace 
    * @param workspaceName Workspace Name 
    * @param configToCopy Method Configuration to Copy 
-   * @return Option[Unit]
+   * @return Option[io.circe.Json]
    */
   def copyToMethodRepo(
     workspaceNamespace: String,
     workspaceName: String,
-    configToCopy: PublishConfigurationIngest): Request[Either[ResponseError[io.circe.Error],Unit],Nothing] = {
+    configToCopy: PublishConfigurationIngest): Request[Either[ResponseError[io.circe.Error],io.circe.Json],Nothing] = {
     assert(workspaceNamespace != null, "Missing required parameter 'workspaceNamespace' when calling MethodConfigurationsApi->copyToMethodRepo")
     assert(workspaceName != null, "Missing required parameter 'workspaceName' when calling MethodConfigurationsApi->copyToMethodRepo")
     assert(configToCopy != null, "Missing required parameter 'configToCopy' when calling MethodConfigurationsApi->copyToMethodRepo")
@@ -84,7 +84,7 @@ object MethodConfigurationsApi {
     basicRequest
       .post(uri"https://api.firecloud.org/api/workspaces/${workspaceNamespace}/${workspaceName}/method_configs/copyToMethodRepo")
       .body(configToCopy)
-      .response(asJson[Unit])
+      .response(asJson[io.circe.Json])
   }
 
   /**
@@ -95,13 +95,13 @@ object MethodConfigurationsApi {
    * @param workspaceName Workspace Name 
    * @param configNamespace Configuration Namespace 
    * @param configName Configuration Name 
-   * @return Option[Unit]
+   * @return Option[io.circe.Json]
    */
   def deleteWorkspaceMethodConfig(
     workspaceNamespace: String,
     workspaceName: String,
     configNamespace: String,
-    configName: String): Request[Either[ResponseError[io.circe.Error],Unit],Nothing] = {
+    configName: String): Request[Either[ResponseError[io.circe.Error],io.circe.Json],Nothing] = {
     assert(workspaceNamespace != null, "Missing required parameter 'workspaceNamespace' when calling MethodConfigurationsApi->deleteWorkspaceMethodConfig")
     assert(workspaceName != null, "Missing required parameter 'workspaceName' when calling MethodConfigurationsApi->deleteWorkspaceMethodConfig")
     assert(configNamespace != null, "Missing required parameter 'configNamespace' when calling MethodConfigurationsApi->deleteWorkspaceMethodConfig")
@@ -109,7 +109,7 @@ object MethodConfigurationsApi {
 
     basicRequest
       .delete(uri"https://api.firecloud.org/api/workspaces/${workspaceNamespace}/${workspaceName}/method_configs/${configNamespace}/${configName}")
-      .response(asJson[Unit])
+      .response(asJson[io.circe.Json])
   }
 
   /**
@@ -120,13 +120,13 @@ object MethodConfigurationsApi {
    * @param workspaceName Workspace Name 
    * @param configNamespace Configuration Namespace 
    * @param configName Configuration Name 
-   * @return Option[Unit]
+   * @return Option[io.circe.Json]
    */
   def getWorkspaceMethodConfig(
     workspaceNamespace: String,
     workspaceName: String,
     configNamespace: String,
-    configName: String): Request[Either[ResponseError[io.circe.Error],Unit],Nothing] = {
+    configName: String): Request[Either[ResponseError[io.circe.Error],io.circe.Json],Nothing] = {
     assert(workspaceNamespace != null, "Missing required parameter 'workspaceNamespace' when calling MethodConfigurationsApi->getWorkspaceMethodConfig")
     assert(workspaceName != null, "Missing required parameter 'workspaceName' when calling MethodConfigurationsApi->getWorkspaceMethodConfig")
     assert(configNamespace != null, "Missing required parameter 'configNamespace' when calling MethodConfigurationsApi->getWorkspaceMethodConfig")
@@ -134,7 +134,7 @@ object MethodConfigurationsApi {
 
     basicRequest
       .get(uri"https://api.firecloud.org/api/workspaces/${workspaceNamespace}/${workspaceName}/method_configs/${configNamespace}/${configName}")
-      .response(asJson[Unit])
+      .response(asJson[io.circe.Json])
   }
 
   /**
@@ -158,7 +158,7 @@ object MethodConfigurationsApi {
    * @param workspaceNamespace Workspace Namespace 
    * @param workspaceName Workspace Name 
    * @param allRepos Configs for all repos, not just Agora (optional, default to false)
-   * @return Option[Unit]
+   * @return Option[io.circe.Json]
    */
   def listWorkspaceMethodConfigs(
     workspaceNamespace: String,
@@ -182,14 +182,14 @@ object MethodConfigurationsApi {
    * @param configNamespace Configuration Namespace 
    * @param configName Configuration Name 
    * @param body Method Config to Update 
-   * @return Option[Unit]
+   * @return Option[io.circe.Json]
    */
   def overwriteWorkspaceMethodConfig(
     workspaceNamespace: String,
     workspaceName: String,
     configNamespace: String,
     configName: String,
-    body: ConfigurationIngest): Request[Either[ResponseError[io.circe.Error],Unit],Nothing] = {
+    body: ConfigurationIngest): Request[Either[ResponseError[io.circe.Error],io.circe.Json],Nothing] = {
     assert(workspaceNamespace != null, "Missing required parameter 'workspaceNamespace' when calling MethodConfigurationsApi->overwriteWorkspaceMethodConfig")
     assert(workspaceName != null, "Missing required parameter 'workspaceName' when calling MethodConfigurationsApi->overwriteWorkspaceMethodConfig")
     assert(configNamespace != null, "Missing required parameter 'configNamespace' when calling MethodConfigurationsApi->overwriteWorkspaceMethodConfig")
@@ -199,7 +199,7 @@ object MethodConfigurationsApi {
     basicRequest
       .put(uri"https://api.firecloud.org/api/workspaces/${workspaceNamespace}/${workspaceName}/method_configs/${configNamespace}/${configName}")
       .body(body)
-      .response(asJson[Unit])
+      .response(asJson[io.circe.Json])
   }
 
   /**
@@ -209,12 +209,12 @@ object MethodConfigurationsApi {
    * @param workspaceNamespace Workspace Namespace 
    * @param workspaceName Workspace Name 
    * @param methodConfigJson Method Configuration contents 
-   * @return Option[Unit]
+   * @return Option[io.circe.Json]
    */
   def postWorkspaceMethodConfig(
     workspaceNamespace: String,
     workspaceName: String,
-    methodConfigJson: NewMethodConfigIngest): Request[Either[ResponseError[io.circe.Error],Unit],Nothing] = {
+    methodConfigJson: NewMethodConfigIngest): Request[Either[ResponseError[io.circe.Error],io.circe.Json],Nothing] = {
     assert(workspaceNamespace != null, "Missing required parameter 'workspaceNamespace' when calling MethodConfigurationsApi->postWorkspaceMethodConfig")
     assert(workspaceName != null, "Missing required parameter 'workspaceName' when calling MethodConfigurationsApi->postWorkspaceMethodConfig")
     assert(methodConfigJson != null, "Missing required parameter 'methodConfigJson' when calling MethodConfigurationsApi->postWorkspaceMethodConfig")
@@ -222,7 +222,7 @@ object MethodConfigurationsApi {
     basicRequest
       .post(uri"https://api.firecloud.org/api/workspaces/${workspaceNamespace}/${workspaceName}/methodconfigs")
       .body(methodConfigJson)
-      .response(asJson[Unit])
+      .response(asJson[io.circe.Json])
   }
 
   /**
@@ -234,14 +234,14 @@ object MethodConfigurationsApi {
    * @param configNamespace Configuration Namespace 
    * @param configName Configuration Name 
    * @param rename Method Config Rename 
-   * @return Option[Unit]
+   * @return Option[io.circe.Json]
    */
   def renameWorkspaceMethodConfig(
     workspaceNamespace: String,
     workspaceName: String,
     configNamespace: String,
     configName: String,
-    rename: MethodConfigRename): Request[Either[ResponseError[io.circe.Error],Unit],Nothing] = {
+    rename: MethodConfigRename): Request[Either[ResponseError[io.circe.Error],io.circe.Json],Nothing] = {
     assert(workspaceNamespace != null, "Missing required parameter 'workspaceNamespace' when calling MethodConfigurationsApi->renameWorkspaceMethodConfig")
     assert(workspaceName != null, "Missing required parameter 'workspaceName' when calling MethodConfigurationsApi->renameWorkspaceMethodConfig")
     assert(configNamespace != null, "Missing required parameter 'configNamespace' when calling MethodConfigurationsApi->renameWorkspaceMethodConfig")
@@ -251,7 +251,7 @@ object MethodConfigurationsApi {
     basicRequest
       .post(uri"https://api.firecloud.org/api/workspaces/${workspaceNamespace}/${workspaceName}/method_configs/${configNamespace}/${configName}/rename")
       .body(rename)
-      .response(asJson[Unit])
+      .response(asJson[io.circe.Json])
   }
 
   /**
@@ -263,14 +263,14 @@ object MethodConfigurationsApi {
    * @param configNamespace Configuration Namespace 
    * @param configName Configuration Name 
    * @param body Method Config to Update 
-   * @return Option[Unit]
+   * @return Option[io.circe.Json]
    */
   def updateWorkspaceMethodConfig(
     workspaceNamespace: String,
     workspaceName: String,
     configNamespace: String,
     configName: String,
-    body: ConfigurationIngest): Request[Either[ResponseError[io.circe.Error],Unit],Nothing] = {
+    body: ConfigurationIngest): Request[Either[ResponseError[io.circe.Error],io.circe.Json],Nothing] = {
     assert(workspaceNamespace != null, "Missing required parameter 'workspaceNamespace' when calling MethodConfigurationsApi->updateWorkspaceMethodConfig")
     assert(workspaceName != null, "Missing required parameter 'workspaceName' when calling MethodConfigurationsApi->updateWorkspaceMethodConfig")
     assert(configNamespace != null, "Missing required parameter 'configNamespace' when calling MethodConfigurationsApi->updateWorkspaceMethodConfig")
@@ -280,7 +280,7 @@ object MethodConfigurationsApi {
     basicRequest
       .post(uri"https://api.firecloud.org/api/workspaces/${workspaceNamespace}/${workspaceName}/method_configs/${configNamespace}/${configName}")
       .body(body)
-      .response(asJson[Unit])
+      .response(asJson[io.circe.Json])
   }
 
   /**

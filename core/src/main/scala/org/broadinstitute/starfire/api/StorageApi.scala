@@ -31,17 +31,17 @@ object StorageApi {
    *
    * @param bucket Name of the bucket in which the object resides. 
    * @param `object` Name of the object. (be sure to urlencode) 
-   * @return Option[Unit]
+   * @return Option[io.circe.Json]
    */
   def getMetadata(
     bucket: String,
-    `object`: String): Request[Either[ResponseError[io.circe.Error],Unit],Nothing] = {
+    `object`: String): Request[Either[ResponseError[io.circe.Error],io.circe.Json],Nothing] = {
     assert(bucket != null, "Missing required parameter 'bucket' when calling StorageApi->getMetadata")
     assert(`object` != null, "Missing required parameter '`object`' when calling StorageApi->getMetadata")
 
     basicRequest
       .get(uri"https://api.firecloud.org/api/storage/${bucket}/${`object`}")
-      .response(asJson[Unit])
+      .response(asJson[io.circe.Json])
   }
 
   /**

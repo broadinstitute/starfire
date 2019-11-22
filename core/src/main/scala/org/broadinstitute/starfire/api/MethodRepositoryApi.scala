@@ -244,12 +244,12 @@ object MethodRepositoryApi {
    * @param workspaceNamespace Workspace Namespace 
    * @param workspaceName Workspace Name 
    * @param configToCopy Method Configuration to Copy 
-   * @return Option[Unit]
+   * @return Option[io.circe.Json]
    */
   def copyFromMethodRepo(
     workspaceNamespace: String,
     workspaceName: String,
-    configToCopy: CopyConfigurationIngest): Request[Either[ResponseError[io.circe.Error],Unit],Nothing] = {
+    configToCopy: CopyConfigurationIngest): Request[Either[ResponseError[io.circe.Error],io.circe.Json],Nothing] = {
     assert(workspaceNamespace != null, "Missing required parameter 'workspaceNamespace' when calling MethodRepositoryApi->copyFromMethodRepo")
     assert(workspaceName != null, "Missing required parameter 'workspaceName' when calling MethodRepositoryApi->copyFromMethodRepo")
     assert(configToCopy != null, "Missing required parameter 'configToCopy' when calling MethodRepositoryApi->copyFromMethodRepo")
@@ -257,7 +257,7 @@ object MethodRepositoryApi {
     basicRequest
       .post(uri"https://api.firecloud.org/api/workspaces/${workspaceNamespace}/${workspaceName}/method_configs/copyFromMethodRepo")
       .body(configToCopy)
-      .response(asJson[Unit])
+      .response(asJson[io.circe.Json])
   }
 
   /**
@@ -267,12 +267,12 @@ object MethodRepositoryApi {
    * @param workspaceNamespace Workspace Namespace 
    * @param workspaceName Workspace Name 
    * @param configToCopy Method Configuration to Copy 
-   * @return Option[Unit]
+   * @return Option[io.circe.Json]
    */
   def copyToMethodRepo(
     workspaceNamespace: String,
     workspaceName: String,
-    configToCopy: PublishConfigurationIngest): Request[Either[ResponseError[io.circe.Error],Unit],Nothing] = {
+    configToCopy: PublishConfigurationIngest): Request[Either[ResponseError[io.circe.Error],io.circe.Json],Nothing] = {
     assert(workspaceNamespace != null, "Missing required parameter 'workspaceNamespace' when calling MethodRepositoryApi->copyToMethodRepo")
     assert(workspaceName != null, "Missing required parameter 'workspaceName' when calling MethodRepositoryApi->copyToMethodRepo")
     assert(configToCopy != null, "Missing required parameter 'configToCopy' when calling MethodRepositoryApi->copyToMethodRepo")
@@ -280,7 +280,7 @@ object MethodRepositoryApi {
     basicRequest
       .post(uri"https://api.firecloud.org/api/workspaces/${workspaceNamespace}/${workspaceName}/method_configs/copyToMethodRepo")
       .body(configToCopy)
-      .response(asJson[Unit])
+      .response(asJson[io.circe.Json])
   }
 
   /**
@@ -288,16 +288,16 @@ object MethodRepositoryApi {
    * 
    *
    * @param methodName name of Method to use for template 
-   * @return Option[Unit]
+   * @return Option[io.circe.Json]
    */
   def createMethodTemplate(
-    methodName: MethodID): Request[Either[ResponseError[io.circe.Error],Unit],Nothing] = {
+    methodName: MethodID): Request[Either[ResponseError[io.circe.Error],io.circe.Json],Nothing] = {
     assert(methodName != null, "Missing required parameter 'methodName' when calling MethodRepositoryApi->createMethodTemplate")
 
     basicRequest
       .post(uri"https://api.firecloud.org/api/template")
       .body(methodName)
-      .response(asJson[Unit])
+      .response(asJson[io.circe.Json])
   }
 
   /**
@@ -365,16 +365,16 @@ object MethodRepositoryApi {
    * 
    *
    * @param methodName name of Method to look up 
-   * @return Option[Unit]
+   * @return Option[io.circe.Json]
    */
   def getMethodIO(
-    methodName: MethodID): Request[Either[ResponseError[io.circe.Error],Unit],Nothing] = {
+    methodName: MethodID): Request[Either[ResponseError[io.circe.Error],io.circe.Json],Nothing] = {
     assert(methodName != null, "Missing required parameter 'methodName' when calling MethodRepositoryApi->getMethodIO")
 
     basicRequest
       .post(uri"https://api.firecloud.org/api/inputsOutputs")
       .body(methodName)
-      .response(asJson[Unit])
+      .response(asJson[io.circe.Json])
   }
 
   /**

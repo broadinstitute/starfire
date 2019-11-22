@@ -29,28 +29,28 @@ object StatusApi {
    * An error status endpoint for load balancing purposes 
    * 
    *
-   * @return Option[Unit]
+   * @return Option[io.circe.Json]
    */
   def error(
-    ): Request[Either[ResponseError[io.circe.Error],Unit],Nothing] = {
+    ): Request[Either[ResponseError[io.circe.Error],io.circe.Json],Nothing] = {
 
     basicRequest
       .get(uri"https://api.firecloud.org/error")
-      .response(asJson[Unit])
+      .response(asJson[io.circe.Json])
   }
 
   /**
    * A health status endpoint for load balancing purposes 
    * 
    *
-   * @return Option[Unit]
+   * @return Option[io.circe.Json]
    */
   def health(
-    ): Request[Either[ResponseError[io.circe.Error],Unit],Nothing] = {
+    ): Request[Either[ResponseError[io.circe.Error],io.circe.Json],Nothing] = {
 
     basicRequest
       .get(uri"https://api.firecloud.org/health")
-      .response(asJson[Unit])
+      .response(asJson[io.circe.Json])
   }
 
   /**

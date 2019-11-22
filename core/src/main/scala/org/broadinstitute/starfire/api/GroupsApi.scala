@@ -36,19 +36,19 @@ object GroupsApi {
    * @param groupName Group name 
    * @param role role of user for group 
    * @param email email of user or group to add 
-   * @return Option[Unit]
+   * @return Option[io.circe.Json]
    */
   def addUserToGroup(
     groupName: String,
     role: String,
-    email: String): Request[Either[ResponseError[io.circe.Error],Unit],Nothing] = {
+    email: String): Request[Either[ResponseError[io.circe.Error],io.circe.Json],Nothing] = {
     assert(groupName != null, "Missing required parameter 'groupName' when calling GroupsApi->addUserToGroup")
     assert(role != null, "Missing required parameter 'role' when calling GroupsApi->addUserToGroup")
     assert(email != null, "Missing required parameter 'email' when calling GroupsApi->addUserToGroup")
 
     basicRequest
       .put(uri"https://api.firecloud.org/api/groups/${groupName}/${role}/${email}")
-      .response(asJson[Unit])
+      .response(asJson[io.circe.Json])
   }
 
   /**
@@ -72,15 +72,15 @@ object GroupsApi {
    * 
    *
    * @param groupName Group name 
-   * @return Option[Unit]
+   * @return Option[io.circe.Json]
    */
   def deleteGroup(
-    groupName: String): Request[Either[ResponseError[io.circe.Error],Unit],Nothing] = {
+    groupName: String): Request[Either[ResponseError[io.circe.Error],io.circe.Json],Nothing] = {
     assert(groupName != null, "Missing required parameter 'groupName' when calling GroupsApi->deleteGroup")
 
     basicRequest
       .delete(uri"https://api.firecloud.org/api/groups/${groupName}")
-      .response(asJson[Unit])
+      .response(asJson[io.circe.Json])
   }
 
   /**
@@ -120,19 +120,19 @@ object GroupsApi {
    * @param groupName Group name 
    * @param role role of user for group 
    * @param email email of user or group to add 
-   * @return Option[Unit]
+   * @return Option[io.circe.Json]
    */
   def removeUserFromGroup(
     groupName: String,
     role: String,
-    email: String): Request[Either[ResponseError[io.circe.Error],Unit],Nothing] = {
+    email: String): Request[Either[ResponseError[io.circe.Error],io.circe.Json],Nothing] = {
     assert(groupName != null, "Missing required parameter 'groupName' when calling GroupsApi->removeUserFromGroup")
     assert(role != null, "Missing required parameter 'role' when calling GroupsApi->removeUserFromGroup")
     assert(email != null, "Missing required parameter 'email' when calling GroupsApi->removeUserFromGroup")
 
     basicRequest
       .delete(uri"https://api.firecloud.org/api/groups/${groupName}/${role}/${email}")
-      .response(asJson[Unit])
+      .response(asJson[io.circe.Json])
   }
 
   /**
@@ -140,15 +140,15 @@ object GroupsApi {
    * 
    *
    * @param groupName Group name 
-   * @return Option[Unit]
+   * @return Option[io.circe.Json]
    */
   def requestAccessToGroup(
-    groupName: String): Request[Either[ResponseError[io.circe.Error],Unit],Nothing] = {
+    groupName: String): Request[Either[ResponseError[io.circe.Error],io.circe.Json],Nothing] = {
     assert(groupName != null, "Missing required parameter 'groupName' when calling GroupsApi->requestAccessToGroup")
 
     basicRequest
       .post(uri"https://api.firecloud.org/api/groups/${groupName}/requestAccess")
-      .response(asJson[Unit])
+      .response(asJson[io.circe.Json])
   }
 
 }

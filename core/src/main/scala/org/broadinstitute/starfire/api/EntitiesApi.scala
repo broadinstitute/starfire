@@ -133,12 +133,12 @@ object EntitiesApi {
    * @param workspaceNamespace Workspace Namespace 
    * @param workspaceName Workspace Name 
    * @param body Entities to delete 
-   * @return Option[Unit]
+   * @return Option[io.circe.Json]
    */
   def deleteEntities(
     workspaceNamespace: String,
     workspaceName: String,
-    body: List[EntityID]): Request[Either[ResponseError[io.circe.Error],Unit],Nothing] = {
+    body: List[EntityID]): Request[Either[ResponseError[io.circe.Error],io.circe.Json],Nothing] = {
     assert(workspaceNamespace != null, "Missing required parameter 'workspaceNamespace' when calling EntitiesApi->deleteEntities")
     assert(workspaceName != null, "Missing required parameter 'workspaceName' when calling EntitiesApi->deleteEntities")
     assert(body != null, "Missing required parameter 'body' when calling EntitiesApi->deleteEntities")
@@ -146,7 +146,7 @@ object EntitiesApi {
     basicRequest
       .post(uri"https://api.firecloud.org/api/workspaces/${workspaceNamespace}/${workspaceName}/entities/delete")
       .body(body)
-      .response(asJson[Unit])
+      .response(asJson[io.circe.Json])
   }
 
   /**
@@ -218,14 +218,14 @@ object EntitiesApi {
    * @param entityType Entity Type 
    * @param entityName Entity Name 
    * @param expression Expression 
-   * @return Option[Unit]
+   * @return Option[io.circe.Json]
    */
   def evaluateEntityExpression(
     workspaceNamespace: String,
     workspaceName: String,
     entityType: String,
     entityName: String,
-    expression: String): Request[Either[ResponseError[io.circe.Error],Unit],Nothing] = {
+    expression: String): Request[Either[ResponseError[io.circe.Error],io.circe.Json],Nothing] = {
     assert(workspaceNamespace != null, "Missing required parameter 'workspaceNamespace' when calling EntitiesApi->evaluateEntityExpression")
     assert(workspaceName != null, "Missing required parameter 'workspaceName' when calling EntitiesApi->evaluateEntityExpression")
     assert(entityType != null, "Missing required parameter 'entityType' when calling EntitiesApi->evaluateEntityExpression")
@@ -235,7 +235,7 @@ object EntitiesApi {
     basicRequest
       .post(uri"https://api.firecloud.org/api/workspaces/${workspaceNamespace}/${workspaceName}/entities/${entityType}/${entityName}/evaluate")
       .body(expression)
-      .response(asJson[Unit])
+      .response(asJson[io.circe.Json])
   }
 
   /**
@@ -245,19 +245,19 @@ object EntitiesApi {
    * @param workspaceNamespace Destination Workspace Namespace 
    * @param workspaceName Destination Workspace Name 
    * @param entities A valid TSV import file 
-   * @return Option[Unit]
+   * @return Option[io.circe.Json]
    */
   def flexibleImportEntities(
     workspaceNamespace: String,
     workspaceName: String,
-    entities: File): Request[Either[ResponseError[io.circe.Error],Unit],Nothing] = {
+    entities: File): Request[Either[ResponseError[io.circe.Error],io.circe.Json],Nothing] = {
     assert(workspaceNamespace != null, "Missing required parameter 'workspaceNamespace' when calling EntitiesApi->flexibleImportEntities")
     assert(workspaceName != null, "Missing required parameter 'workspaceName' when calling EntitiesApi->flexibleImportEntities")
     assert(entities != null, "Missing required parameter 'entities' when calling EntitiesApi->flexibleImportEntities")
 
     basicRequest
       .post(uri"https://api.firecloud.org/api/workspaces/${workspaceNamespace}/${workspaceName}/flexibleImportEntities")
-      .response(asJson[Unit])
+      .response(asJson[io.circe.Json])
   }
 
   /**
@@ -288,7 +288,7 @@ object EntitiesApi {
    *
    * @param workspaceNamespace Workspace Namespace 
    * @param workspaceName Workspace Name 
-   * @return Option[Unit]
+   * @return Option[io.circe.Json]
    */
   def getEntitiesWithType(
     workspaceNamespace: String,
@@ -309,13 +309,13 @@ object EntitiesApi {
    * @param workspaceName Workspace Name 
    * @param entityType Entity Type 
    * @param entityName Entity Name 
-   * @return Option[Unit]
+   * @return Option[io.circe.Json]
    */
   def getEntity(
     workspaceNamespace: String,
     workspaceName: String,
     entityType: String,
-    entityName: String): Request[Either[ResponseError[io.circe.Error],Unit],Nothing] = {
+    entityName: String): Request[Either[ResponseError[io.circe.Error],io.circe.Json],Nothing] = {
     assert(workspaceNamespace != null, "Missing required parameter 'workspaceNamespace' when calling EntitiesApi->getEntity")
     assert(workspaceName != null, "Missing required parameter 'workspaceName' when calling EntitiesApi->getEntity")
     assert(entityType != null, "Missing required parameter 'entityType' when calling EntitiesApi->getEntity")
@@ -323,7 +323,7 @@ object EntitiesApi {
 
     basicRequest
       .get(uri"https://api.firecloud.org/api/workspaces/${workspaceNamespace}/${workspaceName}/entities/${entityType}/${entityName}")
-      .response(asJson[Unit])
+      .response(asJson[io.circe.Json])
   }
 
   /**
@@ -332,17 +332,17 @@ object EntitiesApi {
    *
    * @param workspaceNamespace Workspace Namespace 
    * @param workspaceName Workspace Name 
-   * @return Option[Unit]
+   * @return Option[io.circe.Json]
    */
   def getEntityTypes(
     workspaceNamespace: String,
-    workspaceName: String): Request[Either[ResponseError[io.circe.Error],Unit],Nothing] = {
+    workspaceName: String): Request[Either[ResponseError[io.circe.Error],io.circe.Json],Nothing] = {
     assert(workspaceNamespace != null, "Missing required parameter 'workspaceNamespace' when calling EntitiesApi->getEntityTypes")
     assert(workspaceName != null, "Missing required parameter 'workspaceName' when calling EntitiesApi->getEntityTypes")
 
     basicRequest
       .get(uri"https://api.firecloud.org/api/workspaces/${workspaceNamespace}/${workspaceName}/entities")
-      .response(asJson[Unit])
+      .response(asJson[io.circe.Json])
   }
 
   /**
@@ -352,12 +352,12 @@ object EntitiesApi {
    * @param workspaceNamespace Workspace Namespace 
    * @param workspaceName Workspace Name 
    * @param bagitImportRequest JSON object containing bagit URL 
-   * @return Option[Unit]
+   * @return Option[io.circe.Json]
    */
   def importBagit(
     workspaceNamespace: String,
     workspaceName: String,
-    bagitImportRequest: BagitRequest): Request[Either[ResponseError[io.circe.Error],Unit],Nothing] = {
+    bagitImportRequest: BagitRequest): Request[Either[ResponseError[io.circe.Error],io.circe.Json],Nothing] = {
     assert(workspaceNamespace != null, "Missing required parameter 'workspaceNamespace' when calling EntitiesApi->importBagit")
     assert(workspaceName != null, "Missing required parameter 'workspaceName' when calling EntitiesApi->importBagit")
     assert(bagitImportRequest != null, "Missing required parameter 'bagitImportRequest' when calling EntitiesApi->importBagit")
@@ -365,7 +365,7 @@ object EntitiesApi {
     basicRequest
       .post(uri"https://api.firecloud.org/api/workspaces/${workspaceNamespace}/${workspaceName}/importBagit")
       .body(bagitImportRequest)
-      .response(asJson[Unit])
+      .response(asJson[io.circe.Json])
   }
 
   /**
@@ -375,19 +375,19 @@ object EntitiesApi {
    * @param workspaceNamespace Destination Workspace Namespace 
    * @param workspaceName Destination Workspace Name 
    * @param entities A valid TSV import file 
-   * @return Option[Unit]
+   * @return Option[io.circe.Json]
    */
   def importEntities(
     workspaceNamespace: String,
     workspaceName: String,
-    entities: File): Request[Either[ResponseError[io.circe.Error],Unit],Nothing] = {
+    entities: File): Request[Either[ResponseError[io.circe.Error],io.circe.Json],Nothing] = {
     assert(workspaceNamespace != null, "Missing required parameter 'workspaceNamespace' when calling EntitiesApi->importEntities")
     assert(workspaceName != null, "Missing required parameter 'workspaceName' when calling EntitiesApi->importEntities")
     assert(entities != null, "Missing required parameter 'entities' when calling EntitiesApi->importEntities")
 
     basicRequest
       .post(uri"https://api.firecloud.org/api/workspaces/${workspaceNamespace}/${workspaceName}/importEntities")
-      .response(asJson[Unit])
+      .response(asJson[io.circe.Json])
   }
 
   /**
@@ -397,12 +397,12 @@ object EntitiesApi {
    * @param workspaceNamespace Workspace Namespace 
    * @param workspaceName Workspace Name 
    * @param pfbImportRequest JSON object containing PFB URL 
-   * @return Option[Unit]
+   * @return Option[io.circe.Json]
    */
   def importPFB(
     workspaceNamespace: String,
     workspaceName: String,
-    pfbImportRequest: PFBRequest): Request[Either[ResponseError[io.circe.Error],Unit],Nothing] = {
+    pfbImportRequest: PFBRequest): Request[Either[ResponseError[io.circe.Error],io.circe.Json],Nothing] = {
     assert(workspaceNamespace != null, "Missing required parameter 'workspaceNamespace' when calling EntitiesApi->importPFB")
     assert(workspaceName != null, "Missing required parameter 'workspaceName' when calling EntitiesApi->importPFB")
     assert(pfbImportRequest != null, "Missing required parameter 'pfbImportRequest' when calling EntitiesApi->importPFB")
@@ -410,7 +410,7 @@ object EntitiesApi {
     basicRequest
       .post(uri"https://api.firecloud.org/api/workspaces/${workspaceNamespace}/${workspaceName}/importPFB")
       .body(pfbImportRequest)
-      .response(asJson[Unit])
+      .response(asJson[io.circe.Json])
   }
 
   /**
