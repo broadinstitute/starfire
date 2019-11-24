@@ -35,14 +35,14 @@ object HttpUtils {
         } else {
           statusMessage(response)
         }
-        println(responseError.getClass)
         responseError match {
-          case HttpError(body) => println(body)
+          case HttpError(body) => Left(Snag(message, body))
           case DeserializationError(original, error) =>
-            println(original)
-            println(error)
+            JsonUtils.prettyPrintJson(original) match {
+              case Left(causeSnag) => Left(Snag(message, causeSnag))
+              case Right(jsonPretty) => Left(Snag(message, message + "\n" + error.getMessage + "\n" + jsonPretty))
+            }
         }
-        Left(Snag(message))
       case Right(value) => Right(value)
     }
   }
