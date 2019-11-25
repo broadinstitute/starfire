@@ -1,5 +1,6 @@
 package org.broadinstitute.starfire.app.silk.predef
 
+import better.files.File
 import org.broadinstitute.starfire.api.{EntitiesApi, MethodConfigurationsApi, ProfileApi, StatusApi, SubmissionsApi, WorkspacesApi}
 import org.broadinstitute.starfire.app.silk.SilkCommand.Parameter
 import org.broadinstitute.starfire.app.silk.SilkConfig.sttpBackend
@@ -7,10 +8,13 @@ import org.broadinstitute.starfire.app.silk.SilkType.SilkStringType
 import org.broadinstitute.starfire.app.silk.SilkValue.{SilkIntegerValue, SilkObjectValue, SilkStringValue}
 import org.broadinstitute.starfire.app.silk.predef.PredefUtils.Implicits._
 import org.broadinstitute.starfire.app.silk.{Identifier, SilkCommand, SilkHttpUtils}
+import org.broadinstitute.starfire.auth.OAuthUtils
 import org.broadinstitute.starfire.model.{Profile, SubmissionRequest}
 import org.broadinstitute.starfire.util.Snag
 import org.broadinstitute.starfire.utils.HttpUtils
 import org.joda.time.DateTime
+
+import scala.util.{Failure, Success}
 
 object PredefCommands {
 
@@ -231,6 +235,23 @@ object PredefCommands {
       val workspaceName = env.getString(CommonParameters.workspaceName)
       val request = WorkspacesApi.readBucket(workspaceNamespace, workspaceName)
       SilkHttpUtils.sendAuthorizedPrintResponseReturnEmpty(request, env)
+    }
+  }
+
+  val gcpReadBucket: SilkCommand = new SilkCommand {
+    override def ref: SilkCommand.Ref = SilkCommand.Ref(2019, 11, 25, 18, 28, 12, "gcp.readBucket")
+
+    override def parameters: Seq[Parameter] = Seq(CommonParameters.workspaceBucket)
+
+    override def execute(env: SilkObjectValue): Either[Snag, SilkObjectValue] = {
+      val keyFile = File(env.getString(CommonParameters.accountKeyFile))
+      OAuthUtils.readServiceAccountCredentials(keyFile) match {
+        case Failure(exception) => Left(Snag("Could not read key file", Snag(exception)))
+        case Success(credentials) =>
+//          GoogleStorageUtils.
+//          println(value)
+      }
+      ???
     }
   }
 
