@@ -20,6 +20,8 @@ object PredefEnv {
         PredefCommands.methodConfigurationsListWorkspaceMethodConfigs)
       .add("submissions" / "createSubmission", PredefCommands.submissionsCreateSubmission)
       .add("submissions" / "monitorSubmission", PredefCommands.submissionsMonitorSubmission)
+      .add("workspaces" / "getWorkspace", PredefCommands.workspacesGetWorkspace)
+      .add("workspaces" / "readBucket", PredefCommands.workspacesReadBucket)
 
   def env: SilkObjectValue = theEnv
 

@@ -2673,6 +2673,8 @@ paths:
       responses:
         200:
           description: Successful Request
+          schema:
+            $ref: '#/definitions/WorkspaceResponse'
         400:
           description: Unrecognized query parameters
         404:
@@ -7296,6 +7298,38 @@ definitions:
     description: workflow status
     enum: ["Queued", "Launching", "Submitted", "Running", "Failed", "Succeeded", "Aborting", "Aborted", "Unknown"]
 
+  WorkspaceResponse:
+    description: "Response to getWorkspace request"
+    required:
+      - accessLevel
+      - bucketOptions
+      - canCompute
+      - canShare
+      - catalog
+      - owners
+      - workspace
+      - workspaceSubmissionStats
+    properties:
+      accessLevel:
+        type: string
+      bucketOptions:
+        $ref: '#/definitions/WorkspaceBucketOptions'
+      canCompute:
+        type: boolean
+      canShare:
+        type: boolean
+      catalog:
+        type: boolean
+      owners:
+        type: array
+        items:
+          type: string
+      workspace:
+        $ref: '#/definitions/Workspace'
+      workspaceSubmissionStats:
+        $ref: '#/definitions/WorkspaceSubmissionsStats'
+
+
   Workspace:
     description: ''
     required:
@@ -7308,9 +7342,8 @@ definitions:
       - lastModified
       - createdBy
       - attributes
-      - accessLevels
-      - authDomainACLs
       - isLocked
+      - workflowCollectionName
     type: object
     properties:
       namespace:
@@ -7359,6 +7392,24 @@ definitions:
       isLocked:
         type: boolean
         description: Can the Workspace currently be modified?
+      workflowCollectionName:
+        type: string
+
+  WorkspaceSubmissionsStats:
+    required:
+      - lastFailureDate
+      - lastSuccessDate
+      - runningSubmissionsCount
+    properties:
+      lastFailure:
+        type: string
+        format: date-time
+      lastSuccessDate:
+        type: string
+        format: date-time
+      runningSubmissionsCount:
+        type: integer
+        format: int32
 
   WorkspaceACL:
     description: ''

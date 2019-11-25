@@ -38,10 +38,11 @@ import io.circe.generic.JsonCodec
   // Map[String, Attribute]
   attributes: Map[String, String],
   // Map[String, RawlsGroupRef]
-  accessLevels: Map[String, RawlsGroupRef],
+  accessLevels: Option[Map[String, RawlsGroupRef]] = None,
   // Map[String, RawlsGroupRef]
-  authDomainACLs: Map[String, RawlsGroupRef],
+  authDomainACLs: Option[Map[String, RawlsGroupRef]] = None,
   // Can the Workspace currently be modified?
-  isLocked: Boolean
+  isLocked: Boolean,
+  workflowCollectionName: String
 )
 

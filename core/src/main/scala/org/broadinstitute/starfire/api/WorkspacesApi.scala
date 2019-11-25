@@ -44,6 +44,8 @@ import org.broadinstitute.starfire.model.WorkspaceCatalogUpdateResponseList
 import org.broadinstitute.starfire.model.WorkspaceCatalogUpdateResponseList._
 import org.broadinstitute.starfire.model.WorkspaceIngest
 import org.broadinstitute.starfire.model.WorkspaceIngest._
+import org.broadinstitute.starfire.model.WorkspaceResponse
+import org.broadinstitute.starfire.model.WorkspaceResponse._
 import org.broadinstitute.starfire.model.WorkspaceTag
 import org.broadinstitute.starfire.model.WorkspaceTag._
 
@@ -276,19 +278,19 @@ object WorkspacesApi {
    * @param workspaceNamespace Workspace Namespace 
    * @param workspaceName Workspace Name 
    * @param fields When specified, include only these keys in the response payload and exclude other keys. Accepts a comma-delimited list of values. To include a nested key, specify the key&#39;s path using a dot delimiter; for example, to include {\&quot;workspace\&quot;: {\&quot;attributes\&quot;: {}}}, specify \&quot;workspace.attributes\&quot;. Legal values are any first-level key in the response, any first-level key inside the {\&quot;workspace\&quot;: {}} object, and any first-level key inside the {\&quot;workspace\&quot;: {\&quot;attributes\&quot;: {}}} object. If omitted, will return the full response payload.  (optional)
-   * @return Option[io.circe.Json]
+   * @return Option[WorkspaceResponse]
    */
   def getWorkspace(
     workspaceNamespace: String,
     workspaceName: String,
     fields: Option[List[String]] = None
-    ): Request[Either[ResponseError[io.circe.Error],io.circe.Json],Nothing] = {
+    ): Request[Either[ResponseError[io.circe.Error],WorkspaceResponse],Nothing] = {
     assert(workspaceNamespace != null, "Missing required parameter 'workspaceNamespace' when calling WorkspacesApi->getWorkspace")
     assert(workspaceName != null, "Missing required parameter 'workspaceName' when calling WorkspacesApi->getWorkspace")
 
     basicRequest
       .get(uri"https://api.firecloud.org/api/workspaces/${workspaceNamespace}/${workspaceName}?fields=${fields}")
-      .response(asJson[io.circe.Json])
+      .response(asJson[WorkspaceResponse])
   }
 
   /**

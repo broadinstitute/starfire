@@ -1,6 +1,6 @@
 package org.broadinstitute.starfire.app.silk.predef
 
-import org.broadinstitute.starfire.api.{EntitiesApi, MethodConfigurationsApi, ProfileApi, StatusApi, SubmissionsApi}
+import org.broadinstitute.starfire.api.{EntitiesApi, MethodConfigurationsApi, ProfileApi, StatusApi, SubmissionsApi, WorkspacesApi}
 import org.broadinstitute.starfire.app.silk.SilkCommand.Parameter
 import org.broadinstitute.starfire.app.silk.SilkConfig.sttpBackend
 import org.broadinstitute.starfire.app.silk.SilkType.SilkStringType
@@ -52,8 +52,8 @@ object PredefCommands {
       val dateTimeNow = new DateTime(timeNowMillis)
       val dateTimeString =  dateTimeNow.toString()
       Right(SilkObjectValue(
-        "dateTime" -> SilkIntegerValue(timeNowMillis),
-        "dateTimeString" -> SilkStringValue(dateTimeString)
+        Identifier("dateTime") -> SilkIntegerValue(timeNowMillis),
+        Identifier("dateTimeString") -> SilkStringValue(dateTimeString)
       ))
     }
   }
@@ -205,10 +205,40 @@ object PredefCommands {
     }
   }
 
+  val workspacesGetWorkspace: SilkCommand = new SilkCommand {
+    override def ref: SilkCommand.Ref = SilkCommand.Ref(2019, 11, 25, 17, 3, 57, "workspaces.getWorkspace")
+
+    override def parameters: Seq[Parameter] = Seq(CommonParameters.workspaceNamespace, CommonParameters.workspaceName)
+
+    override def execute(env: SilkObjectValue): Either[Snag, SilkObjectValue] = {
+      val workspaceNamespace = env.getString(CommonParameters.workspaceNamespace)
+      val workspaceName = env.getString(CommonParameters.workspaceName)
+      val request = WorkspacesApi.getWorkspace(workspaceNamespace, workspaceName)
+      SilkHttpUtils.sendAuthorizedExtractData(request, env) { workspaceResponse =>
+        val bucketName = workspaceResponse.workspace.bucketName
+        SilkObjectValue(CommonIds.workspaceBucket -> SilkStringValue(bucketName))
+      }
+    }
+  }
+
+  val workspacesReadBucket: SilkCommand = new SilkCommand {
+    override def ref: SilkCommand.Ref = SilkCommand.Ref(2019, 11, 25, 16, 54, 36, "workspaces.readBucket")
+
+    override def parameters: Seq[Parameter] = Seq(CommonParameters.workspaceNamespace, CommonParameters.workspaceName)
+
+    override def execute(env: SilkObjectValue): Either[Snag, SilkObjectValue] = {
+      val workspaceNamespace = env.getString(CommonParameters.workspaceNamespace)
+      val workspaceName = env.getString(CommonParameters.workspaceName)
+      val request = WorkspacesApi.readBucket(workspaceNamespace, workspaceName)
+      SilkHttpUtils.sendAuthorizedPrintResponseReturnEmpty(request, env)
+    }
+  }
+
   val all: Set[SilkCommand] =
     Set(
       statusStatus, helloWorld, silkUtilGetTime, set, silkDebugDump, profileSetProfile, entitiesGetEntitiesWithType,
-      methodConfigurationsListWorkspaceMethodConfigs, submissionsCreateSubmission, submissionsMonitorSubmission
+      methodConfigurationsListWorkspaceMethodConfigs, submissionsCreateSubmission, submissionsMonitorSubmission,
+      workspacesGetWorkspace, workspacesReadBucket
     )
   val allByRef: Map[SilkCommand.Ref, SilkCommand] = all.map(command => (command.ref, command)).toMap
 

@@ -27,4 +27,12 @@ object SilkHttpUtils {
     }
   }
 
+  def sendAuthorizedExtractData[T](request: Request[Either[ResponseError[io.circe.Error], T], Nothing],
+                                   env: SilkObjectValue
+                                  )(extractor: T => SilkObjectValue
+                                  )(implicit backend: SttpBackend[Identity, Nothing, NothingT]):
+  Either[Snag, SilkObjectValue] = {
+    sendAuthorized(request, env).map(extractor)
+  }
+
 }

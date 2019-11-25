@@ -9,5 +9,6 @@ object CommonParameters {
   val accountKeyFile: Parameter = Parameter(CommonIds.starfireAccountKeyFile, SilkStringType, isRequired = true)
   val workspaceNamespace: Parameter = Parameter(CommonIds.workspaceNamespace, SilkStringType, isRequired = true)
   val workspaceName: Parameter = Parameter(CommonIds.workspaceName, SilkStringType, isRequired = true)
+  val workspaceBucket: Parameter = Parameter(CommonIds.workspaceBucket, SilkStringType, isRequired = true)
 
 }

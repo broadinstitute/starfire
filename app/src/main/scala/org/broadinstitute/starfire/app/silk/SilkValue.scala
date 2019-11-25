@@ -166,11 +166,13 @@ object SilkValue {
     }
     val empty: SilkObjectValue = new SilkObjectValue(Seq.empty, Map.empty)
 
-    def apply(keyValuePair: (String, SilkValue), keyValuePairs: (String, SilkValue)*): SilkObjectValue = {
-      val allPairs = keyValuePair +: keyValuePairs
-      val keys = allPairs.map(_._1)
-      val values = allPairs.toMap
-      SilkObjectValue(keys, values)
+    def apply(idValuePair: (Identifier, SilkValue), idValuePairs: (Identifier, SilkValue)*): SilkObjectValue = {
+      val allPairs = idValuePair +: idValuePairs
+      var silkObjectValue: SilkObjectValue = SilkObjectValue.empty
+      for((id, value) <- allPairs) {
+        silkObjectValue = silkObjectValue.add(id, value)
+      }
+      silkObjectValue
     }
   }
 

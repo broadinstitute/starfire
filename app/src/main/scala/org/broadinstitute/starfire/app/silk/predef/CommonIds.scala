@@ -9,5 +9,6 @@ object CommonIds {
   val starfireAccount: Identifier = "starfire" / "account"
   val workspaceNamespace: Identifier = "workspaceNamespace"
   val workspaceName: Identifier = "workspaceName"
+  val workspaceBucket: Identifier = "workspace" / "bucket"
 
 }
