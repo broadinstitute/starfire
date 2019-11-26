@@ -22,6 +22,7 @@ object PredefEnv {
       .add("submissions" / "monitorSubmission", PredefCommands.submissionsMonitorSubmission)
       .add("workspaces" / "getWorkspace", PredefCommands.workspacesGetWorkspace)
       .add("workspaces" / "readBucket", PredefCommands.workspacesReadBucket)
+      .add("gcp" / "readBucket", PredefCommands.gcpReadBucket)
 
   def env: SilkObjectValue = theEnv
 

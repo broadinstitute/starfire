@@ -1,5 +1,5 @@
 version := "1.0.0"
-name := "starfire-auth"
+name := "starfire-gcp"
 organization := "org.broadinstitute"
 scalaVersion := "2.13.1"
 
