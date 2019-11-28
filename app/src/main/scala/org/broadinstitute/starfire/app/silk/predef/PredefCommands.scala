@@ -1,11 +1,12 @@
 package org.broadinstitute.starfire.app.silk.predef
 
 import better.files.File
+import com.google.cloud.storage.{BlobId, BlobInfo}
 import org.broadinstitute.starfire.api.{EntitiesApi, MethodConfigurationsApi, ProfileApi, StatusApi, SubmissionsApi, WorkspacesApi}
 import org.broadinstitute.starfire.app.silk.SilkCommand.Parameter
 import org.broadinstitute.starfire.app.silk.SilkConfig.sttpBackend
 import org.broadinstitute.starfire.app.silk.SilkType.SilkStringType
-import org.broadinstitute.starfire.app.silk.SilkValue.{SilkIntegerValue, SilkObjectValue, SilkStringValue}
+import org.broadinstitute.starfire.app.silk.SilkValue.{SilkCommandValue, SilkIntegerValue, SilkObjectValue, SilkStringValue}
 import org.broadinstitute.starfire.app.silk.predef.PredefUtils.Implicits._
 import org.broadinstitute.starfire.app.silk.{Identifier, SilkCommand, SilkHttpUtils}
 import org.broadinstitute.starfire.auth.OAuthUtils
@@ -35,6 +36,7 @@ object PredefCommands {
 
   val helloWorld: SilkCommand = new SilkCommand {
     val addresseeId: Identifier = "hello" / "world" / "addressee"
+
     override def ref: SilkCommand.Ref = SilkCommand.Ref(2019, 11, 15, 12, 54, 4, "hello.world")
 
     override def parameters: Seq[Parameter] =
@@ -55,7 +57,7 @@ object PredefCommands {
     override def execute(env: SilkObjectValue): Either[Snag, SilkObjectValue] = {
       val timeNowMillis = System.currentTimeMillis()
       val dateTimeNow = new DateTime(timeNowMillis)
-      val dateTimeString =  dateTimeNow.toString()
+      val dateTimeString = dateTimeNow.toString()
       Right(SilkObjectValue(
         Identifier("dateTime") -> SilkIntegerValue(timeNowMillis),
         Identifier("dateTimeString") -> SilkStringValue(dateTimeString)
@@ -79,7 +81,7 @@ object PredefCommands {
     override def parameters: Seq[Parameter] = Seq.empty
 
     override def execute(env: SilkObjectValue): Either[Snag, SilkObjectValue] = {
-      for(entry <- env.entries) {
+      for (entry <- env.entries) {
         println(entry.asReadableString)
       }
       Right(SilkObjectValue.empty)
@@ -239,22 +241,148 @@ object PredefCommands {
     }
   }
 
-  val gcpReadBucket: SilkCommand = new SilkCommand {
+  val gcpListBucket: SilkCommand = new SilkCommand {
     override def ref: SilkCommand.Ref = SilkCommand.Ref(2019, 11, 25, 18, 28, 12, "gcp.readBucket")
 
-    override def parameters: Seq[Parameter] = Seq(CommonParameters.workspaceBucket)
+    val prefixParam: Parameter = Parameter("gcp" / "prefix", SilkStringType, isRequired = false)
+
+    override def parameters: Seq[Parameter] =
+      Seq(CommonParameters.accountKeyFile, CommonParameters.workspaceBucket, prefixParam)
 
     override def execute(env: SilkObjectValue): Either[Snag, SilkObjectValue] = {
-      val keyFile = CommandUtils.getKeyFile(env)
-      val bucketName = env.getString(CommonParameters.workspaceBucket)
-      OAuthUtils.readServiceAccountCredentials(keyFile) match {
-        case Failure(exception) => Left(Snag("Could not read key file", Snag(exception)))
-        case Success(credentials) =>
-          val blobIter = GoogleStorageUtils.readBucket(bucketName, credentials)
-          for(blob <- blobIter.take(100)) {
-            println(blob.getName)
-          }
-          Right(SilkObjectValue.empty)
+      CommandUtils.doAuthenticated(env) { credentials =>
+        val bucketName = env.getString(CommonParameters.workspaceBucket)
+        val prefixOpt = env.getStringOpt(prefixParam)
+        val blobIter = GoogleStorageUtils(credentials).listBucket(bucketName, prefixOpt)
+        for (blob <- blobIter.take(100)) {
+          println(blob.getName)
+        }
+        Right(SilkObjectValue.empty)
+      }
+    }
+  }
+
+  val gcpCopy: SilkCommand = new SilkCommand {
+    override def ref: SilkCommand.Ref = SilkCommand.Ref(2019, 11, 27, 18, 19, 25, "gcp.copy")
+
+    override def parameters: Seq[Parameter] =
+      Seq(
+        CommonParameters.accountKeyFile, CommonParameters.sourceBucket, CommonParameters.sourceName,
+        CommonParameters.targetBucket, CommonParameters.targetName
+      )
+
+    override def execute(env: SilkObjectValue): Either[Snag, SilkObjectValue] = {
+      CommandUtils.doAuthenticated(env) { credentials =>
+        val sourceBucket = env.getString(CommonParameters.sourceBucket)
+        val sourceName = env.getString(CommonParameters.sourceName)
+        val targetBucket = env.getString(CommonParameters.targetBucket)
+        val targetName = env.getString(CommonParameters.targetName)
+        val sourceBlobId = BlobId.of(sourceBucket, sourceName)
+        val targetBlobId = BlobId.of(targetBucket, targetName)
+        GoogleStorageUtils(credentials).copyFile(sourceBlobId, targetBlobId)
+        Right(SilkObjectValue.empty)
+      }
+    }
+  }
+
+  val gcpBulkCopy: SilkCommand = new SilkCommand {
+    override def ref: SilkCommand.Ref = SilkCommand.Ref(2019, 11, 27, 18, 40, 10, "gcp.bulkCopy")
+
+    val sourcePrefixParam: Parameter = Parameter("sourcePrefix", SilkStringType, isRequired = true)
+    val targetPrefixParam: Parameter = Parameter("targetPrefix", SilkStringType, isRequired = true)
+
+    override def parameters: Seq[Parameter] =
+      Seq(
+        CommonParameters.accountKeyFile, CommonParameters.sourceBucket, sourcePrefixParam,
+        CommonParameters.targetBucket, targetPrefixParam
+      )
+
+    override def execute(env: SilkObjectValue): Either[Snag, SilkObjectValue] = {
+      CommandUtils.doAuthenticated(env) { credentials =>
+        val sourceBucket = env.getString(CommonParameters.sourceBucket)
+        val sourcePrefix = env.getString(sourcePrefixParam)
+        val targetBucket = env.getString(CommonParameters.targetBucket)
+        val targetPrefix = env.getString(targetPrefixParam)
+        val filesCopied =
+          GoogleStorageUtils(credentials).copyFiles(sourceBucket, sourcePrefix, targetBucket, targetPrefix)
+        for(fileCopied <- filesCopied) {
+          println(s"Copied $filesCopied")
+        }
+        Right(SilkObjectValue.empty)
+      }
+    }
+  }
+
+  val gcpUpload: SilkCommand = new SilkCommand {
+    override def ref: SilkCommand.Ref = SilkCommand.Ref(2019, 11, 27, 18, 48, 13, "gcp.upload")
+
+    val sourceFileParam: Parameter = Parameter("sourceFile", SilkStringType, isRequired = true)
+    val contentTypeParam: Parameter = Parameter("contentType", SilkStringType, isRequired = true)
+
+    override def parameters: Seq[Parameter] =
+      Seq(
+        CommonParameters.accountKeyFile, sourceFileParam, CommonParameters.targetBucket, CommonParameters.targetName,
+        contentTypeParam
+      )
+
+    override def execute(env: SilkObjectValue): Either[Snag, SilkObjectValue] = {
+      CommandUtils.doAuthenticated(env) { credentials =>
+        val sourceFile = File(env.getString(sourceFileParam))
+        val targetBucket = env.getString(CommonParameters.targetBucket)
+        val targetName = env.getString(CommonParameters.targetName)
+        val contentType = env.getString(contentTypeParam)
+        val targetBlobInfo =
+          BlobInfo.newBuilder(BlobId.of(targetBucket, targetName)).setContentType(contentType).build()
+        GoogleStorageUtils(credentials).uploadFile(sourceFile, targetBlobInfo)
+        Right(SilkObjectValue.empty)
+      }
+    }
+  }
+
+  val gcpDownload: SilkCommand = new SilkCommand {
+    override def ref: SilkCommand.Ref = SilkCommand.Ref(2019, 11, 27, 18, 55, 50, "gcp.download")
+
+    val targetFileParam: Parameter = Parameter("targetFile", SilkStringType, isRequired = true)
+
+    override def parameters: Seq[Parameter] =
+      Seq(
+        CommonParameters.accountKeyFile, CommonParameters.sourceBucket, CommonParameters.sourceName, targetFileParam
+      )
+
+    override def execute(env: SilkObjectValue): Either[Snag, SilkObjectValue] = {
+      CommandUtils.doAuthenticated(env) { credentials =>
+        val sourceBucket = env.getString(CommonParameters.sourceBucket)
+        val sourceName = env.getString(CommonParameters.sourceName)
+        val targetFile = File(env.getString(targetFileParam))
+        GoogleStorageUtils(credentials).downloadFile(BlobId.of(sourceBucket, sourceName), targetFile)
+        Right(SilkObjectValue.empty)
+      }
+    }
+  }
+
+  val help: SilkCommand = new SilkCommand {
+    override def ref: SilkCommand.Ref = SilkCommand.Ref(2019, 11, 27, 16, 17, 32, "help")
+
+    val commandParam: Parameter = Parameter("command", SilkStringType, isRequired = true)
+
+    override def parameters: Seq[Parameter] = Seq(commandParam)
+
+    override def execute(env: SilkObjectValue): Either[Snag, SilkObjectValue] = {
+      Identifier.parse(env.getString(commandParam)).flatMap { identifier =>
+        env.get(identifier) match {
+          case None => Left(Snag(s"Could not find anything with id ${identifier.asSilkCode}"))
+          case Some(SilkCommandValue(ref)) =>
+            PredefCommands.allByRef.get(ref) match {
+              case Some(command) =>
+                for (param <- command.parameters) {
+                  val isRequiredText = if (param.isRequired) "required" else "not required"
+                  println(s"${param.id.asSilkCode} has type ${param.silkType.name} and is $isRequiredText.")
+                }
+                Right(SilkObjectValue.empty)
+              case None => Left(Snag("Command not defined"))
+            }
+          case Some(value) => Left(Snag(s"Expected command, but got ${value.asReadableString}"))
+        }
       }
     }
   }
@@ -263,7 +391,7 @@ object PredefCommands {
     Set(
       statusStatus, helloWorld, silkUtilGetTime, set, silkDebugDump, profileSetProfile, entitiesGetEntitiesWithType,
       methodConfigurationsListWorkspaceMethodConfigs, submissionsCreateSubmission, submissionsMonitorSubmission,
-      workspacesGetWorkspace, workspacesReadBucket, gcpReadBucket
+      workspacesGetWorkspace, workspacesReadBucket, gcpListBucket, gcpCopy, gcpBulkCopy, gcpUpload, gcpDownload, help
     )
   val allByRef: Map[SilkCommand.Ref, SilkCommand] = all.map(command => (command.ref, command)).toMap
 

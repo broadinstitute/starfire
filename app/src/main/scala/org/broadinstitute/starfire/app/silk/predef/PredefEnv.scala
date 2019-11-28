@@ -22,7 +22,12 @@ object PredefEnv {
       .add("submissions" / "monitorSubmission", PredefCommands.submissionsMonitorSubmission)
       .add("workspaces" / "getWorkspace", PredefCommands.workspacesGetWorkspace)
       .add("workspaces" / "readBucket", PredefCommands.workspacesReadBucket)
-      .add("gcp" / "readBucket", PredefCommands.gcpReadBucket)
+      .add("gcp" / "listBucket", PredefCommands.gcpListBucket)
+      .add("gcp" / "copy", PredefCommands.gcpCopy)
+      .add("gcp" / "bulkCopy", PredefCommands.gcpBulkCopy)
+      .add("gcp" / "upload", PredefCommands.gcpUpload)
+      .add("gcp" / "download", PredefCommands.gcpDownload)
+      .add(Identifier("help"), PredefCommands.help)
 
   def env: SilkObjectValue = theEnv
 

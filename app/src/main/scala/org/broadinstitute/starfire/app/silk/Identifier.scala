@@ -45,6 +45,16 @@ object Identifier {
 
   def apply(parent: Identifier, name: String): Identifier = Identifier(Some(parent), name)
 
+  def parse(string: String): Either[Snag, Identifier] = {
+    val regexMatchingDot = "\\."
+    val parts = string.trim.split(regexMatchingDot).toSeq
+    if(parts.isEmpty) {
+      Left(Snag("Provided empty String, but need non-empty to construct Identifier"))
+    } else {
+      Right(fromNonEmptyList(parts))
+    }
+  }
+
   def fromNonEmptyList(parts: Seq[String]): Identifier = {
     parts match {
       case Seq(name) => Identifier(name)

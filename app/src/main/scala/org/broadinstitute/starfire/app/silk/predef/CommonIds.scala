@@ -10,5 +10,9 @@ object CommonIds {
   val workspaceNamespace: Identifier = "workspaceNamespace"
   val workspaceName: Identifier = "workspaceName"
   val workspaceBucket: Identifier = "workspace" / "bucket"
+  val sourceBucket: Identifier = "sourceBucket"
+  val sourceName: Identifier = "sourceName"
+  val targetBucket: Identifier = "targetBucket"
+  val targetName: Identifier = "targetName"
 
 }
