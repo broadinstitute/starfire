@@ -268,7 +268,7 @@ object PredefCommands {
     override def parameters: Seq[Parameter] =
       Seq(
         CommonParameters.accountKeyFile, CommonParameters.sourceBucket, CommonParameters.sourceName,
-        CommonParameters.targetBucket, CommonParameters.targetName
+        CommonParameters.targetBucket, CommonParameters.targetName, CommonParameters.projectId
       )
 
     override def execute(env: SilkObjectValue): Either[Snag, SilkObjectValue] = {
@@ -279,7 +279,8 @@ object PredefCommands {
         val targetName = env.getString(CommonParameters.targetName)
         val sourceBlobId = BlobId.of(sourceBucket, sourceName)
         val targetBlobId = BlobId.of(targetBucket, targetName)
-        GoogleStorageUtils(credentials).copyFile(sourceBlobId, targetBlobId)
+        val projectId = env.getString(CommonParameters.projectId)
+        GoogleStorageUtils(credentials, projectId).copyFile(sourceBlobId, targetBlobId)
         Right(SilkObjectValue.empty)
       }
     }
@@ -294,7 +295,7 @@ object PredefCommands {
     override def parameters: Seq[Parameter] =
       Seq(
         CommonParameters.accountKeyFile, CommonParameters.sourceBucket, sourcePrefixParam,
-        CommonParameters.targetBucket, targetPrefixParam
+        CommonParameters.targetBucket, targetPrefixParam, CommonParameters.projectId
       )
 
     override def execute(env: SilkObjectValue): Either[Snag, SilkObjectValue] = {
@@ -303,8 +304,9 @@ object PredefCommands {
         val sourcePrefix = env.getString(sourcePrefixParam)
         val targetBucket = env.getString(CommonParameters.targetBucket)
         val targetPrefix = env.getString(targetPrefixParam)
+        val projectId = env.getString(CommonParameters.projectId)
         val filesCopied =
-          GoogleStorageUtils(credentials).copyFiles(sourceBucket, sourcePrefix, targetBucket, targetPrefix)
+          GoogleStorageUtils(credentials, projectId).copyFiles(sourceBucket, sourcePrefix, targetBucket, targetPrefix)
         for(fileCopied <- filesCopied) {
           println(s"Copied $filesCopied")
         }
@@ -322,7 +324,7 @@ object PredefCommands {
     override def parameters: Seq[Parameter] =
       Seq(
         CommonParameters.accountKeyFile, sourceFileParam, CommonParameters.targetBucket, CommonParameters.targetName,
-        contentTypeParam
+        CommonParameters.projectId, contentTypeParam
       )
 
     override def execute(env: SilkObjectValue): Either[Snag, SilkObjectValue] = {
@@ -330,10 +332,11 @@ object PredefCommands {
         val sourceFile = File(env.getString(sourceFileParam))
         val targetBucket = env.getString(CommonParameters.targetBucket)
         val targetName = env.getString(CommonParameters.targetName)
+        val projectId = env.getString(CommonParameters.projectId)
         val contentType = env.getString(contentTypeParam)
         val targetBlobInfo =
           BlobInfo.newBuilder(BlobId.of(targetBucket, targetName)).setContentType(contentType).build()
-        GoogleStorageUtils(credentials).uploadFile(sourceFile, targetBlobInfo)
+        GoogleStorageUtils(credentials, projectId).uploadFile(sourceFile, targetBlobInfo)
         Right(SilkObjectValue.empty)
       }
     }
@@ -346,7 +349,8 @@ object PredefCommands {
 
     override def parameters: Seq[Parameter] =
       Seq(
-        CommonParameters.accountKeyFile, CommonParameters.sourceBucket, CommonParameters.sourceName, targetFileParam
+        CommonParameters.accountKeyFile, CommonParameters.sourceBucket, CommonParameters.sourceName, targetFileParam,
+        CommonParameters.projectId
       )
 
     override def execute(env: SilkObjectValue): Either[Snag, SilkObjectValue] = {
@@ -354,7 +358,8 @@ object PredefCommands {
         val sourceBucket = env.getString(CommonParameters.sourceBucket)
         val sourceName = env.getString(CommonParameters.sourceName)
         val targetFile = File(env.getString(targetFileParam))
-        GoogleStorageUtils(credentials).downloadFile(BlobId.of(sourceBucket, sourceName), targetFile)
+        val projectId = env.getString(CommonParameters.projectId)
+        GoogleStorageUtils(credentials, projectId).downloadFile(BlobId.of(sourceBucket, sourceName), targetFile)
         Right(SilkObjectValue.empty)
       }
     }

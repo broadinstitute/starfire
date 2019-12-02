@@ -13,4 +13,6 @@ object CommonParameters {
   val sourceName: Parameter = Parameter(CommonIds.sourceName, SilkStringType, isRequired = true)
   val targetBucket: Parameter = Parameter(CommonIds.targetBucket, SilkStringType, isRequired = true)
   val targetName: Parameter = Parameter(CommonIds.targetName, SilkStringType, isRequired = true)
+  val projectIdOptional: Parameter = Parameter(CommonIds.projectId, SilkStringType, isRequired = false)
+  val projectId: Parameter = Parameter(CommonIds.projectId, SilkStringType, isRequired = true)
 }
