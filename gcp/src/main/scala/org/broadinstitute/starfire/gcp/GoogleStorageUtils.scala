@@ -54,15 +54,17 @@ class GoogleStorageUtils(credentials: Credentials, projectIdOpt: Option[String] 
 
   def uploadFile(file: File, blobInfo: BlobInfo): Unit = {
     val writer = storage.writer(blobInfo)
-    val fileChannel = file.fileChannel.get()
-    var pos: Long = 0L
-    val fileSize = fileChannel.size()
-    while (pos < fileSize) {
-      val remaining = fileSize - pos
-      val readSize = if (remaining < maxFileReadSize) remaining else maxFileReadSize
-      val buffer = fileChannel.map(FileChannel.MapMode.READ_ONLY, pos, readSize)
-      writer.write(buffer)
-      pos += readSize
+    file.fileChannel.foreach { fileChannel =>
+      var pos: Long = 0L
+      val fileSize = fileChannel.size()
+      while (pos < fileSize) {
+        val remaining = fileSize - pos
+        val readSize = if (remaining < maxFileReadSize) remaining else maxFileReadSize
+        val buffer = fileChannel.map(FileChannel.MapMode.READ_ONLY, pos, readSize)
+        println(s"Writing pos=$pos, readSize=$readSize, remaining=$remaining")
+        writer.write(buffer)
+        pos += readSize
+      }
     }
   }
 
