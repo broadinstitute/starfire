@@ -7,6 +7,7 @@ import com.google.api.gax.paging.Page
 import com.google.auth.Credentials
 import com.google.cloud.storage.Storage.{BlobListOption, CopyRequest}
 import com.google.cloud.storage.{Blob, BlobId, BlobInfo, Storage, StorageOptions}
+import org.broadinstitute.starfire.util.{Snag, UIStringUtils}
 
 import scala.jdk.CollectionConverters.IteratorHasAsScala
 
@@ -14,7 +15,6 @@ class GoogleStorageUtils(credentials: Credentials, projectIdOpt: Option[String] 
   val storage: Storage = {
     var builder = StorageOptions.newBuilder().setCredentials(credentials)
     projectIdOpt.foreach(projectId => builder = builder.setProjectId(projectId))
-    println("builder=" + builder)
     builder.build().getService
   }
 
@@ -52,20 +52,39 @@ class GoogleStorageUtils(credentials: Credentials, projectIdOpt: Option[String] 
 
   val maxFileReadSize = 1000000
 
-  def uploadFile(file: File, blobInfo: BlobInfo): Unit = {
-    val writer = storage.writer(blobInfo)
-    file.fileChannel.foreach { fileChannel =>
+  def uploadFile(file: File, blobInfo: BlobInfo): Either[Snag, Long] = {
+    file.fileChannel.map { fileChannel =>
+      val writer = storage.writer(blobInfo)
       var pos: Long = 0L
       val fileSize = fileChannel.size()
-      while (pos < fileSize) {
+      var failedAttempts: Int = 0
+      val startTime = System.currentTimeMillis()
+      while (pos < fileSize && failedAttempts < 3) {
         val remaining = fileSize - pos
         val readSize = if (remaining < maxFileReadSize) remaining else maxFileReadSize
         val buffer = fileChannel.map(FileChannel.MapMode.READ_ONLY, pos, readSize)
-        println(s"Writing pos=$pos, readSize=$readSize, remaining=$remaining")
-        writer.write(buffer)
-        pos += readSize
+        val timeNow = System.currentTimeMillis()
+        val timePassed = timeNow - startTime
+        val timePassedString = UIStringUtils.prettyTimeInterval(timePassed)
+        val timeEstimate = UIStringUtils.timeEstimate(timePassed, pos, fileSize)
+        val timeEstimateString = UIStringUtils.prettyTimeInterval(timeEstimate)
+        val timesStrings = s"timePassed=$timePassedString, timeEstimate=$timeEstimateString"
+        println(s"Writing pos=$pos, readSize=$readSize, remaining=$remaining, $timesStrings")
+        val writtenSize = writer.write(buffer)
+        if(writtenSize == 0) {
+          failedAttempts += 1
+        } else {
+          failedAttempts = 0
+        }
+        pos += writtenSize
       }
-    }
+      writer.close()
+      if(pos < fileSize) {
+        Left(Snag(s"Could only write $pos of $fileSize bytes."))
+      } else {
+        Right(pos)
+      }
+    }.get()
   }
 
   def downloadFile(blobId: BlobId, file: File): Unit = {
