@@ -1,6 +1,6 @@
 package org.broadinstitute.starfire.app.silk
 
-import org.broadinstitute.starfire.util.Snag
+import org.broadinstitute.yootilz.core.snag.Snag
 
 case class Identifier(parentOpt: Option[Identifier], name: String) extends Expression {
   def /(childName: String): Identifier = Identifier(Some(this), childName)

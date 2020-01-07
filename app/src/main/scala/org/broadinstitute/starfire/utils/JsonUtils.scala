@@ -2,7 +2,7 @@ package org.broadinstitute.starfire.utils
 
 import io.circe.ParsingFailure
 import io.circe.parser.parse
-import org.broadinstitute.starfire.util.Snag
+import org.broadinstitute.yootilz.core.snag.Snag
 
 object JsonUtils {
   def prettyPrintJson(original: String): Either[Snag, String] = {

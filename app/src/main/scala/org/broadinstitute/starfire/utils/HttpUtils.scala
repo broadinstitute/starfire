@@ -1,8 +1,8 @@
 package org.broadinstitute.starfire.utils
 
 import better.files.File
-import org.broadinstitute.starfire.auth.OAuthUtils
-import org.broadinstitute.starfire.util.Snag
+import org.broadinstitute.yootilz.core.snag.Snag
+import org.broadinstitute.yootilz.gcp.auth.OAuthUtils
 import sttp.client.{DeserializationError, HttpError, Identity, NothingT, Request, Response, ResponseError, SttpBackend}
 
 import scala.jdk.CollectionConverters._

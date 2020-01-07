@@ -4,7 +4,7 @@ import fastparse.NoWhitespace._
 import fastparse._
 import org.broadinstitute.starfire.app.silk.Argument.{NamedArgument, PositionalArgument}
 import org.broadinstitute.starfire.app.silk.SilkLiteral.{SilkIntegerLiteral, SilkStringLiteral}
-import org.broadinstitute.starfire.util.Snag
+import org.broadinstitute.yootilz.core.snag.Snag
 
 object Parser {
 

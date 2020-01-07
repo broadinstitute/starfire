@@ -2,8 +2,8 @@ package org.broadinstitute.starfire.app.silk
 
 import org.broadinstitute.starfire.app.silk.SilkValue.SilkObjectValue
 import org.broadinstitute.starfire.app.silk.predef.CommandUtils
-import org.broadinstitute.starfire.util.Snag
 import org.broadinstitute.starfire.utils.HttpUtils
+import org.broadinstitute.yootilz.core.snag.Snag
 import sttp.client.{Identity, NothingT, Request, ResponseError, SttpBackend}
 
 object SilkHttpUtils {

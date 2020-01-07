@@ -1,4 +1,4 @@
-version := "1.0.0"
+version := "1.0.1"
 name := "swagger-sttp-client"
 organization := "io.swagger"
 scalaVersion := "2.13.1"

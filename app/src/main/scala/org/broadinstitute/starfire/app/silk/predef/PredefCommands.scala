@@ -9,12 +9,12 @@ import org.broadinstitute.starfire.app.silk.SilkType.SilkStringType
 import org.broadinstitute.starfire.app.silk.SilkValue.{SilkCommandValue, SilkIntegerValue, SilkObjectValue, SilkStringValue}
 import org.broadinstitute.starfire.app.silk.predef.PredefUtils.Implicits._
 import org.broadinstitute.starfire.app.silk.{Identifier, SilkCommand, SilkHttpUtils}
-import org.broadinstitute.starfire.auth.OAuthUtils
 import org.broadinstitute.starfire.model.{Profile, SubmissionRequest}
-import org.broadinstitute.starfire.util.Snag
 import org.broadinstitute.starfire.utils.HttpUtils
 import org.joda.time.DateTime
-import org.broadinstitute.starfire.gcp.GoogleStorageUtils
+import org.broadinstitute.yootilz.core.snag.Snag
+import org.broadinstitute.yootilz.gcp.auth.OAuthUtils
+import org.broadinstitute.yootilz.gcp.storage.GoogleStorageUtils
 
 import scala.util.{Failure, Success}
 

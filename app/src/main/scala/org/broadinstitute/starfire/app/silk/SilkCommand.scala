@@ -2,8 +2,8 @@ package org.broadinstitute.starfire.app.silk
 
 import org.broadinstitute.starfire.app.silk.SilkCommand.{Parameter, Ref}
 import org.broadinstitute.starfire.app.silk.SilkValue.SilkObjectValue
-import org.broadinstitute.starfire.util.Snag
 import org.broadinstitute.starfire.utils.StringToLongHash
+import org.broadinstitute.yootilz.core.snag.Snag
 import org.joda.time.DateTime
 
 trait SilkCommand {

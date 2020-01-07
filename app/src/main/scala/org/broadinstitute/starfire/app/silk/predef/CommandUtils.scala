@@ -4,8 +4,8 @@ import better.files.File
 import com.google.auth.oauth2.ServiceAccountCredentials
 import org.broadinstitute.starfire.app.silk.SilkConfig
 import org.broadinstitute.starfire.app.silk.SilkValue.SilkObjectValue
-import org.broadinstitute.starfire.auth.OAuthUtils
-import org.broadinstitute.starfire.util.Snag
+import org.broadinstitute.yootilz.core.snag.Snag
+import org.broadinstitute.yootilz.gcp.auth.OAuthUtils
 
 import scala.util.{Failure, Success}
 

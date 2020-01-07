@@ -4,9 +4,10 @@ organization := "org.broadinstitute"
 scalaVersion := "2.13.1"
 
 val sttpV = "2.0.0-RC6"
-
+val yootilzV = "0.0.3"
 
 libraryDependencies ++= Seq(
+  "org.broadinstitute" %% "yootilz-gcp" % yootilzV,
   "com.softwaremill.sttp.client" %% "core" % sttpV,
   "com.github.pathikrit" %% "better-files" % "3.8.0",
   "com.lihaoyi" %% "fastparse" % "2.2.2",
